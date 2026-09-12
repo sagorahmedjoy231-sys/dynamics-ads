@@ -3,140 +3,300 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Telegram Earning Mini App</title>
+  <title>Dynamics Ads - Earning Mini App</title>
   
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Adsgram SDK -->
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-  <!-- TON Connect SDK (Tonkeeper Integration) -->
+  <!-- TON Connect SDK -->
   <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #1a1a2e;
-      color: #ffffff;
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 20px;
-      text-align: center;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #ffffff;
+      min-height: 100vh;
+      padding: 20px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .container {
-      max-width: 400px;
-      margin: 0 auto;
-      background: #16213e;
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     }
 
-    #ton-connect {
+    /* Profile Header */
+    .profile-card {
       display: flex;
-      justify-content: center;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 12px 16px;
+      border-radius: 16px;
       margin-bottom: 20px;
     }
 
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff007f, #7928ca);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      border: 2px solid #00f2fe;
+      object-fit: cover;
+    }
+
+    .user-details h3 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .user-details p {
+      font-size: 12px;
+      color: #00f2fe;
+    }
+
+    /* Balance Card */
     .balance-card {
-      background: #0f3460;
-      padding: 15px;
-      margin: 20px 0;
-      border-radius: 8px;
+      background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+      padding: 20px;
+      border-radius: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 20px rgba(255, 8, 68, 0.3);
     }
 
     .balance-card h3 {
-      margin: 0;
-      font-size: 16px;
-      color: #a6a6a6;
-    }
-
-    .balance-card p {
-      font-size: 32px;
-      font-weight: bold;
-      color: #e94560;
-      margin: 10px 0 0 0;
-    }
-
-    .btn {
-      background-color: #e94560;
-      color: white;
-      border: none;
-      padding: 14px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 8px;
-      cursor: pointer;
-      width: 100%;
-      transition: background 0.3s;
-    }
-
-    .btn:hover {
-      background-color: #d63850;
-    }
-
-    .referral-box {
-      margin-top: 25px;
-      background: #0f3460;
-      padding: 15px;
-      border-radius: 8px;
-    }
-
-    .referral-box h4 {
-      margin-top: 0;
-      color: #dddddd;
-    }
-
-    .referral-box input {
-      width: 90%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      border: 1px solid #1a1a2e;
-      background-color: #1a1a2e;
-      color: #fff;
-      text-align: center;
       font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.9;
     }
 
-    .btn-sub {
-      background-color: #0088cc;
+    .balance-card .points {
+      font-size: 36px;
+      font-weight: 800;
+      margin-top: 5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* Action Buttons */
+    .action-btn {
+      width: 100%;
+      background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      font-weight: bold;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 16px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 15px rgba(0, 198, 255, 0.4);
+      transition: transform 0.2s;
+      margin-bottom: 20px;
+    }
+
+    .action-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Coming Soon Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      padding: 15px;
+      border-radius: 16px;
+      text-align: center;
+      position: relative;
+    }
+
+    .badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #ff007f;
+      color: #fff;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .feature-card i {
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: #f6d365;
+    }
+
+    .feature-card h4 {
+      font-size: 13px;
+    }
+
+    /* Referral Card */
+    .referral-card {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .referral-card h4 {
+      font-size: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ref-input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .ref-input-group input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .ref-input-group button {
+      background: #4e54c8;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    #ton-connect {
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>Earning Dashboard</h1>
     
     <!-- TON Connect Button -->
     <div id="ton-connect"></div>
 
+    <!-- User Profile Header -->
+    <div class="profile-card">
+      <div class="user-info">
+        <img id="user-avatar" class="avatar" src="https://via.placeholder.com/48" alt="Profile" style="display:none;">
+        <div id="avatar-fallback" class="avatar">U</div>
+        <div class="user-details">
+          <h3 id="user-name">User Name</h3>
+          <p id="user-id">ID: 00000000</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Balance Card -->
     <div class="balance-card">
-      <h3>Your Total Balance</h3>
-      <p id="user-points">0 PTS</p>
+      <h3>Total Points</h3>
+      <div class="points"><span id="user-points">0</span> PTS</div>
     </div>
 
-    <button id="watch-ad-btn" class="btn">Watch Ad (+10 Points)</button>
+    <!-- Watch Ad Button -->
+    <button id="watch-ad-btn" class="action-btn">
+      <i class="fa-solid fa-play-circle"></i> Watch Ad (+10 PTS)
+    </button>
 
-    <div class="referral-box">
-      <h4>Your Referral Link</h4>
-      <input type="text" id="ref-link" readonly value="Loading link...">
-      <button onclick="copyRefLink()" class="btn-sub">Copy Link</button>
+    <!-- Coming Soon Features Grid -->
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="badge">SOON</span>
+        <i class="fa-solid fa-calendar-check"></i>
+        <h4>Daily Missions</h4>
+      </div>
+      <div class="feature-card">
+        <span class="badge">SOON</span>
+        <i class="fa-solid fa-dharmachakra"></i>
+        <h4>Spin & Win</h4>
+      </div>
     </div>
+
+    <!-- Referral Link Section -->
+    <div class="referral-card">
+      <h4><i class="fa-solid fa-users"></i> Your Referral Link</h4>
+      <div class="ref-input-group">
+        <input type="text" id="ref-link" readonly value="Loading link...">
+        <button onclick="copyRefLink()"><i class="fa-solid fa-copy"></i> Copy</button>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    // Initialize Telegram WebApp
+    // Initialize Telegram WebApp SDK
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
       tg.expand();
+
+      // Set User Profile Data from Telegram
+      const user = tg.initDataUnsafe?.user;
+      if (user) {
+        document.getElementById('user-name').innerText = user.first_name + (user.last_name ? " " + user.last_name : "");
+        document.getElementById('user-id').innerText = `ID: ${user.id}`;
+        
+        if (user.photo_url) {
+          const avatarImg = document.getElementById('user-avatar');
+          avatarImg.src = user.photo_url;
+          avatarImg.style.display = 'block';
+          document.getElementById('avatar-fallback').style.display = 'none';
+        } else {
+          document.getElementById('avatar-fallback').innerText = user.first_name ? user.first_name.charAt(0).toUpperCase() : 'U';
+        }
+      }
     }
 
     let points = 0;
@@ -147,9 +307,9 @@
       buttonRootId: 'ton-connect'
     });
 
-    // Generate Referral Link
+    // Generate Referral Link with your Bot Username
     const userId = tg?.initDataUnsafe?.user?.id || "guest";
-    document.getElementById('ref-link').value = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
+    document.getElementById('ref-link').value = `https://t.me/DynamicsAdsBot?start=${userId}`;
 
     // Initialize Adsgram Controller
     const AdController = window.Adsgram?.init({ blockId: "YOUR_ADSGRAM_BLOCK_ID" });
@@ -159,7 +319,7 @@
       if (AdController) {
         AdController.show().then((result) => {
           points += 10;
-          document.getElementById('user-points').innerText = `${points} PTS`;
+          document.getElementById('user-points').innerText = points;
           alert("Congratulations! You earned 10 points.");
         }).catch((err) => {
           alert("Failed to load advertisement. Please try again.");
@@ -167,8 +327,8 @@
       } else {
         // Fallback for testing without active blockId
         points += 10;
-        document.getElementById('user-points').innerText = `${points} PTS`;
-        alert("Ad completed! (Demo +10 Points added)");
+        document.getElementById('user-points').innerText = points;
+        alert("Ad completed! (+10 Points added)");
       }
     });
 
