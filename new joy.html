@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Earning Mini App</title>
+  
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Adsgram SDK -->
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+  <!-- TON Connect SDK (Tonkeeper Integration) -->
+  <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1a1a2e;
+      color: #ffffff;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: #16213e;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    #ton-connect {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .balance-card {
+      background: #0f3460;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+
+    .balance-card h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #a6a6a6;
+    }
+
+    .balance-card p {
+      font-size: 32px;
+      font-weight: bold;
+      color: #e94560;
+      margin: 10px 0 0 0;
+    }
+
+    .btn {
+      background-color: #e94560;
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #d63850;
+    }
+
+    .referral-box {
+      margin-top: 25px;
+      background: #0f3460;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .referral-box h4 {
+      margin-top: 0;
+      color: #dddddd;
+    }
+
+    .referral-box input {
+      width: 90%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #1a1a2e;
+      background-color: #1a1a2e;
+      color: #fff;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .btn-sub {
+      background-color: #0088cc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Earning Dashboard</h1>
+    
+    <!-- TON Connect Button -->
+    <div id="ton-connect"></div>
+
+    <div class="balance-card">
+      <h3>Your Total Balance</h3>
+      <p id="user-points">0 PTS</p>
+    </div>
+
+    <button id="watch-ad-btn" class="btn">Watch Ad (+10 Points)</button>
+
+    <div class="referral-box">
+      <h4>Your Referral Link</h4>
+      <input type="text" id="ref-link" readonly value="Loading link...">
+      <button onclick="copyRefLink()" class="btn-sub">Copy Link</button>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Telegram WebApp
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
+    let points = 0;
+
+    // TON Connect Integration
+    const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+      manifestUrl: 'https://raw.githubusercontent.com/ton-community/tutorials/main/03-client/public/tonconnect-manifest.json',
+      buttonRootId: 'ton-connect'
+    });
+
+    // Generate Referral Link
+    const userId = tg?.initDataUnsafe?.user?.id || "guest";
+    document.getElementById('ref-link').value = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
+
+    // Initialize Adsgram Controller
+    const AdController = window.Adsgram?.init({ blockId: "YOUR_ADSGRAM_BLOCK_ID" });
+
+    // Watch Ad Button Logic
+    document.getElementById('watch-ad-btn').addEventListener('click', () => {
+      if (AdController) {
+        AdController.show().then((result) => {
+          points += 10;
+          document.getElementById('user-points').innerText = `${points} PTS`;
+          alert("Congratulations! You earned 10 points.");
+        }).catch((err) => {
+          alert("Failed to load advertisement. Please try again.");
+        });
+      } else {
+        // Fallback for testing without active blockId
+        points += 10;
+        document.getElementById('user-points').innerText = `${points} PTS`;
+        alert("Ad completed! (Demo +10 Points added)");
+      }
+    });
+
+    // Copy Referral Link Function
+    function copyRefLink() {
+      const copyText = document.getElementById("ref-link");
+      copyText.select();
+      navigator.clipboard.writeText(copyText.value);
+      alert("Referral link copied to clipboard!");
+    }
+  </script>
+
+</body>
+</html>
