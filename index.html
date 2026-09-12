@@ -694,7 +694,7 @@
         5: { name: "Grand Master", rate: 0.0005, avatar: "https://cdn-icons-png.flaticon.com/512/610/610120.png" }
     };
 
-    // Updated Subscriber Pricing Mapping (200 removed, 400 changed to 300)
+    // Subscriber Pricing Mapping
     const SUB_PRICING = {
         "100": { cost: 0.005, label: "$0.5 sent" },
         "300": { cost: 0.30, label: "$0.30" },
@@ -723,7 +723,6 @@
     function initAdsgram() {
         try {
             if (window.Adsgram) {
-                // Configured with your actual Block ID: int-47463
                 AdController = window.Adsgram.init({ blockId: "int-47463" });
             }
         } catch(e) { console.warn("Adsgram initialization error:", e); }
@@ -827,16 +826,15 @@
         }
 
         if (AdController) {
+            // শুধুমাত্র অ্যাড সফলভাবে শেষ হলেই রিওয়ার্ড দেওয়া হবে
             AdController.show().then(() => {
                 applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride);
             }).catch((err) => { 
                 console.warn("Ad display error or skipped:", err);
-                // If you are testing in a regular browser where Adsgram SDK fails, 
-                // you can keep this fallback enabled, or remove it so it strictly requires the ad to complete.
-                applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride); 
+                alert("Advertisement could not be loaded or was skipped. Please try again inside Telegram.");
             });
         } else {
-            applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride);
+            alert("Adsgram SDK is not initialized yet. Please open inside Telegram.");
         }
     }
 
