@@ -532,15 +532,15 @@
                 
                 <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Select Subscriber Package:</p>
                 <select id="sub-package-select" class="select-field" onchange="updateCampaignCost()">
-                    <option value="100">100 Subscribers ($0.05)</option>
-                    <option value="200">200 Subscribers ($0.010)</option>
+                    <option value="100">100 Subscribers ($0.005)</option>
+                    <option value="200">200 Subscribers ($0.10)</option>
                     <option value="400">400 Subscribers ($0.30)</option>
                     <option value="1000">1000 Subscribers ($1.00)</option>
                     <option value="2000">2000 Subscribers ($1.09)</option>
                 </select>
 
                 <div style="font-size: 12px; color: var(--accent-green); font-weight: 700; margin-bottom: 12px;" id="campaign-cost-display">
-                    Total Cost: $0.05 (Subscribers get $0.002 each)
+                    Total Cost: $0.005 (Subscribers get $0.002 each)
                 </div>
 
                 <button class="action-btn action-btn-green" onclick="launchSubCampaign()">Launch Subscriber Campaign</button>
@@ -675,10 +675,10 @@
 
 <script>
     /* Global Application State */
-    let balance = 0.0000;
+    let balance = 0.0400;
     let referredUsers = [];
     
-    let mainAdsLeft = 100;
+    let mainAdsLeft = 99;
     let dailyAdsLeft = 10;
     let extraAdsLeft = 30;
 
@@ -688,17 +688,17 @@
 
     // Dynamic Tier Configuration & Tiers: Pro, Legend, Ultra Legend, Grand Master
     const TIER_MAP = {
-        1: { name: "Pro", rate: 0.0001, avatar: "https://cdn-icons-png.flaticon.com/512/4140/4140048.png" },
+        1: { name: "Pro", rate: 0.0003, avatar: "https://cdn-icons-png.flaticon.com/512/4140/4140048.png" },
         2: { name: "Legend", rate: 0.0003, avatar: "https://cdn-icons-png.flaticon.com/512/2583/2583344.png" },
         3: { name: "Ultra Legend", rate: 0.0004, avatar: "https://cdn-icons-png.flaticon.com/512/2583/2583319.png" },
         4: { name: "Grand Master", rate: 0.0005, avatar: "https://cdn-icons-png.flaticon.com/512/2583/2583434.png" },
         5: { name: "Grand Master", rate: 0.0005, avatar: "https://cdn-icons-png.flaticon.com/512/610/610120.png" }
     };
 
-    // Subscriber Pricing Mapping
+    // Updated Subscriber Pricing Mapping (100 = $0.005, 200 = $0.10)
     const SUB_PRICING = {
-        "100": { cost: 0.05, label: "$0.05" },
-        "200": { cost: 0.010, label: "$0.010" },
+        "100": { cost: 0.005, label: "$0.005" },
+        "200": { cost: 0.10, label: "$0.10" },
         "400": { cost: 0.30, label: "$0.30" },
         "1000": { cost: 1.00, label: "$1.00" },
         "2000": { cost: 1.09, label: "$1.09" }
@@ -841,7 +841,7 @@
 
     function applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride) {
         const lvl = getCurrentLevel();
-        const earned = rewardOverride || (lvl === 1 ? 0.02 : (lvl === 2 ? 0.03 : (lvl === 3 ? 0.04 : 0.05)));
+        const earned = rewardOverride || (lvl === 1 ? 0.0003 : (lvl === 2 ? 0.0003 : (lvl === 3 ? 0.0004 : 0.0005)));
 
         balance += earned;
         if(counterKey === 'main') mainAdsLeft--;
@@ -865,9 +865,9 @@
         alert(`Ad Watched Successfully! +$${earned.toFixed(4)} added.`);
     }
 
-    function triggerMainAd() { executeAdWatch('main', 'main-timer-box', 100); }
-    function triggerDailyAd() { executeAdWatch('daily', 'daily-timer-box', 10, 0.002); }
-    function triggerExtraAd() { executeAdWatch('extra', 'extra-timer-box', 30, 0.002); }
+    function triggerMainAd() { executeAdWatch('main', 'main-timer-box', 100, 0.0003); }
+    function triggerDailyAd() { executeAdWatch('daily', 'daily-timer-box', 10, 0.0003); }
+    function triggerExtraAd() { executeAdWatch('extra', 'extra-timer-box', 30, 0.0003); }
 
     /* Referral Simulation & Live Activity List */
     function simulateRefJoin() {
