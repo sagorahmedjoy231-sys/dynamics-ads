@@ -7,7 +7,7 @@
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Adsgram SDK -->
-    <script src="https://sad.adsgram.ai/js/sad-index.js"></script>
+    <script src="https://sad.adsgram.ai/js/sad-index.js" async></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -41,7 +41,6 @@
             min-height: 100vh;
         }
 
-        /* Top Bar */
         .top-bar {
             display: flex;
             align-items: center;
@@ -85,7 +84,6 @@
             color: var(--text-sub);
         }
 
-        /* Container Sections */
         .tab-content {
             display: none;
             padding: 20px;
@@ -101,7 +99,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Balance Card */
         .balance-card {
             background: linear-gradient(135deg, #1f293d 0%, #111827 100%);
             border: 1px solid var(--card-border);
@@ -112,17 +109,6 @@
             margin-bottom: 24px;
             position: relative;
             overflow: hidden;
-        }
-
-        .balance-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(47, 129, 247, 0.1) 0%, transparent 70%);
-            pointer-events: none;
         }
 
         .balance-title {
@@ -141,18 +127,12 @@
             margin-bottom: 18px;
         }
 
-        .balance-amount span {
-            color: var(--accent-hover);
-            font-size: 20px;
-        }
-
         .balance-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
 
-        /* Buttons */
         .btn {
             padding: 12px 20px;
             border-radius: 12px;
@@ -167,40 +147,11 @@
             transition: all 0.2s ease;
         }
 
-        .btn-primary {
-            background: var(--accent-color);
-            color: #fff;
-        }
+        .btn-primary { background: var(--accent-color); color: #fff; }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--card-border); }
+        .btn-success { background: var(--green-color); color: #fff; }
+        .btn-full { width: 100%; }
 
-        .btn-primary:active {
-            background: var(--accent-hover);
-            transform: scale(0.98);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            border: 1px solid var(--card-border);
-        }
-
-        .btn-secondary:active {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-success {
-            background: var(--green-color);
-            color: #fff;
-        }
-
-        .btn-success:active {
-            background: var(--green-hover);
-        }
-
-        .btn-full {
-            width: 100%;
-        }
-
-        /* Card Section */
         .section-header {
             font-size: 16px;
             font-weight: 700;
@@ -247,24 +198,14 @@
         .icon-tg { background: rgba(42, 171, 238, 0.15); color: #2aabee; }
         .icon-tt { background: rgba(254, 44, 85, 0.15); color: #fe2c55; }
 
-        .task-details h5 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
+        .task-details h5 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .task-details p { font-size: 12px; color: var(--green-color); font-weight: 700; }
 
-        .task-details p {
-            font-size: 12px;
-            color: var(--green-color);
-            font-weight: 700;
-        }
-
-        /* Promote Cards */
         .promote-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .promote-card {
@@ -275,25 +216,9 @@
             text-align: center;
         }
 
-        .promote-card h3 {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--accent-hover);
-            margin-bottom: 4px;
-        }
-
-        .promote-card p {
-            font-size: 13px;
-            color: var(--text-sub);
-            margin-bottom: 12px;
-        }
-
-        .promote-card .price {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--gold-color);
-            margin-bottom: 12px;
-        }
+        .promote-card h3 { font-size: 20px; font-weight: 800; color: var(--accent-hover); margin-bottom: 4px; }
+        .promote-card p { font-size: 13px; color: var(--text-sub); margin-bottom: 12px; }
+        .promote-card .price { font-size: 16px; font-weight: 700; color: var(--gold-color); margin-bottom: 12px; }
 
         .notice-box {
             background: rgba(210, 153, 34, 0.1);
@@ -308,14 +233,13 @@
             gap: 10px;
         }
 
-        /* Referral Link Box */
         .ref-box {
             background: var(--card-bg);
             border: 1px dashed var(--accent-color);
             border-radius: 16px;
             padding: 16px;
             text-align: center;
-            margin-top: 15px;
+            margin-bottom: 20px;
         }
 
         .ref-input {
@@ -330,7 +254,40 @@
             text-align: center;
         }
 
-        /* Bottom Nav */
+        .ref-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ref-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ref-user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ref-user-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(47, 129, 247, 0.2);
+            color: var(--accent-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -357,18 +314,13 @@
             text-decoration: none;
         }
 
-        .nav-item i {
-            font-size: 18px;
-        }
-
-        .nav-item.active {
-            color: var(--accent-hover);
-        }
+        .nav-item i { font-size: 18px; }
+        .nav-item.active { color: var(--accent-hover); }
     </style>
 </head>
 <body>
 
-    <!-- Top Profile Header -->
+    <!-- Header Section -->
     <div class="top-bar">
         <div class="user-profile">
             <div class="avatar" id="userAvatar">U</div>
@@ -380,10 +332,10 @@
         <span style="font-size: 12px; background: rgba(35, 134, 54, 0.2); color: var(--green-color); padding: 4px 10px; border-radius: 20px; font-weight: 700;">Active</span>
     </div>
 
-    <!-- TAB 1: HOME -->
+    <!-- TAB 1: HOME (Profile, Balance & Wallet Only) -->
     <div id="tab-home" class="tab-content active">
         <div class="balance-card">
-            <div class="balance-title">Total Balance</div>
+            <div class="balance-title">Wallet Balance</div>
             <div class="balance-amount">$<span id="userBalance">0.0000</span></div>
             <div class="balance-actions">
                 <button class="btn btn-primary" onclick="depositAlert()"><i class="fa-solid fa-wallet"></i> Deposit</button>
@@ -391,27 +343,32 @@
             </div>
         </div>
 
-        <div class="section-header">
-            <span>Watch & Earn</span>
+        <div class="notice-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Minimum Withdrawal Amount: <b>$0.50 USD</b> (TON / USDT)</span>
         </div>
-        <div class="task-list">
+    </div>
+
+    <!-- TAB 2: EARN (Watch Ads & Social Tasks) -->
+    <div id="tab-earn" class="tab-content">
+        <div class="section-header">
+            <span>Watch Ads & Earn</span>
+        </div>
+        <div class="task-list" style="margin-bottom: 24px;">
             <div class="task-card">
                 <div class="task-info">
                     <div class="task-icon icon-ads"><i class="fa-solid fa-play"></i></div>
                     <div class="task-details">
-                        <h5>Watch Adsgram Ad</h5>
-                        <p>+$0.0010 USD</p>
+                        <h5>Watch Adsgram Video Ad</h5>
+                        <p>+$0.0010 USD per ad</p>
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="showRewardAd()">Watch</button>
+                <button class="btn btn-primary" onclick="showRewardAd()">Watch Ad</button>
             </div>
         </div>
-    </div>
 
-    <!-- TAB 2: EXTRA EARN -->
-    <div id="tab-earn" class="tab-content">
         <div class="section-header">
-            <span>Social Tasks</span>
+            <span>Social Extra Earn</span>
         </div>
         <div class="task-list">
             <div class="task-card">
@@ -451,17 +408,17 @@
     <div id="tab-promote" class="tab-content">
         <div class="notice-box">
             <i class="fa-solid fa-circle-info"></i>
-            <span>Minimum deposit required to create campaigns: <b>$0.05 USD</b></span>
+            <span>Minimum deposit required for promotion: <b>$0.05 USD</b></span>
         </div>
         <div class="section-header">
-            <span>Promote Your Channel</span>
+            <span>Promote Youtube / Telegram / TikTok</span>
         </div>
         <div class="promote-grid">
             <div class="promote-card">
                 <h3>100</h3>
                 <p>Subscribers</p>
-                <div class="price">$0.03</div>
-                <button class="btn btn-success btn-full" onclick="buyCampaign(0.03)">Order Now</button>
+                <div class="price">$0.04</div>
+                <button class="btn btn-success btn-full" onclick="buyCampaign(0.04)">Order Now</button>
             </div>
             <div class="promote-card">
                 <h3>200</h3>
@@ -471,14 +428,14 @@
             </div>
         </div>
         <div class="promote-card" style="margin-bottom: 20px;">
-            <h3>400</h3>
+            <h3>1000</h3>
             <p>Subscribers / Followers</p>
-            <div class="price">$1.00</div>
-            <button class="btn btn-success btn-full" onclick="buyCampaign(1.00)">Order Now</button>
+            <div class="price">$1.01</div>
+            <button class="btn btn-success btn-full" onclick="buyCampaign(1.01)">Order Now</button>
         </div>
     </div>
 
-    <!-- TAB 4: REFERRAL -->
+    <!-- TAB 4: REFERRAL (Link & List of Referred Users) -->
     <div id="tab-ref" class="tab-content">
         <div class="section-header">
             <span>Referral Program</span>
@@ -488,7 +445,33 @@
             <h4>Invite Friends & Earn</h4>
             <p style="font-size: 13px; color: var(--text-sub); margin-top: 6px;">Get 10% commission on every task completed by your referred friends.</p>
             <input type="text" id="refLink" class="ref-input" value="https://t.me/DynamicsAdsBot?start=8014446179" readonly>
-            <button class="btn btn-primary btn-full" onclick="copyRefLink()"><i class="fa-solid fa-copy"></i> Copy Link</button>
+            <button class="btn btn-primary btn-full" onclick="copyRefLink()"><i class="fa-solid fa-copy"></i> Copy Referral Link</button>
+        </div>
+
+        <div class="section-header">
+            <span>Your Referred Users (<span id="refCount">2</span>)</span>
+        </div>
+        <div class="ref-list" id="refList">
+            <div class="ref-item">
+                <div class="ref-user-info">
+                    <div class="ref-user-icon"><i class="fa-solid fa-user"></i></div>
+                    <div>
+                        <h5 style="font-size: 13px; font-weight: 700;">@rahim_user</h5>
+                        <p style="font-size: 11px; color: var(--text-sub);">Joined: 10 Sep 2026</p>
+                    </div>
+                </div>
+                <span style="font-size: 12px; color: var(--green-color); font-weight: 700;">+$0.0050</span>
+            </div>
+            <div class="ref-item">
+                <div class="ref-user-info">
+                    <div class="ref-user-icon"><i class="fa-solid fa-user"></i></div>
+                    <div>
+                        <h5 style="font-size: 13px; font-weight: 700;">@karim_adler</h5>
+                        <p style="font-size: 11px; color: var(--text-sub);">Joined: 11 Sep 2026</p>
+                    </div>
+                </div>
+                <span style="font-size: 12px; color: var(--green-color); font-weight: 700;">+$0.0020</span>
+            </div>
         </div>
     </div>
 
@@ -513,7 +496,6 @@
     </div>
 
     <script>
-        // Telegram WebApp Initialization
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
@@ -527,31 +509,39 @@
             }
         }
 
-        // Balance State
         let balance = 0.0000;
 
         function updateBalanceDisplay() {
             document.getElementById('userBalance').innerText = balance.toFixed(4);
         }
 
-        // Adsgram AdController Setup
-        const AdController = window.Adsgram?.init({ blockId: "int-47493" });
+        let AdController = null;
+
+        window.addEventListener('load', () => {
+            if (window.Adsgram) {
+                AdController = window.Adsgram.init({ blockId: "47493" });
+            }
+        });
 
         function showRewardAd() {
+            if (!AdController && window.Adsgram) {
+                AdController = window.Adsgram.init({ blockId: "47493" });
+            }
+
             if (!AdController) {
-                alert("Adsgram SDK is loading or unavailable.");
+                alert("Adsgram SDK is loading. Please wait 2 seconds and try again.");
                 return;
             }
+
             AdController.show().then((result) => {
                 balance += 0.0010;
                 updateBalanceDisplay();
                 alert("Success! You earned $0.0010 USD.");
             }).catch((result) => {
-                alert("Ad playback skipped or failed to load.");
+                alert("No ad available at the moment or ad was closed.");
             });
         }
 
-        // Social Task Handler
         function completeTask(btnElement, targetUrl) {
             window.open(targetUrl, '_blank');
             btnElement.innerText = "Checking...";
@@ -564,7 +554,6 @@
             }, 4000);
         }
 
-        // Tab Navigation Switcher
         function switchTab(tabName, navElement) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -572,15 +561,13 @@
             navElement.classList.add('active');
         }
 
-        // Deposit Info
         function depositAlert() {
             alert("To deposit, send TON/USDT to our official wallet address. Minimum deposit: $0.05 USD.");
         }
 
-        // Withdraw Process
         function openWithdraw() {
-            if (balance < 0.20) {
-                alert("Minimum withdrawal threshold is $0.20 USD (TON/USDT network).");
+            if (balance < 0.50) {
+                alert("Minimum withdrawal threshold is $0.50 USD (TON/USDT network).");
             } else {
                 const wallet = prompt("Enter your TON (USDT) wallet address:");
                 if (wallet) {
@@ -591,7 +578,6 @@
             }
         }
 
-        // Campaign Purchase System
         function buyCampaign(cost) {
             if (balance < cost) {
                 alert(`Insufficient funds! Please deposit at least $${(cost - balance).toFixed(2)} USD to order this campaign.`);
@@ -605,7 +591,6 @@
             }
         }
 
-        // Copy Referral Link
         function copyRefLink() {
             const copyText = document.getElementById("refLink");
             copyText.select();
