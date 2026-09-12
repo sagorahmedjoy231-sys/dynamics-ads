@@ -211,7 +211,7 @@
             box-shadow: 0 4px 20px rgba(121, 40, 202, 0.4);
         }
 
-        .input-field {
+        .input-field, .select-field {
             width: 100%;
             padding: 12px 16px;
             background: rgba(5, 8, 18, 0.8);
@@ -223,7 +223,8 @@
             margin-bottom: 10px;
         }
 
-        .input-field:focus { border-color: var(--accent-cyan); }
+        .input-field:focus, .select-field:focus { border-color: var(--accent-cyan); }
+        .select-field option { background: #070a12; color: white; }
 
         /* Circular Lucky Wheel Banner */
         .lucky-wheel-box {
@@ -512,7 +513,7 @@
         <div id="panel-promo" class="tab-panel">
             <div class="glass-card">
                 <div class="card-header-title">Promote Your Links & Channels</div>
-                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">Create custom ad campaigns inside our network across platforms.</p>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">Create custom subscriber ad campaigns inside our network.</p>
                 
                 <!-- Social Media Channel Logos Bar -->
                 <div class="social-logos-bar">
@@ -527,9 +528,22 @@
                     </div>
                 </div>
 
-                <input type="text" class="input-field" placeholder="Campaign Target URL">
-                <input type="number" class="input-field" placeholder="Total Impressions Budget">
-                <button class="action-btn action-btn-green" onclick="alert('Ad Campaign Submitted for Review!')">Launch Ad Campaign</button>
+                <input type="text" id="promo-url" class="input-field" placeholder="Campaign Target URL">
+                
+                <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Select Subscriber Package:</p>
+                <select id="sub-package-select" class="select-field" onchange="updateCampaignCost()">
+                    <option value="100">100 Subscribers ($0.05)</option>
+                    <option value="200">200 Subscribers ($0.010)</option>
+                    <option value="400">400 Subscribers ($0.30)</option>
+                    <option value="1000">1000 Subscribers ($1.00)</option>
+                    <option value="2000">2000 Subscribers ($1.09)</option>
+                </select>
+
+                <div style="font-size: 12px; color: var(--accent-green); font-weight: 700; margin-bottom: 12px;" id="campaign-cost-display">
+                    Total Cost: $0.05 (Subscribers get $0.002 each)
+                </div>
+
+                <button class="action-btn action-btn-green" onclick="launchSubCampaign()">Launch Subscriber Campaign</button>
             </div>
         </div>
 
@@ -681,6 +695,15 @@
         5: { name: "Grand Master", rate: 0.0005, avatar: "https://cdn-icons-png.flaticon.com/512/610/610120.png" }
     };
 
+    // Subscriber Pricing Mapping
+    const SUB_PRICING = {
+        "100": { cost: 0.05, label: "$0.05" },
+        "200": { cost: 0.010, label: "$0.010" },
+        "400": { cost: 0.30, label: "$0.30" },
+        "1000": { cost: 1.00, label: "$1.00" },
+        "2000": { cost: 1.09, label: "$1.09" }
+    };
+
     window.addEventListener('DOMContentLoaded', () => {
         initTelegramUser();
         initAdsgram();
@@ -742,6 +765,34 @@
         renderReferralsList();
     }
 
+    function updateCampaignCost() {
+        const select = document.getElementById('sub-package-select');
+        const qty = select.value;
+        const info = SUB_PRICING[qty];
+        document.getElementById('campaign-cost-display').innerText = `Total Cost: ${info.label} (Subscribers get $0.002 each)`;
+    }
+
+    function launchSubCampaign() {
+        const url = document.getElementById('promo-url').value.trim();
+        const qty = document.getElementById('sub-package-select').value;
+        const info = SUB_PRICING[qty];
+
+        if(!url) {
+            alert("Please enter a campaign target URL!");
+            return;
+        }
+
+        if(balance < info.cost) {
+            alert("Insufficient balance to launch this subscriber campaign!");
+            return;
+        }
+
+        balance -= info.cost;
+        updateTierAndUI();
+        alert(`Subscriber Campaign Launched Successfully!\nTarget: ${qty} Subscribers\nCost: ${info.label}`);
+        document.getElementById('promo-url').value = "";
+    }
+
     /* Deposit Address Revealing via Logo Click */
     function revealDepositAddress(netName, addressVal) {
         const box = document.getElementById('deposit-reveal-box');
@@ -790,7 +841,6 @@
 
     function applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride) {
         const lvl = getCurrentLevel();
-        const baseRate = TIER_MAP[lvl].rate * 100; 
         const earned = rewardOverride || (lvl === 1 ? 0.02 : (lvl === 2 ? 0.03 : (lvl === 3 ? 0.04 : 0.05)));
 
         balance += earned;
