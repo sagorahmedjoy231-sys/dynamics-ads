@@ -685,7 +685,7 @@
     let AdController = null;
     let selectedWithdrawGateway = 'binance';
 
-    // Dynamic Tier Configuration & Tiers: Pro, Legend, Ultra Legend, Grand Master
+    // Dynamic Tier Configuration
     const TIER_MAP = {
         1: { name: "Pro", rate: 0.0003, avatar: "https://cdn-icons-png.flaticon.com/512/4140/4140048.png" },
         2: { name: "Legend", rate: 0.0003, avatar: "https://cdn-icons-png.flaticon.com/512/2583/2583344.png" },
@@ -694,7 +694,7 @@
         5: { name: "Grand Master", rate: 0.0005, avatar: "https://cdn-icons-png.flaticon.com/512/610/610120.png" }
     };
 
-    // Updated Subscriber Pricing Mapping
+    // Updated Subscriber Pricing Mapping (200 removed, 400 changed to 300)
     const SUB_PRICING = {
         "100": { cost: 0.005, label: "$0.5 sent" },
         "300": { cost: 0.30, label: "$0.30" },
@@ -723,9 +723,10 @@
     function initAdsgram() {
         try {
             if (window.Adsgram) {
-                AdController = window.Adsgram.init({ blockId: "YOUR_ADSGRAM_BLOCK_ID" });
+                // Configured with your actual Block ID: int-47463
+                AdController = window.Adsgram.init({ blockId: "int-47463" });
             }
-        } catch(e) { console.warn("Adsgram fallback active"); }
+        } catch(e) { console.warn("Adsgram initialization error:", e); }
     }
 
     function switchTab(tabId, el) {
@@ -791,7 +792,6 @@
         document.getElementById('promo-url').value = "";
     }
 
-    /* Deposit Address Revealing via Logo Click */
     function revealDepositAddress(netName, addressVal) {
         const box = document.getElementById('deposit-reveal-box');
         box.style.display = "block";
@@ -806,7 +806,6 @@
         alert("Deposit address copied to clipboard!");
     }
 
-    /* Withdraw Gateway Selection */
     function selectWithdrawMethod(method) {
         selectedWithdrawGateway = method;
         ['binance', 'ton', 'usdt'].forEach(m => {
@@ -815,7 +814,6 @@
         document.getElementById(`w-method-${method}`).classList.add('active');
     }
 
-    /* Ad Watch Execution */
     function executeAdWatch(counterKey, timerBoxId, resetLimit, rewardOverride) {
         if (isCooldownActive) {
             alert("Please wait 10 seconds before watching the next ad!");
@@ -831,7 +829,12 @@
         if (AdController) {
             AdController.show().then(() => {
                 applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride);
-            }).catch(() => { applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride); });
+            }).catch((err) => { 
+                console.warn("Ad display error or skipped:", err);
+                // If you are testing in a regular browser where Adsgram SDK fails, 
+                // you can keep this fallback enabled, or remove it so it strictly requires the ad to complete.
+                applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride); 
+            });
         } else {
             applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride);
         }
@@ -867,7 +870,6 @@
     function triggerDailyAd() { executeAdWatch('daily', 'daily-timer-box', 10, 0.0003); }
     function triggerExtraAd() { executeAdWatch('extra', 'extra-timer-box', 30, 0.0003); }
 
-    /* Referral Simulation & Live Activity List */
     function simulateRefJoin() {
         const mockIds = ["@User_Alpha", "@CryptoSagor", "@TelegramKing", "@BotMaster99", "@EarnPro_2026"];
         const randomId = mockIds[Math.floor(Math.random() * mockIds.length)] + Math.floor(Math.random() * 1000);
@@ -880,7 +882,7 @@
             activeWorking: Math.random() > 0.2
         });
 
-        balance += 0.0010; // Signup Commission
+        balance += 0.0010;
         updateTierAndUI();
         alert(`New referral joined: ${randomId}!`);
     }
@@ -893,7 +895,7 @@
         }
 
         let html = '';
-        referredUsers.forEach((ref, idx) => {
+        referredUsers.forEach((ref) => {
             const dotClass = ref.status === 'Online' ? 'online' : 'offline';
             html += `
                 <div class="ref-user-card">
