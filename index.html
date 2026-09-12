@@ -1,1105 +1,702 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexusPay Elite - Global Crypto Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-deep: #050711;
-            --bg-card: rgba(13, 19, 38, 0.88);
-            --accent-primary: #00f0ff;
-            --accent-secondary: #7000ff;
-            --accent-gold: #ffd700;
-            --accent-success: #00ff88;
-            --accent-warning: #ffb800;
-            --accent-danger: #ff3366;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --card-radius: 24px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-deep);
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(112, 0, 255, 0.2) 0%, transparent 45%),
-                radial-gradient(circle at 90% 90%, rgba(0, 240, 255, 0.15) 0%, transparent 45%),
-                radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 60%);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 16px;
-            padding-bottom: 96px;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .app-view {
-            display: none;
-            flex-direction: column;
-            gap: 16px;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        .app-view.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .glass-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--card-radius);
-            padding: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .profile-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .avatar-wrapper {
-            position: relative;
-            width: 74px;
-            height: 74px;
-        }
-
-        .avatar-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--accent-primary);
-            transition: all 0.4s ease;
-        }
-
-        .level-1 .avatar-img { border-color: #00f0ff; box-shadow: 0 0 12px rgba(0, 240, 255, 0.3); }
-        .level-2 .avatar-img { border-color: #3b82f6; box-shadow: 0 0 18px rgba(59, 130, 246, 0.5); }
-        .level-3 .avatar-img { border-color: #8b5cf6; box-shadow: 0 0 24px rgba(139, 92, 246, 0.7); }
-        .level-4 .avatar-img { border-color: #ec4899; box-shadow: 0 0 30px rgba(236, 72, 153, 0.8); }
-        .level-5 .avatar-img { border-color: #ffd700; box-shadow: 0 0 40px rgba(255, 215, 0, 1); animation: eliteGlow 1.5s infinite alternate; }
-
-        @keyframes eliteGlow {
-            0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.4); }
-            100% { box-shadow: 0 0 45px rgba(255, 215, 0, 1), inset 0 0 20px rgba(255, 215, 0, 0.8); }
-        }
-
-        .elite-crown {
-            position: absolute;
-            top: -14px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 16px;
-            color: var(--accent-gold);
-            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.9));
-            display: none;
-            z-index: 10;
-            animation: floatCrown 2s ease-in-out infinite;
-        }
-
-        @keyframes floatCrown {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-4px); }
-        }
-
-        .level-5 .elite-crown { display: block; }
-
-        .avatar-upload-label {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background: var(--accent-primary);
-            color: #050711;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            transition: transform 0.2s;
-            z-index: 8;
-        }
-
-        .avatar-upload-label:hover { transform: scale(1.2); }
-        #avatar-input { display: none; }
-
-        .user-details h2 {
-            font-size: 17px;
-            font-weight: 800;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-
-        .level-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: linear-gradient(135deg, rgba(112, 0, 255, 0.35), rgba(0, 240, 255, 0.2));
-            border: 1px solid rgba(0, 240, 255, 0.4);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--accent-primary);
-            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.15);
-        }
-
-        .wallet-card {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(15, 23, 42, 0.9));
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: var(--card-radius);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .wallet-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .wallet-info .label {
-            font-size: 10px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
-        .wallet-info .amount {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--accent-success);
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
-        }
-
-        .wallet-limits {
-            display: flex;
-            justify-content: space-between;
-            background: rgba(5, 7, 17, 0.6);
-            padding: 10px 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-
-        .wallet-limits span b { color: #fff; }
-
-        .wallet-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-action {
-            flex: 1;
-            padding: 12px;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-
-        .btn-deposit {
-            background: linear-gradient(135deg, var(--accent-success), #00b359);
-            color: #050711;
-            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
-        }
-
-        .btn-withdraw {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .btn-action:hover { transform: translateY(-2px); opacity: 0.95; }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .section-header h3 {
-            font-size: 15px;
-            font-weight: 700;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section-header h3 i { color: var(--accent-primary); }
-
-        .boost-banner {
-            background: linear-gradient(135deg, rgba(112, 0, 255, 0.25), rgba(0, 240, 255, 0.12));
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 20px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .boost-info h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 3px; }
-        .boost-info p { font-size: 10px; color: var(--text-muted); }
-
-        .boost-multiplier {
-            background: var(--accent-primary);
-            color: #050711;
-            font-weight: 800;
-            font-size: 14px;
-            padding: 8px 14px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-        }
-
-        .tasks-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .task-card {
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 14px 10px;
-            text-align: center;
-            transition: transform 0.2s;
-        }
-
-        .task-card:hover { transform: translateY(-3px); border-color: var(--accent-primary); }
-
-        .task-card .count {
-            font-size: 17px;
-            font-weight: 800;
-            color: var(--accent-primary);
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .task-card .label {
-            font-size: 9px;
-            color: var(--text-muted);
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .btn-premium {
-            background: linear-gradient(135deg, var(--accent-primary), #0088ff);
-            color: #050711;
-            font-weight: 800;
-            border: none;
-            border-radius: 14px;
-            padding: 13px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 6px 20px rgba(0, 240, 255, 0.3);
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-premium:hover { opacity: 0.95; transform: translateY(-2px); }
-
-        .commission-rules {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
-        .rule-badge {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 10px 6px;
-            text-align: center;
-        }
-
-        .rule-badge .pct { font-size: 13px; font-weight: 800; color: var(--accent-success); display: block; margin-bottom: 2px; }
-        .rule-badge .lbl { font-size: 9px; color: var(--text-muted); font-weight: 600; }
-
-        .input-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        input[type="text"], input[type="number"], select {
-            flex: 1;
-            background: rgba(5, 7, 17, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
-            padding: 11px 14px;
-            color: #fff;
-            font-size: 12px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        input:focus, select:focus { border-color: var(--accent-primary); }
-
-        .referral-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-
-        .referral-item {
-            background: rgba(10, 15, 30, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
-            padding: 10px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .ref-user-info { display: flex; align-items: center; gap: 10px; }
-        .ref-avatar {
-            width: 36px; height: 36px; border-radius: 50%; background: #1e293b;
-            display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .ref-details h5 { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 2px; }
-
-        .status-pill {
-            font-size: 9px; font-weight: 700; padding: 4px 8px; border-radius: 20px;
-            display: inline-flex; align-items: center; gap: 4px;
-        }
-        .status-online { background: rgba(0, 255, 136, 0.15); color: var(--accent-success); border: 1px solid rgba(0, 255, 136, 0.3); }
-        .status-offline { background: rgba(148, 163, 184, 0.1); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.2); }
-        .status-working { background: rgba(0, 240, 255, 0.15); color: var(--accent-primary); border: 1px solid rgba(0, 240, 255, 0.3); }
-
-        .payment-methods-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .pay-method-card {
-            background: rgba(15, 23, 42, 0.8);
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .pay-method-card.selected {
-            border-color: var(--accent-success);
-            background: rgba(0, 255, 136, 0.08);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-        }
-
-        .pay-logo {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            object-fit: contain;
-            background: #fff;
-            padding: 4px;
-        }
-
-        .pay-info h5 { font-size: 12px; font-weight: 700; color: #fff; }
-        .pay-info span { font-size: 9px; color: var(--text-muted); }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 32px);
-            max-width: 448px;
-            background: rgba(10, 15, 30, 0.94);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
-            padding: 10px 14px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 1000;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-        }
-
-        .nav-item {
-            background: transparent;
-            border: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 9px;
-            font-weight: 600;
-        }
-
-        .nav-item i {
-            font-size: 17px;
-            transition: transform 0.3s;
-        }
-
-        .nav-item.active {
-            color: var(--accent-primary);
-        }
-
-        .nav-item.active i {
-            transform: scale(1.15);
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
-        }
-
-        .demo-panel {
-            background: rgba(5, 7, 17, 0.7);
-            border-radius: 14px;
-            padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            margin-top: 10px;
-        }
-        .demo-panel p { font-size: 10px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
-        .demo-controls { display: flex; gap: 6px; flex-wrap: wrap; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050711">
+  <title>NexusPay Elite — Crypto Earning Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    :root{
+      --bg:#050711;
+      --panel:#0c1224;
+      --panel2:#0f172a;
+      --cyan:#00eaff;
+      --blue:#2f80ff;
+      --purple:#7c3cff;
+      --green:#00ff91;
+      --gold:#ffd34e;
+      --red:#ff477e;
+      --text:#f7fbff;
+      --muted:#91a0b8;
+      --line:rgba(255,255,255,.09);
+      --radius:24px;
+      --nav-h:78px;
+      --safe-bottom:env(safe-area-inset-bottom,0px);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 8% 5%,rgba(124,60,255,.28),transparent 34%),
+        radial-gradient(circle at 94% 28%,rgba(0,234,255,.18),transparent 31%),
+        radial-gradient(circle at 50% 100%,rgba(47,128,255,.18),transparent 40%),
+        var(--bg);
+      font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+      overflow-x:hidden;
+    }
+
+    button,input{font:inherit}
+    button{border:0}
+    .app{
+      width:min(100%,520px);
+      margin:auto;
+      padding:16px 16px calc(var(--nav-h) + var(--safe-bottom) + 34px);
+    }
+
+    .view{display:none;gap:16px;animation:fade .24s ease}
+    .view.active{display:flex;flex-direction:column}
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+    .card{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:linear-gradient(145deg,rgba(16,25,50,.92),rgba(7,12,25,.94));
+      box-shadow:0 20px 55px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.06);
+      padding:20px;
+    }
+    .card::before{
+      content:"";
+      position:absolute;inset:-1px;
+      background:linear-gradient(115deg,rgba(0,234,255,.08),transparent 35%,rgba(124,60,255,.08));
+      pointer-events:none;
+    }
+    .card>*{position:relative;z-index:1}
+
+    .profile-card{padding:18px}
+    .profile-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .profile-left{display:flex;align-items:center;gap:14px;min-width:0}
+
+    .avatar-wrap{position:relative;width:72px;height:72px;flex:0 0 72px}
+    .avatar{
+      width:100%;height:100%;object-fit:cover;border-radius:50%;
+      border:3px solid var(--cyan);
+      box-shadow:0 0 24px rgba(0,234,255,.45);
+      background:#18223a;
+    }
+    .camera{
+      position:absolute;right:-1px;bottom:-1px;width:27px;height:27px;border-radius:50%;
+      display:grid;place-items:center;background:var(--cyan);color:#031018;
+      box-shadow:0 5px 16px rgba(0,234,255,.35);cursor:pointer
+    }
+    #avatarInput{display:none}
+    .crown{
+      position:absolute;left:50%;top:-16px;transform:translateX(-50%);
+      color:var(--gold);filter:drop-shadow(0 0 8px rgba(255,211,78,.8));
+      animation:float 1.8s ease-in-out infinite;display:none
+    }
+    .level-5 .crown{display:block}
+    @keyframes float{50%{transform:translate(-50%,-5px)}}
+
+    .identity{min-width:0}
+    .identity h1{font-size:18px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .handle{font-size:11px;color:var(--muted);margin-top:3px}
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;margin-top:7px;
+      padding:5px 10px;border-radius:999px;font-size:10px;font-weight:800;
+      color:var(--cyan);background:rgba(0,234,255,.08);border:1px solid rgba(0,234,255,.25)
+    }
+
+    .icon-btn{
+      width:42px;height:42px;border-radius:13px;cursor:pointer;color:var(--text);
+      background:rgba(255,255,255,.06);border:1px solid var(--line)
+    }
+
+    .balance{
+      border-color:rgba(0,255,145,.22);
+      background:
+        radial-gradient(circle at 100% 0,rgba(0,255,145,.13),transparent 38%),
+        linear-gradient(145deg,rgba(0,255,145,.08),rgba(10,18,36,.96));
+    }
+    .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);font-weight:800}
+    .amount{font-size:34px;line-height:1.15;font-weight:800;margin-top:5px;color:var(--green);text-shadow:0 0 26px rgba(0,255,145,.22)}
+    .amount small{font-size:13px;color:#d8fff0}
+    .balance-meta{display:flex;justify-content:space-between;gap:10px;margin-top:15px;padding:10px 12px;border-radius:13px;background:rgba(0,0,0,.24);font-size:10px;color:var(--muted)}
+    .balance-meta b{color:#fff}
+
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    .btn{
+      min-height:46px;padding:12px 14px;border-radius:14px;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:12px;
+      transition:.2s transform,.2s opacity
+    }
+    .btn:active{transform:scale(.98)}
+    .primary{color:#041018;background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:0 8px 24px rgba(0,180,255,.24)}
+    .success{color:#04110b;background:linear-gradient(135deg,var(--green),#00b96c)}
+    .ghost{color:#fff;background:rgba(255,255,255,.07);border:1px solid var(--line)}
+    .danger{color:#fff;background:rgba(255,71,126,.12);border:1px solid rgba(255,71,126,.28)}
+
+    .section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+    .section-head h2{font-size:16px;font-weight:800;display:flex;align-items:center;gap:9px}
+    .section-head h2 i{color:var(--cyan)}
+    .status{font-size:10px;font-weight:800;color:var(--green)}
+
+    .boost{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:16px;border-radius:19px;
+      border:1px solid rgba(0,234,255,.25);
+      background:linear-gradient(135deg,rgba(124,60,255,.18),rgba(0,234,255,.08));
+    }
+    .boost h3{font-size:14px}.boost p{font-size:10px;color:var(--muted);margin-top:4px}
+    .mult{padding:9px 13px;border-radius:12px;background:var(--cyan);color:#031018;font-size:15px;font-weight:800;box-shadow:0 0 22px rgba(0,234,255,.3)}
+
+    .tasks{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+    .task{
+      min-width:0;padding:14px 8px;text-align:center;border-radius:16px;
+      background:rgba(255,255,255,.035);border:1px solid var(--line)
+    }
+    .task .num{display:block;font-size:23px;font-weight:800;color:var(--cyan)}
+    .task:nth-child(2) .num{color:var(--gold)}
+    .task:nth-child(3) .num{color:#b58cff}
+    .task span:last-child{display:block;font-size:9px;color:var(--muted);font-weight:800;text-transform:uppercase;margin-top:4px}
+
+    .progress{height:9px;border-radius:99px;background:#080d1a;overflow:hidden;margin:14px 0 6px}
+    .progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--blue));box-shadow:0 0 16px rgba(0,234,255,.6);transition:.35s}
+    .progress-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+
+    .notice{
+      padding:12px 14px;border-radius:14px;font-size:10px;line-height:1.5;
+      color:#b9c7dc;background:rgba(255,255,255,.035);border:1px solid var(--line)
+    }
+
+    .method-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .method{
+      display:flex;align-items:center;gap:10px;padding:13px;border-radius:15px;cursor:pointer;
+      background:rgba(255,255,255,.035);border:1px solid var(--line)
+    }
+    .method.selected{border-color:var(--green);box-shadow:0 0 18px rgba(0,255,145,.12);background:rgba(0,255,145,.06)}
+    .method-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#fff;color:#111;font-size:16px}
+    .method h4{font-size:11px}.method p{font-size:9px;color:var(--muted);margin-top:2px}
+
+    .field{margin-top:10px}
+    .field label{display:block;font-size:10px;color:var(--muted);font-weight:700;margin:0 0 6px 2px}
+    .field input{
+      width:100%;height:46px;border-radius:13px;border:1px solid var(--line);
+      background:#060a14;color:#fff;outline:none;padding:0 14px;font-size:12px
+    }
+    .field input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,234,255,.08)}
+    .form-actions{margin-top:12px}
+
+    .ref-link{display:grid;grid-template-columns:1fr auto;gap:8px}
+    .ref-list{display:flex;flex-direction:column;gap:8px;margin-top:12px;max-height:250px;overflow:auto}
+    .friend{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+    .friend-left{display:flex;align-items:center;gap:10px;min-width:0}
+    .friend-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#24324f,#101827);font-size:11px;font-weight:800}
+    .friend-name{font-size:11px;font-weight:800}.friend-action{font-size:9px;color:var(--muted);margin-top:2px}
+    .pill{font-size:8px;padding:5px 8px;border-radius:99px;font-weight:800}
+    .online{color:var(--green);background:rgba(0,255,145,.1)}
+    .working{color:var(--cyan);background:rgba(0,234,255,.1)}
+    .offline{color:#a9b2c0;background:rgba(169,178,192,.09)}
+
+    .profile-cover{
+      height:88px;border-radius:18px;
+      background:
+        radial-gradient(circle at 20% 20%,rgba(0,234,255,.35),transparent 35%),
+        radial-gradient(circle at 80% 70%,rgba(124,60,255,.4),transparent 35%),
+        linear-gradient(135deg,#0b1830,#10102a);
+      border:1px solid var(--line);margin-bottom:40px;position:relative
+    }
+    .profile-large{
+      position:absolute;left:18px;bottom:-34px;width:70px;height:70px;border-radius:50%;
+      border:3px solid var(--cyan);background:#18223a;box-shadow:0 0 25px rgba(0,234,255,.3)
+    }
+    .profile-info{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+    .profile-info h3{font-size:17px}.profile-info p{font-size:10px;color:var(--muted);margin-top:3px}
+    .verified{font-size:9px;color:var(--green);font-weight:800}
+
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}
+    .stat{padding:12px 7px;text-align:center;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+    .stat b{display:block;font-size:16px}.stat span{font-size:8px;color:var(--muted);text-transform:uppercase}
+
+    .modal{
+      position:fixed;inset:0;z-index:2000;display:none;align-items:flex-end;justify-content:center;
+      background:rgba(0,0,0,.65);backdrop-filter:blur(8px);padding:14px
+    }
+    .modal.show{display:flex}
+    .sheet{
+      width:min(100%,520px);max-height:88vh;overflow:auto;border-radius:25px;
+      background:#0a1020;border:1px solid var(--line);box-shadow:0 -20px 70px rgba(0,0,0,.55);padding:20px
+    }
+    .sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .sheet-head h3{font-size:17px}
+    .close{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.06);color:#fff;cursor:pointer}
+
+    .bottom-nav{
+      position:fixed;z-index:1500;left:50%;bottom:calc(10px + var(--safe-bottom));transform:translateX(-50%);
+      width:min(calc(100% - 24px),488px);min-height:68px;padding:8px;
+      display:grid;grid-template-columns:repeat(4,1fr);gap:5px;
+      border-radius:21px;border:1px solid rgba(255,255,255,.11);
+      background:rgba(7,11,23,.92);backdrop-filter:blur(22px);
+      box-shadow:0 18px 50px rgba(0,0,0,.65)
+    }
+    .nav{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+      border-radius:15px;background:transparent;color:#78869d;cursor:pointer;font-size:9px;font-weight:800
+    }
+    .nav i{font-size:18px}.nav.active{color:var(--cyan);background:rgba(0,234,255,.08);text-shadow:0 0 12px rgba(0,234,255,.45)}
+    .nav.active i{transform:translateY(-1px)}
+
+    .toast{
+      position:fixed;z-index:3000;left:50%;top:18px;transform:translate(-50%,-130%);
+      width:min(calc(100% - 28px),480px);padding:13px 15px;border-radius:14px;
+      background:#10192d;border:1px solid rgba(0,234,255,.25);box-shadow:0 12px 35px rgba(0,0,0,.45);
+      font-size:11px;text-align:center;transition:.28s
+    }
+    .toast.show{transform:translate(-50%,0)}
+
+    @media (max-width:370px){
+      .app{padding-left:11px;padding-right:11px}
+      .card{padding:16px}
+      .tasks{gap:6px}.task .num{font-size:20px}
+      .identity h1{font-size:16px}.avatar-wrap{width:64px;height:64px;flex-basis:64px}
+    }
+  </style>
 </head>
+
 <body>
-<div class="app-container">
+  <main class="app">
 
-    <!-- VIEW 1: HOME VIEW -->
-    <div id="view-home" class="app-view active">
-        <div class="glass-card">
-            <div class="profile-header">
-                <div class="profile-left">
-                    <div class="avatar-wrapper level-1" id="avatar-frame-wrapper">
-                        <div class="elite-crown"><i class="fa-solid fa-crown"></i></div>
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" id="user-avatar" class="avatar-img" alt="Telegram Profile Avatar">
-                        <label for="avatar-input" class="avatar-upload-label" title="Upload Telegram Photo">
-                            <i class="fa-solid fa-camera"></i>
-                        </label>
-                        <input type="file" id="avatar-input" accept="image/*" onchange="uploadTelegramAvatar(event)">
-                    </div>
-                    <div class="user-details">
-                        <h2 id="username-display">Sagor Ahmed</h2>
-                        <div class="level-badge" id="level-badge-container">
-                            <i class="fa-solid fa-shield-halved"></i> <span id="level-text">Level 1 - Elite (0 Refs)</span>
-                        </div>
-                    </div>
-                </div>
+    <!-- HOME -->
+    <section id="home" class="view active">
+      <div class="card profile-card">
+        <div class="profile-row">
+          <div class="profile-left">
+            <div class="avatar-wrap level-1" id="avatarWrap">
+              <i class="fa-solid fa-crown crown"></i>
+              <img id="avatar" class="avatar" alt="Profile avatar"
+                   src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=180&q=85">
+              <label class="camera" for="avatarInput" title="Change profile photo"><i class="fa-solid fa-camera"></i></label>
+              <input id="avatarInput" type="file" accept="image/*">
             </div>
+            <div class="identity">
+              <h1 id="userName">Sagor Ahmed</h1>
+              <div class="handle">@sagor_official</div>
+              <div class="badge"><i class="fa-solid fa-shield-halved"></i><span id="levelText">Level 1 · 0 Refs</span></div>
+            </div>
+          </div>
+          <button class="icon-btn" onclick="openProfile()" aria-label="Profile"><i class="fa-solid fa-user-gear"></i></button>
+        </div>
+      </div>
+
+      <div class="card balance">
+        <div class="eyebrow">Main crypto balance · demo</div>
+        <div class="amount"><span id="balance">0.00</span> <small>USDT</small></div>
+        <div class="balance-meta">
+          <span>Min deposit <b>$0.90</b></span>
+          <span>Min withdrawal <b>$0.05</b></span>
+        </div>
+        <div class="actions">
+          <button class="btn success" onclick="openModal('deposit')"><i class="fa-solid fa-wallet"></i> Deposit</button>
+          <button class="btn ghost" onclick="openModal('withdraw')"><i class="fa-solid fa-arrow-up-from-bracket"></i> Withdraw</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="boost">
+          <div>
+            <h3>Video Watch Multiplier</h3>
+            <p id="multiplierText">Level 1 base earning · 1.0×</p>
+          </div>
+          <div class="mult" id="multiplier">1.0×</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-head">
+          <h2><i class="fa-solid fa-fire"></i> Daily Earning Tasks</h2>
+          <span class="status">ACTIVE</span>
         </div>
 
-        <!-- Promo Code Card (Coming Soon) -->
-        <div class="glass-card">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-ticket"></i> Promo Code</h3>
-                <span style="background: rgba(255, 184, 0, 0.15); color: var(--accent-warning); border: 1px solid rgba(255, 184, 0, 0.3); font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">Coming Soon</span>
-            </div>
-            <div class="input-row">
-                <input type="text" placeholder="Enter promo code..." disabled style="opacity: 0.6; cursor: not-allowed;">
-                <button class="btn-premium" style="width: auto; background: rgba(255,255,255,0.08); color: var(--text-muted); cursor: not-allowed;" disabled>Apply</button>
-            </div>
+        <div class="tasks">
+          <div class="task"><span class="num">100</span><span>Daily Ads</span></div>
+          <div class="task"><span class="num">20</span><span>Bonus Ads</span></div>
+          <div class="task"><span class="num">10</span><span>Extra Earning</span></div>
         </div>
 
-        <div class="wallet-card">
-            <div class="wallet-top">
-                <div class="wallet-info">
-                    <span class="label">Main Crypto Balance</span>
-                    <div class="amount"><span id="balance-val">0.00</span> USDT</div>
-                </div>
-            </div>
-            <div class="wallet-limits">
-                <span>Min Deposit: <b>$0.90</b></span>
-                <span>Min Withdraw: <b>$0.05</b></span>
-            </div>
-            <div class="wallet-actions">
-                <button class="btn-action btn-deposit" onclick="switchView('profile')"><i class="fa-solid fa-wallet"></i> Deposit</button>
-                <button class="btn-action btn-withdraw" onclick="switchView('profile')"><i class="fa-solid fa-arrow-up-from-bracket"></i> Withdraw</button>
-            </div>
+        <div class="progress"><span id="taskProgress"></span></div>
+        <div class="progress-label"><span id="taskLabel">0 / 130 completed</span><span>Daily reset</span></div>
+        <div style="height:12px"></div>
+        <button class="btn primary" style="width:100%" onclick="startTasks()">
+          <i class="fa-solid fa-play"></i> Start Daily Tasks
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="section-head">
+          <h2><i class="fa-solid fa-circle-info"></i> Dashboard Notice</h2>
+        </div>
+        <div class="notice">
+          This page is a front-end demo. Task counters and balance changes are simulated locally in the browser; no real crypto payment or payout is performed.
+        </div>
+      </div>
+    </section>
+
+    <!-- EARN -->
+    <section id="earn" class="view">
+      <div class="card">
+        <div class="section-head">
+          <h2><i class="fa-solid fa-bolt"></i> Earn Center</h2>
+          <span class="status">130 TASKS</span>
+        </div>
+        <p style="font-size:11px;color:var(--muted);line-height:1.55;margin-bottom:15px">
+          Your daily quota is split into 100 Daily Ads, 20 Bonus Ads and 10 Extra Earning tasks.
+        </p>
+        <div class="tasks">
+          <div class="task"><span class="num">100</span><span>Daily Ads</span></div>
+          <div class="task"><span class="num">20</span><span>Bonus Ads</span></div>
+          <div class="task"><span class="num">10</span><span>Extra Earning</span></div>
+        </div>
+        <div class="progress"><span id="earnProgress"></span></div>
+        <div class="progress-label"><span id="earnLabel">0 / 130 completed</span><span id="earnPercent">0%</span></div>
+        <div style="height:12px"></div>
+        <button class="btn primary" style="width:100%" onclick="startTasks()">
+          <i class="fa-solid fa-layer-group"></i> Run Available Tasks
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="section-head">
+          <h2><i class="fa-solid fa-gift"></i> Bonus Zone</h2>
+          <span style="color:var(--gold);font-size:10px;font-weight:800">20 AVAILABLE</span>
+        </div>
+        <div class="notice">Bonus tasks are separated from the 100 daily ads so the dashboard stays clear and easy to use on mobile.</div>
+        <div style="height:12px"></div>
+        <button class="btn ghost" style="width:100%" onclick="completeBonus()">
+          <i class="fa-solid fa-star"></i> Complete 1 Bonus Task
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="section-head">
+          <h2><i class="fa-solid fa-chart-line"></i> Extra Earning</h2>
+          <span style="color:#b58cff;font-size:10px;font-weight:800">10 AVAILABLE</span>
+        </div>
+        <div class="notice">Extra earning is a separate 10-task quota. Completing a task updates only this local demo.</div>
+        <div style="height:12px"></div>
+        <button class="btn ghost" style="width:100%" onclick="completeExtra()">
+          <i class="fa-solid fa-plus"></i> Complete 1 Extra Task
+        </button>
+      </div>
+    </section>
+
+    <!-- REFERRAL -->
+    <section id="referral" class="view">
+      <div class="card">
+        <div class="section-head">
+          <h2><i class="fa-solid fa-users"></i> Referral Network</h2>
+          <span id="refCount" style="font-size:10px;color:var(--cyan);font-weight:800">0 REFERRALS</span>
         </div>
 
-        <!-- Daily Spin Reward Card (Coming Soon) -->
-        <div class="glass-card">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-dharmachakra"></i> Daily Spin Reward</h3>
-                <span style="background: rgba(255, 184, 0, 0.15); color: var(--accent-warning); border: 1px solid rgba(255, 184, 0, 0.3); font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">Coming Soon</span>
-            </div>
-            <div style="text-align: center; padding: 6px 0;">
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Spin the wheel daily for mystery crypto rewards and multipliers!</p>
-                <button class="btn-premium" style="background: rgba(255,255,255,0.08); color: var(--text-muted); cursor: not-allowed;" disabled><i class="fa-solid fa-lock"></i> Spin Locked</button>
-            </div>
+        <div class="tasks">
+          <div class="task"><span class="num">1%</span><span>Invite</span></div>
+          <div class="task"><span class="num">1%</span><span>Tasks</span></div>
+          <div class="task"><span class="num">1%</span><span>Deposit</span></div>
         </div>
 
-        <div class="glass-card">
-            <div class="boost-banner">
-                <div class="boost-info">
-                    <h4>Level Multiplier Active</h4>
-                    <p id="multiplier-desc">Elite tier base earning active (1.0x)</p>
-                </div>
-                <div class="boost-multiplier" id="multiplier-badge">1.0x</div>
-            </div>
+        <div style="height:14px"></div>
+        <div class="ref-link">
+          <input id="refInput" class="field" style="margin:0" value="https://nexuspay.example/ref/sagor99" readonly>
+          <button class="btn primary" onclick="copyReferral()">Copy</button>
         </div>
+
+        <div style="margin-top:16px;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase">
+          Referred Friends
+        </div>
+        <div id="friends" class="ref-list"></div>
+
+        <div style="height:12px"></div>
+        <button class="btn ghost" style="width:100%" onclick="addFriend()">
+          <i class="fa-solid fa-user-plus"></i> Simulate Invite
+        </button>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="profile" class="view">
+      <div class="card">
+        <div class="profile-cover">
+          <img id="profileAvatar" class="profile-large"
+               src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=180&q=85" alt="Profile">
+        </div>
+        <div class="profile-info">
+          <div>
+            <h3 id="profileName">Sagor Ahmed</h3>
+            <p>Telegram ID: @sagor_official</p>
+            <div class="verified"><i class="fa-solid fa-circle-check"></i> Verified demo profile</div>
+          </div>
+          <span class="badge" id="profileLevel">Level 1</span>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><b id="statRefs">0</b><span>Referrals</span></div>
+          <div class="stat"><b id="statTasks">0</b><span>Tasks</span></div>
+          <div class="stat"><b id="statBalance">0.00</b><span>USDT</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-head"><h2><i class="fa-solid fa-sliders"></i> Profile Settings</h2></div>
+        <div class="field"><label>Display name</label><input id="nameInput" value="Sagor Ahmed" maxlength="32"></div>
+        <div class="field"><label>Telegram username</label><input id="handleInput" value="@sagor_official" maxlength="32"></div>
+        <div class="form-actions">
+          <button class="btn primary" style="width:100%" onclick="saveProfile()"><i class="fa-solid fa-check"></i> Save Profile</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-head"><h2><i class="fa-solid fa-shield-halved"></i> Account</h2></div>
+        <div class="notice">Level and earning values shown here are demo values. Real authentication, Telegram identity verification, wallet custody and payouts require a secure backend.</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3 id="modalTitle">Deposit</h3>
+        <button class="close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div id="depositForm">
+        <div class="section-head"><h2><i class="fa-solid fa-wallet"></i> Demo Deposit</h2><span style="font-size:10px;color:var(--green)">MIN $0.90</span></div>
+        <div class="method-grid">
+          <div class="method selected" onclick="selectMethod(this)"><div class="method-icon"><i class="fa-solid fa-coins"></i></div><div><h4>USDT</h4><p>Demo gateway</p></div></div>
+          <div class="method" onclick="selectMethod(this)"><div class="method-icon"><i class="fa-brands fa-bitcoin"></i></div><div><h4>BTC</h4><p>Demo gateway</p></div></div>
+          <div class="method" onclick="selectMethod(this)"><div class="method-icon"><i class="fa-solid fa-dollar-sign"></i></div><div><h4>USDC</h4><p>Demo gateway</p></div></div>
+          <div class="method" onclick="selectMethod(this)"><div class="method-icon"><i class="fa-solid fa-building-columns"></i></div><div><h4>Binance</h4><p>Demo gateway</p></div></div>
+        </div>
+        <div class="field"><label>Amount</label><input id="depositAmount" type="number" min="0.90" step="0.01" placeholder="0.90"></div>
+        <div class="form-actions"><button class="btn success" style="width:100%" onclick="demoDeposit()"><i class="fa-solid fa-plus"></i> Add Demo Balance</button></div>
+      </div>
+
+      <div id="withdrawForm" style="display:none">
+        <div class="section-head"><h2><i class="fa-solid fa-arrow-up-from-bracket"></i> Demo Withdrawal</h2><span style="font-size:10px;color:var(--gold)">MIN $0.05</span></div>
+        <div class="notice">This form only simulates a withdrawal request. It does not send cryptocurrency.</div>
+        <div class="field"><label>Amount</label><input id="withdrawAmount" type="number" min="0.05" step="0.01" placeholder="0.05"></div>
+        <div class="field"><label>Wallet address (demo only)</label><input id="withdrawAddress" type="text" placeholder="Enter a test address"></div>
+        <div class="form-actions"><button class="btn primary" style="width:100%" onclick="demoWithdraw()"><i class="fa-solid fa-paper-plane"></i> Create Demo Request</button></div>
+      </div>
     </div>
+  </div>
 
-    <!-- VIEW 2: EARN VIEW (100 Ads Only) -->
-    <div id="view-earn" class="app-view">
-        <div class="glass-card">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-bolt"></i> Earn Center & Ads</h3>
-                <span style="font-size: 10px; color: var(--accent-primary);">100 Ads Available</span>
-            </div>
-            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">Watch the daily pool of 100 ads to accumulate USDT rewards based on your level multiplier.</p>
-            
-            <div class="tasks-grid" style="margin-bottom: 14px;">
-                <div class="task-card" style="background: rgba(0,240,255,0.08); border-color: rgba(0,240,255,0.2); grid-column: span 3;">
-                    <span class="count" id="ads-count-display">100 / 100</span>
-                    <span class="label">Daily Advertisement Quota</span>
-                </div>
-            </div>
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button class="nav active" data-view="home" onclick="switchView('home',this)"><i class="fa-solid fa-house"></i><span>Home</span></button>
+    <button class="nav" data-view="earn" onclick="switchView('earn',this)"><i class="fa-solid fa-coins"></i><span>Earn</span></button>
+    <button class="nav" data-view="referral" onclick="switchView('referral',this)"><i class="fa-solid fa-user-group"></i><span>Referral</span></button>
+    <button class="nav" data-view="profile" onclick="switchView('profile',this)"><i class="fa-solid fa-user-shield"></i><span>Profile</span></button>
+  </nav>
 
-            <button class="btn-premium" onclick="watchAdTask()"><i class="fa-solid fa-play"></i> Watch Next Ad (Earn Reward)</button>
-        </div>
-    </div>
+  <div id="toast" class="toast"></div>
 
-    <!-- VIEW 3: REFERRAL VIEW -->
-    <div id="view-referral" class="app-view">
-        <div class="glass-card">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-users-viewfinder"></i> Referral Network</h3>
-                <span style="font-size: 10px; color: var(--accent-primary);" id="total-ref-count">0 Referrals</span>
-            </div>
-            
-            <div class="commission-rules">
-                <div class="rule-badge">
-                    <span class="pct">+ $0.20</span>
-                    <span class="lbl">Instant Ref Bonus</span>
-                </div>
-                <div class="rule-badge">
-                    <span class="pct">10%</span>
-                    <span class="lbl">Fan Deposit Comm.</span>
-                </div>
-                <div class="rule-badge">
-                    <span class="pct">1%</span>
-                    <span class="lbl">Fan Withdraw Comm.</span>
-                </div>
-            </div>
-
-            <div class="input-row" style="margin-bottom: 12px;">
-                <input type="text" id="ref-link-input" value="https://nexuspay.io/ref/sagor99" readonly>
-                <button class="btn-premium" style="width: auto;" onclick="copyRefLink()"><i class="fa-solid fa-copy"></i> Copy</button>
-            </div>
-
-            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Referred Fans Live Activity</div>
-            <div class="referral-list" id="referral-list-container"></div>
-
-            <div class="demo-panel">
-                <p>Simulate Fan Actions:</p>
-                <div class="demo-controls">
-                    <button class="btn-premium" style="font-size:10px; padding:8px; width:auto;" onclick="simulateAddReferral()">+ Invite Fan (+$0.20)</button>
-                    <button class="btn-premium" style="font-size:10px; padding:8px; width:auto; background:linear-gradient(135deg, #00ff88, #00b359); color:#000;" onclick="simulateFanDeposit()">Fan Deposit ($10 -> 10%)</button>
-                    <button class="btn-premium" style="font-size:10px; padding:8px; width:auto; background:linear-gradient(135deg, #ffb800, #ff8800); color:#000;" onclick="simulateFanWithdraw()">Fan Withdraw ($5 -> 1%)</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- VIEW 4: EXTERNAL PROMOTION & CAMPAIGNS -->
-    <div id="view-external" class="app-view">
-        <div class="glass-card">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-bullhorn"></i> External Promotion</h3>
-                <span style="font-size: 10px; color: var(--accent-primary);">Social Booster</span>
-            </div>
-            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Buy or complete Telegram, YouTube, and TikTok engagement campaigns. Earn by interacting with links provided by other users!</p>
-
-            <div style="margin-bottom: 12px;">
-                <label style="font-size: 10px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Select Package Size</label>
-                <select id="campaign-package-select" onchange="updateCampaignPrice()">
-                    <option value="100">100 Followers/Subscribers - $0.30</option>
-                    <option value="200">200 Followers/Subscribers - $0.60</option>
-                    <option value="300">300 Followers/Subscribers - $0.90</option>
-                    <option value="400">400 Followers/Subscribers - $0.90</option>
-                    <option value="1000">1000 Followers/Subscribers - $1.50</option>
-                </select>
-            </div>
-
-            <div class="input-row" style="margin-bottom: 10px;">
-                <input type="text" id="campaign-link-input" placeholder="Paste YouTube/Telegram/TikTok link here">
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 11px;">
-                <span style="color: var(--text-muted);">Campaign Cost:</span>
-                <span style="font-weight: 800; color: var(--accent-success);" id="campaign-cost-display">$0.30 USDT</span>
-            </div>
-            <button class="btn-premium" onclick="createCampaign()">Launch Campaign</button>
-        </div>
-
-        <div class="glass-card">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-list-check"></i> Available Social Tasks</h3>
-                <span style="font-size: 9px; color: var(--accent-warning);">Earn $0.30 per action</span>
-            </div>
-            <div class="referral-list">
-                <div class="referral-item">
-                    <div class="ref-user-info">
-                        <div class="ref-avatar" style="background:#ff0000; color:#fff;"><i class="fa-brands fa-youtube"></i></div>
-                        <div class="ref-details">
-                            <h5>YouTube Channel Sub</h5>
-                            <span style="font-size:9px; color:var(--text-muted);">Reward: $0.30 USDT</span>
-                        </div>
-                    </div>
-                    <button class="btn-premium" style="width: auto; padding: 6px 12px; font-size: 10px;" onclick="completeSocialTask(0.30, 'https://youtube.com')">Visit & Earn</button>
-                </div>
-                <div class="referral-item">
-                    <div class="ref-user-info">
-                        <div class="ref-avatar" style="background:#0088cc; color:#fff;"><i class="fa-brands fa-telegram"></i></div>
-                        <div class="ref-details">
-                            <h5>Telegram Channel Join</h5>
-                            <span style="font-size:9px; color:var(--text-muted);">Reward: $0.30 USDT</span>
-                        </div>
-                    </div>
-                    <button class="btn-premium" style="width: auto; padding: 6px 12px; font-size: 10px;" onclick="completeSocialTask(0.30, 'https://t.me')">Visit & Earn</button>
-                </div>
-                <div class="referral-item">
-                    <div class="ref-user-info">
-                        <div class="ref-avatar" style="background:#fe2c55; color:#fff;"><i class="fa-brands fa-tiktok"></i></div>
-                        <div class="ref-details">
-                            <h5>TikTok Profile Follow</h5>
-                            <span style="font-size:9px; color:var(--text-muted);">Reward: $0.30 USDT</span>
-                        </div>
-                    </div>
-                    <button class="btn-premium" style="width: auto; padding: 6px 12px; font-size: 10px;" onclick="completeSocialTask(0.30, 'https://tiktok.com')">Visit & Earn</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- VIEW 5: PROFILE, WALLET BINDING & DEPOSIT/WITHDRAW -->
-    <div id="view-profile" class="app-view">
-        <div class="glass-card">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-user-gear"></i> Elite User Profile</h3>
-                <span style="font-size: 10px; color: var(--accent-gold); font-weight: 700;" id="profile-level-tag">Level 1 - Elite</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" id="profile-view-avatar" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-primary);" alt="Avatar">
-                <div>
-                    <h4 style="font-size: 14px; color: #fff; font-weight: 700;">Sagor Ahmed</h4>
-                    <p style="font-size: 10px; color: var(--text-muted);">Telegram ID: @sagor_official</p>
-                    <span style="font-size: 9px; color: var(--accent-success); font-weight: 700;">Verified Account</span>
-                </div>
-            </div>
-            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Levels: Elite (Level 1) -> Pro (Level 2) -> Master (Level 3) -> Legend (Level 4) -> Ultra Master (Level 5 Max).</p>
-        </div>
-
-        <!-- Wallet Management & Binding Section -->
-        <div class="glass-card">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-link"></i> Wallet Binding</h3>
-                <span style="font-size: 10px; color: var(--accent-primary);">One-time setup</span>
-            </div>
-            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Link your Telegram Wallet or Tonkeeper once to enable instant withdrawals without re-entering addresses.</p>
-            
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;">
-                <div style="display: flex; gap: 8px;">
-                    <input type="text" id="telegram-wallet-input" placeholder="Telegram Wallet Address/ID" readonly>
-                    <button class="btn-premium" style="width: auto; background: linear-gradient(135deg, #0088cc, #005580); font-size: 11px; padding: 10px 12px;" onclick="bindWallet('telegram')"><i class="fa-brands fa-telegram"></i> Add Telegram</button>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <input type="text" id="tonkeeper-wallet-input" placeholder="Tonkeeper Wallet Address" readonly>
-                    <button class="btn-premium" style="width: auto; background: linear-gradient(135deg, #0098ea, #0066aa); font-size: 11px; padding: 10px 12px;" onclick="bindWallet('tonkeeper')"><i class="fa-solid fa-wallet"></i> Add Tonkeeper</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Deposit Section -->
-        <div class="glass-card" id="deposit-section">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-wallet"></i> Global Crypto Deposit</h3>
-                <span style="font-size: 10px; color: var(--accent-success);">Min: $0.90</span>
-            </div>
-            <div class="payment-methods-grid">
-                <div class="pay-method-card selected" onclick="selectPaymentMethod(this, 'Binance Pay')">
-                    <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.svg" class="pay-logo" alt="Binance Pay">
-                    <div class="pay-info"><h5>Binance Pay</h5><span>Min $0.90</span></div>
-                </div>
-                <div class="pay-method-card" onclick="selectPaymentMethod(this, 'USDT TRC20')">
-                    <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg" class="pay-logo" alt="USDT">
-                    <div class="pay-info"><h5>USDT TRC20</h5><span>Min $0.90</span></div>
-                </div>
-            </div>
-            <div class="input-row" style="margin-bottom: 10px;">
-                <input type="number" id="deposit-amount-input" placeholder="Enter amount (Min $0.90)" min="0.90" step="0.01">
-            </div>
-            <button class="btn-premium" style="background: linear-gradient(135deg, var(--accent-success), #00b359); color:#050711;" onclick="processDeposit()">Confirm Crypto Deposit</button>
-        </div>
-
-        <!-- Withdraw Section -->
-        <div class="glass-card" id="withdraw-section">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-arrow-up-from-bracket"></i> Fast Crypto Withdrawal</h3>
-                <span style="font-size: 10px; color: var(--accent-warning);">Min: $0.05</span>
-            </div>
-            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Withdrawals use your saved bound wallet automatically.</p>
-            
-            <div class="input-row" style="margin-bottom: 10px;">
-                <input type="number" id="withdraw-amount-input" placeholder="Enter withdrawal amount (Min $0.05)" min="0.05" step="0.01">
-            </div>
-            <button class="btn-premium" onclick="processWithdraw()">Request Instant Payout ($0.05 Min)</button>
-        </div>
-    </div>
-
-</div>
-
-<!-- BOTTOM NAVIGATION BAR -->
-<nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchView('home', this)">
-        <i class="fa-solid fa-house"></i>
-        <span>Home</span>
-    </button>
-    <button class="nav-item" onclick="switchView('earn', this)">
-        <i class="fa-solid fa-coins"></i>
-        <span>Earn</span>
-    </button>
-    <button class="nav-item" onclick="switchView('referral', this)">
-        <i class="fa-solid fa-user-group"></i>
-        <span>Referral</span>
-    </button>
-    <button class="nav-item" onclick="switchView('external', this)">
-        <i class="fa-solid fa-bullhorn"></i>
-        <span>External</span>
-    </button>
-    <button class="nav-item" onclick="switchView('profile', this)">
-        <i class="fa-solid fa-user-shield"></i>
-        <span>Profile</span>
-    </button>
-</nav>
-
-<script>
-    let state = {
-        balance: 0.00,
-        referralCount: 0,
-        currentLevel: 1,
-        multiplier: 1.0,
-        levelTitle: "Elite",
-        selectedGateway: 'Binance Pay',
-        boundWallets: {
-            telegram: null,
-            tonkeeper: null
-        },
-        adsRemaining: 100,
-        friends: [
-            { name: "Alex Morgan", status: "working", action: "Watching Videos" },
-            { name: "David Miller", status: "online", action: "Idle Online" },
-            { name: "Elena Rostova", status: "offline", action: "Offline" }
-        ]
+  <script>
+    const state = {
+      balance: 0,
+      daily: 0,
+      bonus: 0,
+      extra: 0,
+      refs: 0,
+      level: 1,
+      multiplier: 1,
+      name: "Sagor Ahmed",
+      handle: "@sagor_official",
+      friends: [
+        {name:"Alex Morgan", status:"working", action:"Watching videos"},
+        {name:"David Miller", status:"online", action:"Online"},
+        {name:"Elena Rostova", status:"offline", action:"Offline"}
+      ]
     };
 
-    function initApp() {
-        renderReferrals();
+    const $ = id => document.getElementById(id);
+
+    function totalDone(){ return state.daily + state.bonus + state.extra; }
+    function totalQuota(){ return 130; }
+
+    function toast(message){
+      const t = $("toast");
+      t.textContent = message;
+      t.classList.add("show");
+      clearTimeout(window.__toast);
+      window.__toast = setTimeout(()=>t.classList.remove("show"),2200);
+    }
+
+    function switchView(name, btn){
+      document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+      $(name).classList.add("active");
+      document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
+      (btn || document.querySelector(`.nav[data-view="${name}"]`))?.classList.add("active");
+      window.scrollTo({top:0,behavior:"smooth"});
+      updateUI();
+    }
+
+    function openProfile(){ switchView("profile"); }
+    function openModal(type){
+      $("modal").classList.add("show");
+      $("depositForm").style.display = type==="deposit" ? "block" : "none";
+      $("withdrawForm").style.display = type==="withdraw" ? "block" : "none";
+      $("modalTitle").textContent = type==="deposit" ? "Deposit" : "Withdraw";
+      document.body.style.overflow="hidden";
+    }
+    function closeModal(){
+      $("modal").classList.remove("show");
+      document.body.style.overflow="";
+    }
+
+    function updateProgress(){
+      const done = totalDone();
+      const pct = Math.min(100,(done/totalQuota())*100);
+      $("taskProgress").style.width=pct+"%";
+      $("earnProgress").style.width=pct+"%";
+      $("taskLabel").textContent=`${done} / 130 completed`;
+      $("earnLabel").textContent=`${done} / 130 completed`;
+      $("earnPercent").textContent=Math.round(pct)+"%";
+    }
+
+    function updateUI(){
+      $("balance").textContent=state.balance.toFixed(2);
+      $("statBalance").textContent=state.balance.toFixed(2);
+      $("statRefs").textContent=state.refs;
+      $("statTasks").textContent=totalDone();
+
+      const levels = [
+        {min:0,m:"1.0",name:"Level 1"},
+        {min:5,m:"1.2",name:"Level 2"},
+        {min:15,m:"1.5",name:"Level 3"},
+        {min:30,m:"2.0",name:"Level 4"},
+        {min:50,m:"3.0",name:"Level 5"}
+      ];
+      let current=levels[0];
+      for(const l of levels) if(state.refs>=l.min) current=l;
+      state.level=levels.indexOf(current)+1;
+      state.multiplier=Number(current.m);
+
+      $("levelText").textContent=`${current.name} · ${state.refs} Refs`;
+      $("profileLevel").textContent=current.name;
+      $("multiplier").textContent=current.m+"×";
+      $("multiplierText").textContent=`${current.name} base earning · ${current.m}×`;
+
+      $("avatarWrap").className=`avatar-wrap level-${state.level}`;
+      $("refCount").textContent=`${state.refs} REFERRALS`;
+
+      renderFriends();
+      updateProgress();
+    }
+
+    function startTasks(){
+      if(totalDone()>=130){ toast("All 130 daily tasks are complete."); return; }
+      const interval = setInterval(()=>{
+        if(state.daily<100) state.daily++;
+        else if(state.bonus<20) state.bonus++;
+        else if(state.extra<10) state.extra++;
         updateUI();
-        updateCampaignPrice();
-    }
-
-    function switchView(viewName, btnElement) {
-        document.querySelectorAll('.app-view').forEach(view => {
-            view.classList.remove('active');
-        });
-
-        const targetView = document.getElementById(`view-${viewName}`);
-        if (targetView) {
-            targetView.classList.add('active');
+        if(totalDone()>=130){
+          clearInterval(interval);
+          toast("All 130 tasks completed.");
         }
-
-        if (btnElement) {
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            btnElement.classList.add('active');
-        } else {
-            document.querySelectorAll('.nav-item').forEach(nav => {
-                if(nav.getAttribute('onclick').includes(viewName)) {
-                    nav.classList.add('active');
-                } else {
-                    nav.classList.remove('active');
-                }
-            });
-        }
-        window.scrollTo(0, 0);
+      },55);
     }
 
-    function updateUI() {
-        document.getElementById('balance-val').innerText = state.balance.toFixed(2);
-        document.getElementById('total-ref-count').innerText = `${state.referralCount} Referrals`;
-        document.getElementById('ads-count-display').innerText = `${state.adsRemaining} / 100`;
-        
-        let levelName = "Elite";
-        let levelNum = 1;
-        let mult = 1.0;
-
-        if (state.referralCount >= 20) {
-            levelNum = 5; levelName = "Ultra Master"; mult = 3.0;
-        } else if (state.referralCount >= 15) {
-            levelNum = 4; levelName = "Legend"; mult = 2.5;
-        } else if (state.referralCount >= 10) {
-            levelNum = 3; levelName = "Master"; mult = 2.0;
-        } else if (state.referralCount >= 5) {
-            levelNum = 2; levelName = "Pro"; mult = 1.5;
-        } else {
-            levelNum = 1; levelName = "Elite"; mult = 1.0;
-        }
-
-        state.currentLevel = levelNum;
-        state.multiplier = mult;
-        state.levelTitle = levelName;
-
-        const wrapper = document.getElementById('avatar-frame-wrapper');
-        wrapper.className = `avatar-wrapper level-${levelNum}`;
-
-        document.getElementById('level-text').innerText = `Level ${levelNum} - ${levelName} (${state.referralCount} Refs)`;
-        document.getElementById('profile-level-tag').innerText = `Level ${levelNum} - ${levelName}`;
-        document.getElementById('multiplier-badge').innerText = `${mult.toFixed(1)}x`;
-        document.getElementById('multiplier-desc').innerText = `${levelName} tier multiplier active (${mult.toFixed(1)}x)`;
+    function completeBonus(){
+      if(state.bonus>=20){toast("All 20 bonus tasks are complete.");return}
+      state.bonus++; updateUI(); toast(`Bonus task ${state.bonus}/20 completed.`);
     }
 
-    function watchAdTask() {
-        if(state.adsRemaining <= 0) {
-            alert('Daily ad quota completed! Come back tomorrow.');
-            return;
-        }
-        state.adsRemaining--;
-        let baseReward = 0.0020;
-        let earned = baseReward * state.multiplier;
-        state.balance += earned;
-        updateUI();
-        alert(`Ad watched successfully! Earned $${earned.toFixed(4)} USDT.`);
+    function completeExtra(){
+      if(state.extra>=10){toast("All 10 extra tasks are complete.");return}
+      state.extra++; updateUI(); toast(`Extra task ${state.extra}/10 completed.`);
     }
 
-    function completeSocialTask(rewardAmount, targetUrl) {
-        window.open(targetUrl, '_blank');
-        state.balance += rewardAmount;
-        updateUI();
-        alert(`Task verified! $${rewardAmount.toFixed(2)} USDT added to your balance.`);
+    function addFriend(){
+      const names=["Noah Carter","Mia Wilson","Liam Taylor","Ava Smith","Ethan Brown","Sofia Lee"];
+      state.refs++;
+      state.friends.unshift({
+        name:names[(state.refs-1)%names.length],
+        status:"online",
+        action:"Just joined"
+      });
+      updateUI();
+      toast("Demo referral added.");
     }
 
-    function updateCampaignPrice() {
-        const pkg = document.getElementById('campaign-package-select').value;
-        const pricing = {
-            '100': 0.30,
-            '200': 0.60,
-            '300': 0.90,
-            '400': 0.90,
-            '1000': 1.50
-        };
-        let cost = pricing[pkg] || 0.30;
-        document.getElementById('campaign-cost-display').innerText = `$${cost.toFixed(2)} USDT`;
+    function renderFriends(){
+      $("friends").innerHTML=state.friends.map(f=>{
+        const initials=f.name.split(" ").map(x=>x[0]).join("").slice(0,2);
+        return `<div class="friend">
+          <div class="friend-left">
+            <div class="friend-avatar">${initials}</div>
+            <div><div class="friend-name">${f.name}</div><div class="friend-action">${f.action}</div></div>
+          </div>
+          <span class="pill ${f.status}">${f.status}</span>
+        </div>`;
+      }).join("");
     }
 
-    function createCampaign() {
-        const link = document.getElementById('campaign-link-input').value.trim();
-        const pkg = document.getElementById('campaign-package-select').value;
-        const pricing = { '100': 0.30, '200': 0.60, '300': 0.90, '400': 0.90, '1000': 1.50 };
-        let cost = pricing[pkg] || 0.30;
-
-        if(!link) {
-            alert('Please paste a valid promotional link.');
-            return;
-        }
-        if(state.balance < cost) {
-            alert('Insufficient balance for this campaign. Please deposit or earn more.');
-            return;
-        }
-        state.balance -= cost;
-        updateUI();
-        alert(`Campaign successfully launched for ${pkg} followers/subscribers ($${cost.toFixed(2)})!`);
-        document.getElementById('campaign-link-input').value = '';
+    async function copyReferral(){
+      try{
+        await navigator.clipboard.writeText($("refInput").value);
+        toast("Referral link copied.");
+      }catch(e){ toast("Copy is unavailable in this browser."); }
     }
 
-    function bindWallet(type) {
-        if(type === 'telegram') {
-            window.open('https://t.me/wallet', '_blank');
-            setTimeout(() => {
-                let addr = "UQBR_" + Math.random().toString(36).substring(2, 10).toUpperCase();
-                state.boundWallets.telegram = addr;
-                document.getElementById('telegram-wallet-input').value = addr;
-                alert('Telegram Wallet successfully connected and bound!');
-            }, 1000);
-        } else if(type === 'tonkeeper') {
-            window.open('https://app.tonkeeper.com/', '_blank');
-            setTimeout(() => {
-                let addr = "EQD_" + Math.random().toString(36).substring(2, 10).toUpperCase();
-                state.boundWallets.tonkeeper = addr;
-                document.getElementById('tonkeeper-wallet-input').value = addr;
-                alert('Tonkeeper Wallet successfully connected and bound!');
-            }, 1000);
-        }
+    function selectMethod(el){
+      document.querySelectorAll(".method").forEach(x=>x.classList.remove("selected"));
+      el.classList.add("selected");
     }
 
-    function selectPaymentMethod(element, method) {
-        document.querySelectorAll('.pay-method-card').forEach(card => card.classList.remove('selected'));
-        element.classList.add('selected');
-        state.selectedGateway = method;
+    function demoDeposit(){
+      const amount=Number($("depositAmount").value);
+      if(!Number.isFinite(amount) || amount<0.90){toast("Minimum demo deposit is $0.90.");return}
+      state.balance += amount;
+      $("depositAmount").value="";
+      updateUI(); closeModal();
+      toast(`Demo balance +$${amount.toFixed(2)}`);
     }
 
-    function processDeposit() {
-        const amt = parseFloat(document.getElementById('deposit-amount-input').value);
-        if(isNaN(amt) || amt < 0.90) {
-            alert('Minimum deposit amount is $0.90 USDT.');
-            return;
-        }
-        state.balance += amt;
-        updateUI();
-        alert(`Successfully deposited $${amt.toFixed(2)} via ${state.selectedGateway}!`);
-        document.getElementById('deposit-amount-input').value = '';
+    function demoWithdraw(){
+      const amount=Number($("withdrawAmount").value);
+      const address=$("withdrawAddress").value.trim();
+      if(!Number.isFinite(amount) || amount<0.05){toast("Minimum demo withdrawal is $0.05.");return}
+      if(amount>state.balance){toast("Insufficient demo balance.");return}
+      if(!address){toast("Enter a test wallet address.");return}
+      state.balance -= amount;
+      $("withdrawAmount").value="";
+      $("withdrawAddress").value="";
+      updateUI(); closeModal();
+      toast(`Demo payout request created: $${amount.toFixed(2)}`);
     }
 
-    function processWithdraw() {
-        const amt = parseFloat(document.getElementById('withdraw-amount-input').value);
-        if(!state.boundWallets.telegram && !state.boundWallets.tonkeeper) {
-            alert('Please bind your Telegram Wallet or Tonkeeper first before requesting withdrawals.');
-            switchView('profile');
-            return;
-        }
-        if(isNaN(amt) || amt < 0.05) {
-            alert('Minimum withdrawal amount is $0.05 USDT.');
-            return;
-        }
-        if(state.balance < amt) {
-            alert('Insufficient balance for withdrawal.');
-            return;
-        }
-        state.balance -= amt;
-        updateUI();
-        alert(`Withdrawal request of $${amt.toFixed(2)} submitted successfully to your bound wallet!`);
-        document.getElementById('withdraw-amount-input').value = '';
+    function saveProfile(){
+      const name=$("nameInput").value.trim() || "Sagor Ahmed";
+      const handle=$("handleInput").value.trim() || "@sagor_official";
+      state.name=name; state.handle=handle;
+      $("userName").textContent=name;
+      $("profileName").textContent=name;
+      document.querySelector(".handle").textContent=handle;
+      $("profileName").nextElementSibling.textContent=`Telegram ID: ${handle}`;
+      toast("Profile saved locally.");
     }
 
-    function renderReferrals() {
-        const container = document.getElementById('referral-list-container');
-        container.innerHTML = '';
-        if(state.friends.length === 0) {
-            container.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:10px; padding:12px;">No referrals yet. Share your link!</div>';
-            return;
-        }
-        state.friends.forEach(f => {
-            let statusClass = f.status === 'online' ? 'status-online' : (f.status === 'working' ? 'status-working' : 'status-offline');
-            container.innerHTML += `
-                <div class="referral-item">
-                    <div class="ref-user-info">
-                        <div class="ref-avatar">${f.name.charAt(0)}</div>
-                        <div class="ref-details">
-                            <h5>${f.name}</h5>
-                            <span style="font-size:9px; color:var(--text-muted);">${f.action}</span>
-                        </div>
-                    </div>
-                    <span class="status-pill ${statusClass}"><i class="fa-solid fa-circle" style="font-size:5px;"></i> ${f.status}</span>
-                </div>
-            `;
-        });
-    }
+    $("avatarInput").addEventListener("change", e=>{
+      const file=e.target.files?.[0];
+      if(!file) return;
+      if(!file.type.startsWith("image/")){toast("Please select an image.");return}
+      const url=URL.createObjectURL(file);
+      $("avatar").src=url;
+      $("profileAvatar").src=url;
+      toast("Profile photo updated locally.");
+    });
 
-    function simulateAddReferral() {
-        state.referralCount++;
-        state.balance += 0.20; // Instant 20 cents bonus
-        let fakeNames = ["Liam Vance", "Sophia Reed", "Noah Brooks", "Chloe Bennett", "Mason Cole"];
-        let randomName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-        state.friends.unshift({ name: randomName, status: "working", action: "Newly Joined" });
-        renderReferrals();
-        updateUI();
-        alert(`New referral joined! Instant bonus +$0.20 added.`);
-    }
-
-    function simulateFanDeposit() {
-        let depositAmount = 10.00;
-        let commission = depositAmount * 0.10; // 10% commission
-        state.balance += commission;
-        updateUI();
-        alert(`A referred fan deposited $${depositAmount.toFixed(2)}! You received 10% commission: +$${commission.toFixed(2)} USDT.`);
-    }
-
-    function simulateFanWithdraw() {
-        let withdrawAmount = 5.00;
-        let commission = withdrawAmount * 0.01; // 1% commission
-        state.balance += commission;
-        updateUI();
-        alert(`A referred fan withdrew $${withdrawAmount.toFixed(2)}! You received 1% commission: +$${commission.toFixed(2)} USDT.`);
-    }
-
-    function copyRefLink() {
-        const input = document.getElementById('ref-link-input');
-        input.select();
-        navigator.clipboard.writeText(input.value);
-        alert('Referral link copied to clipboard!');
-    }
-
-    function uploadTelegramAvatar(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('user-avatar').src = e.target.result;
-                document.getElementById('profile-view-avatar').src = e.target.result;
-            }
-            reader.readAsDataURL(file);
-        }
-    }
-
-    window.onload = initApp;
-</script>
+    updateUI();
+  </script>
 </body>
 </html>
