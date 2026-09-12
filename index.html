@@ -7,7 +7,7 @@
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Adsgram SDK -->
-    <script src="https://sad.adsgram.ai/js/sad-index.js" async></script>
+    <script src="https://sad.adsgram.ai/js/sad-index.js"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -74,15 +74,8 @@
             box-shadow: 0 4px 12px rgba(47, 129, 247, 0.3);
         }
 
-        .user-info h4 {
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .user-info p {
-            font-size: 12px;
-            color: var(--text-sub);
-        }
+        .user-info h4 { font-size: 15px; font-weight: 700; }
+        .user-info p { font-size: 12px; color: var(--text-sub); }
 
         .tab-content {
             display: none;
@@ -90,9 +83,7 @@
             animation: fadeIn 0.3s ease-in-out;
         }
 
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content.active { display: block; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
@@ -107,8 +98,6 @@
             text-align: center;
             box-shadow: 0 8px 24px rgba(0,0,0,0.4);
             margin-bottom: 24px;
-            position: relative;
-            overflow: hidden;
         }
 
         .balance-title {
@@ -316,11 +305,67 @@
 
         .nav-item i { font-size: 18px; }
         .nav-item.active { color: var(--accent-hover); }
+
+        /* Modal overlay styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-header h3 { font-size: 18px; font-weight: 700; }
+        .close-btn { font-size: 24px; cursor: pointer; color: var(--text-sub); }
+
+        .wallet-option {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .wallet-option h5 { font-size: 14px; color: var(--accent-hover); margin-bottom: 4px; }
+        .wallet-option p { font-size: 11px; color: var(--text-sub); margin-bottom: 8px; word-break: break-all; }
+        .address-box {
+            font-family: monospace;
+            background: #0d1117;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Header Section -->
     <div class="top-bar">
         <div class="user-profile">
             <div class="avatar" id="userAvatar">U</div>
@@ -332,24 +377,24 @@
         <span style="font-size: 12px; background: rgba(35, 134, 54, 0.2); color: var(--green-color); padding: 4px 10px; border-radius: 20px; font-weight: 700;">Active</span>
     </div>
 
-    <!-- TAB 1: HOME (Profile, Balance & Wallet Only) -->
+    <!-- TAB 1: HOME -->
     <div id="tab-home" class="tab-content active">
         <div class="balance-card">
             <div class="balance-title">Wallet Balance</div>
             <div class="balance-amount">$<span id="userBalance">0.0000</span></div>
             <div class="balance-actions">
-                <button class="btn btn-primary" onclick="depositAlert()"><i class="fa-solid fa-wallet"></i> Deposit</button>
+                <button class="btn btn-primary" onclick="openDepositModal()"><i class="fa-solid fa-wallet"></i> Deposit</button>
                 <button class="btn btn-secondary" onclick="openWithdraw()"><i class="fa-solid fa-arrow-up-right-from-square"></i> Withdraw</button>
             </div>
         </div>
 
         <div class="notice-box">
             <i class="fa-solid fa-circle-info"></i>
-            <span>Minimum Withdrawal Amount: <b>$0.50 USD</b> (TON / USDT)</span>
+            <span>Minimum Withdrawal Amount: <b>$0.50 USD / TON</b></span>
         </div>
     </div>
 
-    <!-- TAB 2: EARN (Watch Ads & Social Tasks) -->
+    <!-- TAB 2: EARN -->
     <div id="tab-earn" class="tab-content">
         <div class="section-header">
             <span>Watch Ads & Earn</span>
@@ -408,7 +453,7 @@
     <div id="tab-promote" class="tab-content">
         <div class="notice-box">
             <i class="fa-solid fa-circle-info"></i>
-            <span>Minimum deposit required for promotion: <b>$0.05 USD</b></span>
+            <span>Deposit funds to your wallet to create promotional campaigns.</span>
         </div>
         <div class="section-header">
             <span>Promote Youtube / Telegram / TikTok</span>
@@ -417,25 +462,33 @@
             <div class="promote-card">
                 <h3>100</h3>
                 <p>Subscribers</p>
-                <div class="price">$0.04</div>
-                <button class="btn btn-success btn-full" onclick="buyCampaign(0.04)">Order Now</button>
+                <div class="price">$0.30</div>
+                <button class="btn btn-success btn-full" onclick="buyCampaign(0.30)">Order Now</button>
             </div>
             <div class="promote-card">
                 <h3>200</h3>
                 <p>Subscribers</p>
-                <div class="price">$0.08</div>
-                <button class="btn btn-success btn-full" onclick="buyCampaign(0.08)">Order Now</button>
+                <div class="price">$0.60</div>
+                <button class="btn btn-success btn-full" onclick="buyCampaign(0.60)">Order Now</button>
             </div>
         </div>
-        <div class="promote-card" style="margin-bottom: 20px;">
-            <h3>1000</h3>
-            <p>Subscribers / Followers</p>
-            <div class="price">$1.01</div>
-            <button class="btn btn-success btn-full" onclick="buyCampaign(1.01)">Order Now</button>
+        <div class="promote-grid">
+            <div class="promote-card">
+                <h3>400</h3>
+                <p>Subscribers</p>
+                <div class="price">$1.20</div>
+                <button class="btn btn-success btn-full" onclick="buyCampaign(1.20)">Order Now</button>
+            </div>
+            <div class="promote-card">
+                <h3>1000</h3>
+                <p>Subscribers</p>
+                <div class="price">$1.05</div>
+                <button class="btn btn-success btn-full" onclick="buyCampaign(1.05)">Order Now</button>
+            </div>
         </div>
     </div>
 
-    <!-- TAB 4: REFERRAL (Link & List of Referred Users) -->
+    <!-- TAB 4: REFERRAL -->
     <div id="tab-ref" class="tab-content">
         <div class="section-header">
             <span>Referral Program</span>
@@ -475,7 +528,60 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- DEPOSIT MODAL -->
+    <div id="depositModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Deposit Funds</h3>
+                <span class="close-btn" onclick="closeDepositModal()">&times;</span>
+            </div>
+            <div class="notice-box" style="margin-bottom: 16px;">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Minimum Deposit Amount: <b>$1.00 USD equivalent</b></span>
+            </div>
+
+            <!-- TON Network (Gram / TON) -->
+            <div class="wallet-option">
+                <h5>1. TON Network (Gram / TON Tokens)</h5>
+                <p>Send only Gram (prev. Toncoin) and TON network tokens. Minimum deposit is $1.00 USD value.</p>
+                <div class="address-box" id="addr-ton">UQD2KsEcAoJc8ksG53JOXM5ZZ0YqLCVCDJ_3VyykrAYOyJGz</div>
+                <button class="btn btn-secondary btn-full" style="padding: 6px; font-size: 12px;" onclick="copyAddress('addr-ton')"><i class="fa-solid fa-copy"></i> Copy TON Address</button>
+            </div>
+
+            <!-- TON Network (USDT) -->
+            <div class="wallet-option">
+                <h5>2. TON Network (USDT-TON)</h5>
+                <p>Send only USD₮ on the TON Network. Minimum deposit is $1.00 USDT.</p>
+                <div class="address-box" id="addr-usdt-ton">UQD2KsEcAoJc8ksG53JOXM5ZZ0YqLCVCDJ_3VyykrAYOyJGz</div>
+                <button class="btn btn-secondary btn-full" style="padding: 6px; font-size: 12px;" onclick="copyAddress('addr-usdt-ton')"><i class="fa-solid fa-copy"></i> Copy USDT (TON) Address</button>
+            </div>
+
+            <!-- TRON Network (TRC20) -->
+            <div class="wallet-option">
+                <h5>3. TRON Network (USDT-TRC20)</h5>
+                <p>Send only TRON (TRC20) network assets. Minimum deposit is $1.00 USDT.</p>
+                <div class="address-box" id="addr-tron">TSauYKffD5Z83n1yuXnKgJfKNwMKLx9MN5</div>
+                <button class="btn btn-secondary btn-full" style="padding: 6px; font-size: 12px;" onclick="copyAddress('addr-tron')"><i class="fa-solid fa-copy"></i> Copy USDT (TRC20) Address</button>
+            </div>
+
+            <!-- BNB Smart Chain (BEP20) -->
+            <div class="wallet-option">
+                <h5>4. BNB Smart Chain (USDT / BNB - BEP20)</h5>
+                <p>Send only BNB Smart Chain assets to this address. Minimum deposit is $1.00 USD value.</p>
+                <div class="address-box" id="addr-bsc">0x14f2209D2494D1777639cE609e3C0f6038D08676</div>
+                <button class="btn btn-secondary btn-full" style="padding: 6px; font-size: 12px;" onclick="copyAddress('addr-bsc')"><i class="fa-solid fa-copy"></i> Copy BNB Smart Chain Address</button>
+            </div>
+
+            <!-- Ethereum Network (ERC20) -->
+            <div class="wallet-option">
+                <h5>5. Ethereum Network (ERC20)</h5>
+                <p>Send only Ethereum network assets to this address. Minimum deposit is $1.00 USD value.</p>
+                <div class="address-box" id="addr-eth">0x14f2209D2494D1777639cE609e3C0f6038D08676</div>
+                <button class="btn btn-secondary btn-full" style="padding: 6px; font-size: 12px;" onclick="copyAddress('addr-eth')"><i class="fa-solid fa-copy"></i> Copy Ethereum Address</button>
+            </div>
+        </div>
+    </div>
+
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('home', this)">
             <i class="fa-solid fa-house"></i>
@@ -515,30 +621,20 @@
             document.getElementById('userBalance').innerText = balance.toFixed(4);
         }
 
-        let AdController = null;
-
-        window.addEventListener('load', () => {
-            if (window.Adsgram) {
-                AdController = window.Adsgram.init({ blockId: "47493" });
-            }
-        });
-
         function showRewardAd() {
-            if (!AdController && window.Adsgram) {
-                AdController = window.Adsgram.init({ blockId: "47493" });
-            }
-
-            if (!AdController) {
-                alert("Adsgram SDK is loading. Please wait 2 seconds and try again.");
+            if (typeof window.Adsgram === 'undefined') {
+                alert("Adsgram SDK network error. Please reload the app.");
                 return;
             }
+
+            const AdController = window.Adsgram.init({ blockId: "int-47493" });
 
             AdController.show().then((result) => {
                 balance += 0.0010;
                 updateBalanceDisplay();
                 alert("Success! You earned $0.0010 USD.");
-            }).catch((result) => {
-                alert("No ad available at the moment or ad was closed.");
+            }).catch((error) => {
+                alert("No ad available currently or closed early.");
             });
         }
 
@@ -561,15 +657,25 @@
             navElement.classList.add('active');
         }
 
-        function depositAlert() {
-            alert("To deposit, send TON/USDT to our official wallet address. Minimum deposit: $0.05 USD.");
+        function openDepositModal() {
+            document.getElementById('depositModal').style.display = 'block';
+        }
+
+        function closeDepositModal() {
+            document.getElementById('depositModal').style.display = 'none';
+        }
+
+        function copyAddress(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text);
+            alert("Wallet address copied to clipboard!");
         }
 
         function openWithdraw() {
             if (balance < 0.50) {
-                alert("Minimum withdrawal threshold is $0.50 USD (TON/USDT network).");
+                alert("Minimum withdrawal threshold is $0.50 USD.");
             } else {
-                const wallet = prompt("Enter your TON (USDT) wallet address:");
+                const wallet = prompt("Enter your wallet address:");
                 if (wallet) {
                     alert(`Withdrawal request of $${balance.toFixed(4)} USD submitted successfully!`);
                     balance = 0.0000;
@@ -580,7 +686,7 @@
 
         function buyCampaign(cost) {
             if (balance < cost) {
-                alert(`Insufficient funds! Please deposit at least $${(cost - balance).toFixed(2)} USD to order this campaign.`);
+                alert(`Insufficient funds! Please deposit at least $${cost.toFixed(2)} USD to launch this campaign.`);
             } else {
                 const link = prompt("Enter your Channel/Page URL to promote:");
                 if (link) {
