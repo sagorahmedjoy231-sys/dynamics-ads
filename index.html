@@ -532,14 +532,14 @@
                 
                 <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Select Subscriber Package:</p>
                 <select id="sub-package-select" class="select-field" onchange="updateCampaignCost()">
-                    <option value="100">100 Subscribers ($0.5 sent)</option>
+                    <option value="100">100 Subscribers ($0.50)</option>
                     <option value="300">300 Subscribers ($0.30)</option>
                     <option value="1000">1000 Subscribers ($1.00)</option>
-                    <option value="2000">2000 Subscribers ($1.9 sent)</option>
+                    <option value="2000">2000 Subscribers ($1.90)</option>
                 </select>
 
                 <div style="font-size: 12px; color: var(--accent-green); font-weight: 700; margin-bottom: 12px;" id="campaign-cost-display">
-                    Total Cost: $0.5 sent (Subscribers get $0.002 each)
+                    Total Cost: $0.50 (Subscribers get $0.002 each)
                 </div>
 
                 <button class="action-btn action-btn-green" onclick="launchSubCampaign()">Launch Subscriber Campaign</button>
@@ -696,10 +696,10 @@
 
     // Subscriber Pricing Mapping
     const SUB_PRICING = {
-        "100": { cost: 0.005, label: "$0.5 sent" },
+        "100": { cost: 0.50, label: "$0.50" },
         "300": { cost: 0.30, label: "$0.30" },
         "1000": { cost: 1.00, label: "$1.00" },
-        "2000": { cost: 0.019, label: "$1.9 sent" }
+        "2000": { cost: 1.90, label: "$1.90" }
     };
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -723,14 +723,18 @@
     function initAdsgram() {
         try {
             if (window.Adsgram && typeof window.Adsgram.init === 'function') {
-                // আপনার নতুন আসল Block ID (47622) আপডেট করা হয়েছে
                 AdController = window.Adsgram.init({ blockId: "47622" });
             } else {
-                setTimeout(() => {
+                let checkCount = 0;
+                const sdkInterval = setInterval(() => {
+                    checkCount++;
                     if (window.Adsgram && typeof window.Adsgram.init === 'function') {
                         AdController = window.Adsgram.init({ blockId: "47622" });
+                        clearInterval(sdkInterval);
+                    } else if (checkCount > 10) {
+                        clearInterval(sdkInterval);
                     }
-                }, 1000);
+                }, 500);
             }
         } catch(e) { 
             console.warn("Adsgram initialization error:", e); 
@@ -843,10 +847,10 @@
                 applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride);
             }).catch((err) => { 
                 console.warn("Ad display error or skipped:", err);
-                alert("Advertisement could not be loaded or was skipped. Please try again inside Telegram.");
+                alert("Advertisement could not be loaded or was skipped. Please try again.");
             });
         } else {
-            alert("Adsgram SDK is not loaded. Please open the bot directly inside Telegram app.");
+            applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride);
         }
     }
 
