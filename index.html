@@ -722,10 +722,19 @@
 
     function initAdsgram() {
         try {
-            if (window.Adsgram) {
-                AdController = window.Adsgram.init({ blockId: "int-47463" });
+            if (window.Adsgram && typeof window.Adsgram.init === 'function') {
+                // আপনার নতুন আসল Block ID (47622) আপডেট করা হয়েছে
+                AdController = window.Adsgram.init({ blockId: "47622" });
+            } else {
+                setTimeout(() => {
+                    if (window.Adsgram && typeof window.Adsgram.init === 'function') {
+                        AdController = window.Adsgram.init({ blockId: "47622" });
+                    }
+                }, 1000);
             }
-        } catch(e) { console.warn("Adsgram initialization error:", e); }
+        } catch(e) { 
+            console.warn("Adsgram initialization error:", e); 
+        }
     }
 
     function switchTab(tabId, el) {
@@ -825,8 +834,11 @@
             return;
         }
 
+        if (!AdController && window.Adsgram && typeof window.Adsgram.init === 'function') {
+            AdController = window.Adsgram.init({ blockId: "47622" });
+        }
+
         if (AdController) {
-            // শুধুমাত্র অ্যাড সফলভাবে শেষ হলেই রিওয়ার্ড দেওয়া হবে
             AdController.show().then(() => {
                 applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride);
             }).catch((err) => { 
@@ -834,7 +846,7 @@
                 alert("Advertisement could not be loaded or was skipped. Please try again inside Telegram.");
             });
         } else {
-            alert("Adsgram SDK is not initialized yet. Please open inside Telegram.");
+            alert("Adsgram SDK is not loaded. Please open the bot directly inside Telegram app.");
         }
     }
 
