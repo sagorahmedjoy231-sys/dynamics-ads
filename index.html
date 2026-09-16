@@ -11,6 +11,9 @@
     <!-- Adsgram Ad Network Live Controller SDK -->
     <script src="https://sad.adsgram.ai/js/sad-b.js"></script>
 
+    <!-- Canvas Confetti Library for Spin Win Effect -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
         :root {
             --bg-dark: #070a12;
@@ -226,54 +229,82 @@
         .input-field:focus, .select-field:focus { border-color: var(--accent-cyan); }
         .select-field option { background: #070a12; color: white; }
 
-        /* Circular Lucky Wheel Banner */
-        .lucky-wheel-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle, #2a0845 0%, #11052c 100%);
-            border-radius: 20px;
-            border: 2px solid var(--accent-gold);
-            padding: 20px;
-            text-align: center;
+        /* Interactive Wheel UI Components */
+        .wheel-wrapper {
             position: relative;
-            overflow: hidden;
+            width: 220px;
+            height: 220px;
+            margin: 15px auto;
         }
 
-        .circular-wheel-logo {
-            width: 90px;
-            height: 90px;
+        .wheel-pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 20px solid var(--accent-gold);
+            z-index: 20;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+        }
+
+        .wheel-canvas {
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            border: 3px solid var(--accent-gold);
-            background: #1e0935;
+            border: 4px solid var(--accent-gold);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            background: conic-gradient(#00f2fe 0deg 60deg, #00ffaa 60deg 120deg, #7928ca 120deg 180deg, #ff3b30 180deg 240deg, #ffb700 240deg 300deg, #0072ff 300deg 360deg);
+            box-shadow: 0 0 25px rgba(255, 183, 0, 0.4);
+        }
+
+        .wheel-center-node {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: var(--bg-dark);
+            border-radius: 50%;
+            border: 2px solid var(--accent-gold);
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            animation: wheelRotate 10s linear infinite;
-            box-shadow: 0 0 20px rgba(255, 183, 0, 0.5);
-            margin-bottom: 12px;
+            font-size: 18px;
+            z-index: 10;
         }
 
-        @keyframes wheelRotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        /* Win Modal Effect */
+        .win-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
         }
 
-        .wheel-center-icon {
-            font-size: 28px;
-        }
-
-        .coming-soon-badge {
-            background: var(--accent-gold);
-            color: #000;
-            padding: 5px 14px;
+        .win-modal-card {
+            background: var(--card-glass);
+            border: 2px solid var(--accent-gold);
             border-radius: 20px;
-            font-size: 11px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            box-shadow: 0 0 12px rgba(255, 183, 0, 0.6);
+            padding: 24px;
+            text-align: center;
+            max-width: 320px;
+            width: 85%;
+            box-shadow: 0 0 30px rgba(255, 183, 0, 0.5);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.6); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         /* Deposit Logo Selection Cards */
@@ -466,40 +497,37 @@
             <div class="glass-card">
                 <div class="card-header-title">
                     <span>Adsgram High-Yield Network</span>
-                    <span style="color: var(--accent-cyan); font-size: 11px;">10 Sec Cooldown</span>
+                    <span style="color: var(--accent-cyan); font-size: 11px;">Limit: 3/Day</span>
                 </div>
-                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 14px;">Watch verified sponsor ads every 10 seconds to earn directly to your balance.</p>
-                <button class="action-btn action-btn-green" onclick="triggerMainAd()">Watch Main Ad (<span id="main-ads-count">100</span>/100)</button>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 14px;">Watch up to 3 ads daily to earn rewards and unlock spins.</p>
+                <button class="action-btn action-btn-green" id="main-ad-btn" onclick="triggerMainAd()">Watch Main Ad (<span id="main-ads-count">3</span>/3)</button>
                 <div id="main-timer-box" class="countdown-lbl" style="display:none;">Reset in: 24:00:00</div>
             </div>
 
-            <!-- Circular Daily Lucky Wheel Banner -->
-            <div class="glass-card">
-                <div class="card-header-title">Daily Lucky Wheel</div>
-                <div class="lucky-wheel-box">
-                    <div class="circular-wheel-logo">
-                        <span class="wheel-center-icon">🎯</span>
-                    </div>
-                    <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-bottom: 8px;">Win up to 1.00 Instantly!</div>
-                    <div class="coming-soon-badge">COMING SOON</div>
+            <!-- Interactive Lucky Wheel Banner -->
+            <div class="glass-card" style="text-align:center;">
+                <div class="card-header-title">
+                    <span>Daily Lucky Wheel</span>
+                    <span id="spin-count-display" style="color: var(--accent-gold); font-size: 11px;">0 Spins Available</span>
                 </div>
+                
+                <div class="wheel-wrapper">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel-canvas" id="wheel-disc"></div>
+                    <div class="wheel-center-node">🎯</div>
+                </div>
+
+                <button class="action-btn" style="background: linear-gradient(135deg, var(--accent-gold), #e67e22);" id="spin-action-btn" onclick="spinWheelAction()">SPIN WHEEL NOW</button>
             </div>
         </div>
 
         <!-- TAB 2: EARN PANEL -->
         <div id="tab-earn-view" class="tab-panel">
             <div class="glass-card">
-                <div class="card-header-title">Daily Missions (10 Ads)</div>
-                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Mission Ads Left: <span id="daily-ads-count">10</span>/10</p>
+                <div class="card-header-title">Daily Missions</div>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Mission Ads Left: <span id="daily-ads-count">3</span>/3</p>
                 <button class="action-btn" onclick="triggerDailyAd()">Watch Mission Ad</button>
                 <div id="daily-timer-box" class="countdown-lbl" style="display:none;">Reset in: 24:00:00</div>
-            </div>
-
-            <div class="glass-card">
-                <div class="card-header-title">Extra Earn Package (30 Ads)</div>
-                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Extra Ads Left: <span id="extra-ads-count">30</span>/30</p>
-                <button class="action-btn action-btn-purple" onclick="triggerExtraAd()">Watch Extra Ad</button>
-                <div id="extra-timer-box" class="countdown-lbl" style="display:none;">Reset in: 24:00:00</div>
             </div>
 
             <div class="glass-card">
@@ -512,8 +540,8 @@
         <!-- TAB 3: PROMO PANEL -->
         <div id="panel-promo" class="tab-panel">
             <div class="glass-card">
-                <div class="card-header-title">Promote Your Links & Channels</div>
-                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">Create custom subscriber ad campaigns inside our network.</p>
+                <div class="card-header-title">Buy Social Services (Subscribers / Follows)</div>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">Select package and target URL to boost your channels.</p>
                 
                 <!-- Social Media Channel Logos Bar -->
                 <div class="social-logos-bar">
@@ -532,14 +560,15 @@
                 
                 <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Select Subscriber Package:</p>
                 <select id="sub-package-select" class="select-field" onchange="updateCampaignCost()">
-                    <option value="100">100 Subscribers ($0.50)</option>
-                    <option value="300">300 Subscribers ($0.30)</option>
-                    <option value="1000">1000 Subscribers ($1.00)</option>
-                    <option value="2000">2000 Subscribers ($1.90)</option>
+                    <option value="100">100 Subscribers / Follows ($0.60)</option>
+                    <option value="500">500 Subscribers / Follows ($1.00)</option>
+                    <option value="1000">1000 Subscribers / Follows ($1.60)</option>
+                    <option value="2000">2000 Subscribers / Follows ($2.10)</option>
+                    <option value="4000">4000 Subscribers / Follows ($3.20)</option>
                 </select>
 
                 <div style="font-size: 12px; color: var(--accent-green); font-weight: 700; margin-bottom: 12px;" id="campaign-cost-display">
-                    Total Cost: $0.50 (Subscribers get $0.002 each)
+                    Total Cost: $0.60 (TON / USDT / Binance)
                 </div>
 
                 <button class="action-btn action-btn-green" onclick="launchSubCampaign()">Launch Subscriber Campaign</button>
@@ -568,7 +597,7 @@
                 <button class="action-btn action-btn-purple" onclick="simulateRefJoin()">+ Simulate Referral Join</button>
             </div>
 
-            <!-- Referred Users List with Detailed Activity Tracker -->
+            <!-- Referred Users List -->
             <div class="glass-card">
                 <div class="card-header-title">Your Referred Users Activity</div>
                 <div id="referrals-list-container">
@@ -579,14 +608,12 @@
 
         <!-- TAB 5: PROFILE & WALLET PANEL -->
         <div id="panel-profile" class="tab-panel">
-            
-            <!-- DEPOSIT SECTION WITH CLICKABLE LOGO CARDS -->
             <div class="glass-card">
                 <div class="card-header-title">
                     <span>Deposit Gateways</span>
                     <span style="color: var(--accent-gold); font-size: 11px;">Min Deposit: 1.00</span>
                 </div>
-                <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">Click any crypto logo to reveal your verified deposit address:</p>
+                <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">Click any crypto logo to reveal deposit address:</p>
 
                 <div class="deposit-grid">
                     <div class="deposit-logo-card" onclick="revealDepositAddress('TON', 'EQB_TON_KEEPER_DEPOSIT_ADDRESS_EXAMPLE')">
@@ -601,10 +628,6 @@
                         <img class="crypto-icon-lg" src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="Binance">
                         <span style="font-size: 12px; font-weight:700;">Binance Pay</span>
                     </div>
-                    <div class="deposit-logo-card" onclick="revealDepositAddress('Gram', 'UQD2KsEcAoJc8ksG53J0XM5Z20YqLCVCDJ_3VyykrAYOyJGz')">
-                        <img class="crypto-icon-lg" src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="Gram">
-                        <span style="font-size: 12px; font-weight:700;">Gram Wallet</span>
-                    </div>
                 </div>
 
                 <div id="deposit-reveal-box" style="display:none; background: rgba(0,0,0,0.4); border: 1px dashed var(--accent-green); border-radius: 12px; padding: 12px; margin-top: 10px;">
@@ -614,7 +637,7 @@
                 </div>
             </div>
 
-            <!-- WITHDRAW SECTION WITH LOGO SELECTION -->
+            <!-- WITHDRAW SECTION -->
             <div class="glass-card">
                 <div class="card-header-title">
                     <span>Withdraw Funds</span>
@@ -641,9 +664,19 @@
                 <input type="number" id="withdraw-amount" class="input-field" placeholder="Amount in USD">
                 <button class="action-btn action-btn-green" onclick="processWithdrawal()">Submit Withdrawal Request</button>
             </div>
-
         </div>
 
+    </div>
+
+    <!-- Spin Win Modal Popup -->
+    <div class="win-modal-overlay" id="spin-win-modal">
+        <div class="win-modal-card">
+            <div style="font-size: 32px; margin-bottom: 8px;">🎉</div>
+            <h3 style="color: var(--accent-gold); font-size: 18px; margin-bottom: 6px;">CONGRATULATIONS!</h3>
+            <p style="font-size: 12px; color: var(--text-secondary);">You won a reward from Lucky Wheel!</p>
+            <div style="font-size: 26px; font-weight: 800; color: var(--accent-green); margin: 14px 0;" id="win-modal-val">+$0.0001</div>
+            <button class="action-btn action-btn-green" onclick="closeWinModal()">CLAIM REWARD</button>
+        </div>
     </div>
 
     <!-- Bottom Navigation Component -->
@@ -677,29 +710,34 @@
     let balance = 0.0400;
     let referredUsers = [];
     
-    let mainAdsLeft = 100;
-    let dailyAdsLeft = 10;
-    let extraAdsLeft = 30;
+    let mainAdsLeft = 3;
+    let dailyAdsLeft = 3;
+    let availableSpins = 0;
 
-    let isCooldownActive = false;
     let AdController = null;
     let selectedWithdrawGateway = 'binance';
 
-    // Dynamic Tier Configuration
+    // New Verified Block ID
+    const activeBlockId = "48241";
+
+    // Safe Wheel Rewards (Large amounts $5, $10, $15 will NEVER hit)
+    const safeRewards = [0.0001, 0.0002, 0.003];
+
+    // Subscriber Pricing Mapping
+    const SUB_PRICING = {
+        "100": { cost: 0.60, label: "$0.60" },
+        "500": { cost: 1.00, label: "$1.00" },
+        "1000": { cost: 1.60, label: "$1.60" },
+        "2000": { cost: 2.10, label: "$2.10" },
+        "4000": { cost: 3.20, label: "$3.20" }
+    };
+
     const TIER_MAP = {
         1: { name: "Pro", rate: 0.0003, avatar: "https://cdn-icons-png.flaticon.com/512/4140/4140048.png" },
         2: { name: "Legend", rate: 0.0003, avatar: "https://cdn-icons-png.flaticon.com/512/2583/2583344.png" },
         3: { name: "Ultra Legend", rate: 0.0004, avatar: "https://cdn-icons-png.flaticon.com/512/2583/2583319.png" },
         4: { name: "Grand Master", rate: 0.0005, avatar: "https://cdn-icons-png.flaticon.com/512/2583/2583434.png" },
         5: { name: "Grand Master", rate: 0.0005, avatar: "https://cdn-icons-png.flaticon.com/512/610/610120.png" }
-    };
-
-    // Subscriber Pricing Mapping
-    const SUB_PRICING = {
-        "100": { cost: 0.50, label: "$0.50" },
-        "300": { cost: 0.30, label: "$0.30" },
-        "1000": { cost: 1.00, label: "$1.00" },
-        "2000": { cost: 1.90, label: "$1.90" }
     };
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -723,22 +761,20 @@
     function initAdsgram() {
         try {
             if (window.Adsgram && typeof window.Adsgram.init === 'function') {
-                AdController = window.Adsgram.init({ blockId: "47622" });
+                AdController = window.Adsgram.init({ blockId: activeBlockId });
             } else {
                 let checkCount = 0;
                 const sdkInterval = setInterval(() => {
                     checkCount++;
                     if (window.Adsgram && typeof window.Adsgram.init === 'function') {
-                        AdController = window.Adsgram.init({ blockId: "47622" });
+                        AdController = window.Adsgram.init({ blockId: activeBlockId });
                         clearInterval(sdkInterval);
                     } else if (checkCount > 10) {
                         clearInterval(sdkInterval);
                     }
                 }, 500);
             }
-        } catch(e) { 
-            console.warn("Adsgram initialization error:", e); 
-        }
+        } catch(e) { console.warn(e); }
     }
 
     function switchTab(tabId, el) {
@@ -770,8 +806,14 @@
         document.getElementById('app-balance').innerText = balance.toFixed(4);
         document.getElementById('main-ads-count').innerText = mainAdsLeft;
         document.getElementById('daily-ads-count').innerText = dailyAdsLeft;
-        document.getElementById('extra-ads-count').innerText = extraAdsLeft;
+        document.getElementById('spin-count-display').innerText = `${availableSpins} Spins Available`;
         document.getElementById('ref-total-display').innerText = `${referredUsers.length} Invites`;
+
+        const mainBtn = document.getElementById('main-ad-btn');
+        if(mainAdsLeft <= 0) {
+            mainBtn.disabled = true;
+            mainBtn.innerText = "Daily Limit Reached";
+        }
 
         renderReferralsList();
     }
@@ -780,7 +822,7 @@
         const select = document.getElementById('sub-package-select');
         const qty = select.value;
         const info = SUB_PRICING[qty];
-        document.getElementById('campaign-cost-display').innerText = `Total Cost: ${info.label} (Subscribers get $0.002 each)`;
+        document.getElementById('campaign-cost-display').innerText = `Total Cost: ${info.label} (TON / USDT / Binance)`;
     }
 
     function launchSubCampaign() {
@@ -788,25 +830,17 @@
         const qty = document.getElementById('sub-package-select').value;
         const info = SUB_PRICING[qty];
 
-        if(!url) {
-            alert("Please enter a campaign target URL!");
-            return;
-        }
-
-        if(balance < info.cost) {
-            alert("Insufficient balance to launch this subscriber campaign!");
-            return;
-        }
+        if(!url) { alert("Please enter campaign target URL!"); return; }
+        if(balance < info.cost) { alert("Insufficient balance!"); return; }
 
         balance -= info.cost;
         updateTierAndUI();
-        alert(`Subscriber Campaign Launched Successfully!\nTarget: ${qty} Subscribers\nCost: ${info.label}`);
+        alert(`Subscriber Campaign Launched!\nTarget: ${qty} Subscribers\nCost: ${info.label}`);
         document.getElementById('promo-url').value = "";
     }
 
     function revealDepositAddress(netName, addressVal) {
-        const box = document.getElementById('deposit-reveal-box');
-        box.style.display = "block";
+        document.getElementById('deposit-reveal-box').style.display = "block";
         document.getElementById('deposit-gateway-title').innerText = `${netName} Deposit Address:`;
         document.getElementById('deposit-reveal-input').value = addressVal;
     }
@@ -815,7 +849,7 @@
         const input = document.getElementById('deposit-reveal-input');
         input.select();
         document.execCommand('copy');
-        alert("Deposit address copied to clipboard!");
+        alert("Address copied!");
     }
 
     function selectWithdrawMethod(method) {
@@ -826,76 +860,81 @@
         document.getElementById(`w-method-${method}`).classList.add('active');
     }
 
-    function executeAdWatch(counterKey, timerBoxId, resetLimit, rewardOverride) {
-        if (isCooldownActive) {
-            alert("Please wait 10 seconds before watching the next ad!");
-            return;
-        }
-
-        let currentCount = counterKey === 'main' ? mainAdsLeft : (counterKey === 'daily' ? dailyAdsLeft : extraAdsLeft);
-        if (currentCount <= 0) {
-            alert("Daily viewing limit reached!");
+    function executeAdWatch(type) {
+        if (mainAdsLeft <= 0) {
+            alert("Daily viewing limit reached (3 Ads/Day)!");
             return;
         }
 
         if (!AdController && window.Adsgram && typeof window.Adsgram.init === 'function') {
-            AdController = window.Adsgram.init({ blockId: "47622" });
+            AdController = window.Adsgram.init({ blockId: activeBlockId });
         }
 
         if (AdController) {
             AdController.show().then(() => {
-                applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride);
-            }).catch((err) => { 
-                console.warn("Ad display error or skipped:", err);
-                alert("Advertisement could not be loaded or was skipped. Please try again.");
+                applyRewardAndSpin();
+            }).catch((err) => {
+                alert("Ad could not be loaded or skipped. Try again inside Telegram.");
             });
         } else {
-            applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride);
+            applyRewardAndSpin();
         }
     }
 
-    function applyAdReward(counterKey, timerBoxId, resetLimit, rewardOverride) {
-        const lvl = getCurrentLevel();
-        const earned = rewardOverride || (lvl === 1 ? 0.0003 : (lvl === 2 ? 0.0003 : (lvl === 3 ? 0.0004 : 0.0005)));
+    function applyRewardAndSpin() {
+        balance += 0.0003;
+        mainAdsLeft--;
+        dailyAdsLeft--;
+        availableSpins++;
+        updateTierAndUI();
+        alert("Ad Watched Successfully! +$0.0003 and +1 Spin added!");
+    }
 
-        balance += earned;
-        if(counterKey === 'main') mainAdsLeft--;
-        if(counterKey === 'daily') dailyAdsLeft--;
-        if(counterKey === 'extra') extraAdsLeft--;
+    function triggerMainAd() { executeAdWatch('main'); }
+    function triggerDailyAd() { executeAdWatch('daily'); }
 
+    function spinWheelAction() {
+        if (availableSpins <= 0) {
+            alert("No spins available! Watch an ad to get 1 spin.");
+            return;
+        }
+
+        availableSpins--;
         updateTierAndUI();
 
-        isCooldownActive = true;
-        setTimeout(() => { isCooldownActive = false; }, 10000);
+        const disc = document.getElementById('wheel-disc');
+        const reward = safeRewards[Math.floor(Math.random() * safeRewards.length)];
+        const rotDegree = 1440 + Math.floor(Math.random() * 360);
 
-        let remaining = counterKey === 'main' ? mainAdsLeft : (counterKey === 'daily' ? dailyAdsLeft : extraAdsLeft);
-        if(remaining === 0) {
-            startCountdownTimer(timerBoxId, 86400, () => {
-                if(counterKey === 'main') mainAdsLeft = resetLimit;
-                if(counterKey === 'daily') dailyAdsLeft = resetLimit;
-                if(counterKey === 'extra') extraAdsLeft = resetLimit;
-                updateTierAndUI();
-            });
-        }
-        alert(`Ad Watched Successfully! +$${earned.toFixed(4)} added.`);
+        disc.style.transform = `rotate(${rotDegree}deg)`;
+
+        setTimeout(() => {
+            balance += reward;
+            updateTierAndUI();
+
+            // Trigger Fireworks/Confetti Effect
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            document.getElementById('win-modal-val').innerText = `+$${reward}`;
+            document.getElementById('spin-win-modal').style.display = 'flex';
+
+            disc.style.transition = 'none';
+            disc.style.transform = 'rotate(0deg)';
+            setTimeout(() => { disc.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)'; }, 50);
+        }, 4000);
     }
 
-    function triggerMainAd() { executeAdWatch('main', 'main-timer-box', 100, 0.0003); }
-    function triggerDailyAd() { executeAdWatch('daily', 'daily-timer-box', 10, 0.0003); }
-    function triggerExtraAd() { executeAdWatch('extra', 'extra-timer-box', 30, 0.0003); }
+    function closeWinModal() {
+        document.getElementById('spin-win-modal').style.display = 'none';
+    }
 
     function simulateRefJoin() {
-        const mockIds = ["@User_Alpha", "@CryptoSagor", "@TelegramKing", "@BotMaster99", "@EarnPro_2026"];
+        const mockIds = ["@User_Alpha", "@CryptoSagor", "@TelegramKing"];
         const randomId = mockIds[Math.floor(Math.random() * mockIds.length)] + Math.floor(Math.random() * 1000);
         
-        referredUsers.push({
-            id: randomId,
-            status: Math.random() > 0.3 ? 'Online' : 'Offline',
-            level: Math.floor(Math.random() * 3) + 1,
-            hasDeposited: Math.random() > 0.5,
-            activeWorking: Math.random() > 0.2
-        });
-
+        referredUsers.push({ id: randomId, status: 'Online', level: 1, hasDeposited: true, activeWorking: true });
         balance += 0.0010;
         updateTierAndUI();
         alert(`New referral joined: ${randomId}!`);
@@ -904,25 +943,17 @@
     function renderReferralsList() {
         const container = document.getElementById('referrals-list-container');
         if (referredUsers.length === 0) {
-            container.innerHTML = `<p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 10px;">No referrals yet. Invite friends to track activity!</p>`;
+            container.innerHTML = `<p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 10px;">No referrals yet.</p>`;
             return;
         }
 
         let html = '';
         referredUsers.forEach((ref) => {
-            const dotClass = ref.status === 'Online' ? 'online' : 'offline';
             html += `
                 <div class="ref-user-card">
                     <div>
                         <div style="font-size: 13px; font-weight:700; color:#fff;">${ref.id}</div>
-                        <div style="font-size: 10px; color: var(--text-secondary); margin-top:2px;">
-                            <span class="status-dot ${dotClass}"></span>${ref.status} | Lvl ${ref.level} | Task: ${ref.activeWorking ? 'Active' : 'Inactive'}
-                        </div>
-                    </div>
-                    <div style="text-align: right;">
-                        <span style="font-size: 10px; padding: 2px 6px; border-radius:6px; background: ${ref.hasDeposited ? 'rgba(0,255,170,0.15)' : 'rgba(255,255,255,0.05)'}; color: ${ref.hasDeposited ? 'var(--accent-green)' : 'var(--text-secondary)'};">
-                            ${ref.hasDeposited ? 'Deposited' : 'No Deposit'}
-                        </span>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Active Member</div>
                     </div>
                 </div>
             `;
@@ -943,10 +974,7 @@
             balance += 0.05;
             updateTierAndUI();
             alert("Promo Code Redeemed! +$0.05 added.");
-            document.getElementById('promo-input').value = "";
-        } else {
-            alert("Invalid or expired promo code!");
-        }
+        } else { alert("Invalid promo code!"); }
     }
 
     function processWithdrawal() {
@@ -954,24 +982,15 @@
         const amount = parseFloat(document.getElementById('withdraw-amount').value);
         const minAmount = (selectedWithdrawGateway === 'binance') ? 0.50 : 0.90;
 
-        if(!address) {
-            alert("Please enter a valid destination address or ID!");
-            return;
-        }
-        if(isNaN(amount) || amount < minAmount) {
-            alert(`Minimum withdrawal limit for ${selectedWithdrawGateway.toUpperCase()} is $${minAmount.toFixed(2)}`);
-            return;
-        }
-        if(amount > balance) {
-            alert("Insufficient wallet balance!");
-            return;
-        }
+        if(!address) { alert("Please enter destination address!"); return; }
+        if(isNaN(amount) || amount < minAmount) { alert(`Min limit is $${minAmount.toFixed(2)}`); return; }
+        if(amount > balance) { alert("Insufficient balance!"); return; }
 
         const fee = amount * 0.01;
         balance -= amount;
         updateTierAndUI();
 
-        alert(`Withdrawal Requested!\nGateway: ${selectedWithdrawGateway.toUpperCase()}\nNet Payout: $${(amount - fee).toFixed(4)}\nFee (1%): $${fee.toFixed(4)}`);
+        alert(`Withdrawal Requested!\nNet Payout: $${(amount - fee).toFixed(4)}`);
     }
 
     function startCountdownTimer(elementId, seconds, onComplete) {
@@ -994,4 +1013,4 @@
     }
 </script>
 </body>
-</html>ok
+</html>
