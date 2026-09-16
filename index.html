@@ -229,11 +229,11 @@
         .input-field:focus, .select-field:focus { border-color: var(--accent-cyan); }
         .select-field option { background: #070a12; color: white; }
 
-        /* Interactive Wheel UI Components */
+        /* Custom Visual Wheel UI Component */
         .wheel-wrapper {
             position: relative;
-            width: 220px;
-            height: 220px;
+            width: 250px;
+            height: 250px;
             margin: 15px auto;
         }
 
@@ -244,20 +244,19 @@
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-top: 20px solid var(--accent-gold);
-            z-index: 20;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 22px solid var(--accent-gold);
+            z-index: 30;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.9));
         }
 
-        .wheel-canvas {
+        .wheel-disc-svg {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 4px solid var(--accent-gold);
+            border: 5px solid var(--accent-gold);
             transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-            background: conic-gradient(#00f2fe 0deg 60deg, #00ffaa 60deg 120deg, #7928ca 120deg 180deg, #ff3b30 180deg 240deg, #ffb700 240deg 300deg, #0072ff 300deg 360deg);
             box-shadow: 0 0 25px rgba(255, 183, 0, 0.4);
         }
 
@@ -266,16 +265,17 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
+            width: 54px;
+            height: 54px;
             background: var(--bg-dark);
             border-radius: 50%;
-            border: 2px solid var(--accent-gold);
+            border: 3px solid var(--accent-gold);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            z-index: 10;
+            font-size: 20px;
+            z-index: 20;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
         }
 
         /* Win Modal Effect */
@@ -379,16 +379,6 @@
             justify-content: space-between;
             align-items: center;
         }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 4px;
-        }
-        .online { background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
-        .offline { background: var(--text-secondary); }
 
         /* Social Media Promo Logos Bar */
         .social-logos-bar {
@@ -504,7 +494,7 @@
                 <div id="main-timer-box" class="countdown-lbl" style="display:none;">Reset in: 24:00:00</div>
             </div>
 
-            <!-- Interactive Lucky Wheel Banner -->
+            <!-- SVG Visual Wheel Banner -->
             <div class="glass-card" style="text-align:center;">
                 <div class="card-header-title">
                     <span>Daily Lucky Wheel</span>
@@ -513,7 +503,36 @@
                 
                 <div class="wheel-wrapper">
                     <div class="wheel-pointer"></div>
-                    <div class="wheel-canvas" id="wheel-disc"></div>
+                    
+                    <!-- SVG Wheel Disk with Explicit Labels for All 6 Segments -->
+                    <svg class="wheel-disc-svg" id="wheel-disc" viewBox="0 0 200 200">
+                        <g transform="translate(100, 100)">
+                            <!-- Segment 1: 0.0001 -->
+                            <path d="M 0 0 L 0 -100 A 100 100 0 0 1 86.6 -50 Z" fill="#00f2fe" />
+                            <text x="30" y="-60" fill="#000" font-size="10" font-weight="bold" transform="rotate(30, 30, -60)">0.0001</text>
+
+                            <!-- Segment 2: $5 -->
+                            <path d="M 0 0 L 86.6 -50 A 100 100 0 0 1 86.6 50 Z" fill="#7928ca" />
+                            <text x="60" y="0" fill="#fff" font-size="12" font-weight="bold" transform="rotate(90, 60, 0)">$5</text>
+
+                            <!-- Segment 3: 0.0002 -->
+                            <path d="M 0 0 L 86.6 50 A 100 100 0 0 1 0 100 Z" fill="#00ffaa" />
+                            <text x="30" y="60" fill="#000" font-size="10" font-weight="bold" transform="rotate(150, 30, 60)">0.0002</text>
+
+                            <!-- Segment 4: $10 -->
+                            <path d="M 0 0 L 0 100 A 100 100 0 0 1 -86.6 50 Z" fill="#ff3b30" />
+                            <text x="-30" y="60" fill="#fff" font-size="12" font-weight="bold" transform="rotate(210, -30, 60)">$10</text>
+
+                            <!-- Segment 5: 0.003 -->
+                            <path d="M 0 0 L -86.6 50 A 100 100 0 0 1 -86.6 -50 Z" fill="#ffb700" />
+                            <text x="-60" y="0" fill="#000" font-size="10" font-weight="bold" transform="rotate(270, -60, 0)">0.003</text>
+
+                            <!-- Segment 6: $15 -->
+                            <path d="M 0 0 L -86.6 -50 A 100 100 0 0 1 0 -100 Z" fill="#0072ff" />
+                            <text x="-30" y="-60" fill="#fff" font-size="12" font-weight="bold" transform="rotate(330, -30, -60)">$15</text>
+                        </g>
+                    </svg>
+
                     <div class="wheel-center-node">🎯</div>
                 </div>
 
@@ -543,7 +562,6 @@
                 <div class="card-header-title">Buy Social Services (Subscribers / Follows)</div>
                 <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">Select package and target URL to boost your channels.</p>
                 
-                <!-- Social Media Channel Logos Bar -->
                 <div class="social-logos-bar">
                     <div class="social-logo-btn" title="YouTube">
                         <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube">
@@ -597,11 +615,10 @@
                 <button class="action-btn action-btn-purple" onclick="simulateRefJoin()">+ Simulate Referral Join</button>
             </div>
 
-            <!-- Referred Users List -->
             <div class="glass-card">
                 <div class="card-header-title">Your Referred Users Activity</div>
                 <div id="referrals-list-container">
-                    <p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 10px;">No referrals yet. Invite friends to track activity!</p>
+                    <p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 10px;">No referrals yet.</p>
                 </div>
             </div>
         </div>
@@ -717,13 +734,16 @@
     let AdController = null;
     let selectedWithdrawGateway = 'binance';
 
-    // New Verified Block ID
+    // Block ID Verified
     const activeBlockId = "48241";
 
-    // Safe Wheel Rewards (Large amounts $5, $10, $15 will NEVER hit)
-    const safeRewards = [0.0001, 0.0002, 0.003];
+    // Reward Objects Mapping to Rotations for Safe Winning
+    const safeWinningTargets = [
+        { reward: 0.0001, deg: 1470 }, // Segment 1
+        { reward: 0.0002, deg: 1590 }, // Segment 3
+        { reward: 0.003,  deg: 1710 }  // Segment 5
+    ];
 
-    // Subscriber Pricing Mapping
     const SUB_PRICING = {
         "100": { cost: 0.60, label: "$0.60" },
         "500": { cost: 1.00, label: "$1.00" },
@@ -762,17 +782,6 @@
         try {
             if (window.Adsgram && typeof window.Adsgram.init === 'function') {
                 AdController = window.Adsgram.init({ blockId: activeBlockId });
-            } else {
-                let checkCount = 0;
-                const sdkInterval = setInterval(() => {
-                    checkCount++;
-                    if (window.Adsgram && typeof window.Adsgram.init === 'function') {
-                        AdController = window.Adsgram.init({ blockId: activeBlockId });
-                        clearInterval(sdkInterval);
-                    } else if (checkCount > 10) {
-                        clearInterval(sdkInterval);
-                    }
-                }, 500);
             }
         } catch(e) { console.warn(e); }
     }
@@ -814,8 +823,6 @@
             mainBtn.disabled = true;
             mainBtn.innerText = "Daily Limit Reached";
         }
-
-        renderReferralsList();
     }
 
     function updateCampaignCost() {
@@ -860,9 +867,10 @@
         document.getElementById(`w-method-${method}`).classList.add('active');
     }
 
-    function executeAdWatch(type) {
+    // STRICT AD LOGIC: Must view ad to earn balance & spin. No fallback free rewards!
+    function executeAdWatch() {
         if (mainAdsLeft <= 0) {
-            alert("Daily viewing limit reached (3 Ads/Day)!");
+            alert("Daily limit reached (3 Ads/Day)!");
             return;
         }
 
@@ -872,30 +880,26 @@
 
         if (AdController) {
             AdController.show().then(() => {
-                applyRewardAndSpin();
+                balance += 0.0003;
+                mainAdsLeft--;
+                dailyAdsLeft--;
+                availableSpins++;
+                updateTierAndUI();
+                alert("Ad Completed Successfully! +$0.0003 & +1 Spin added.");
             }).catch((err) => {
-                alert("Ad could not be loaded or skipped. Try again inside Telegram.");
+                alert("Ad failed or skipped. You must watch the complete ad to get rewarded!");
             });
         } else {
-            applyRewardAndSpin();
+            alert("Adsgram SDK is loading or unavailable. Please open inside Telegram app.");
         }
     }
 
-    function applyRewardAndSpin() {
-        balance += 0.0003;
-        mainAdsLeft--;
-        dailyAdsLeft--;
-        availableSpins++;
-        updateTierAndUI();
-        alert("Ad Watched Successfully! +$0.0003 and +1 Spin added!");
-    }
-
-    function triggerMainAd() { executeAdWatch('main'); }
-    function triggerDailyAd() { executeAdWatch('daily'); }
+    function triggerMainAd() { executeAdWatch(); }
+    function triggerDailyAd() { executeAdWatch(); }
 
     function spinWheelAction() {
         if (availableSpins <= 0) {
-            alert("No spins available! Watch an ad to get 1 spin.");
+            alert("No spins available! Watch an ad to earn 1 spin.");
             return;
         }
 
@@ -903,21 +907,21 @@
         updateTierAndUI();
 
         const disc = document.getElementById('wheel-disc');
-        const reward = safeRewards[Math.floor(Math.random() * safeRewards.length)];
-        const rotDegree = 1440 + Math.floor(Math.random() * 360);
+        
+        // Pick strictly from low safe targets ($5, $10, $15 are mathematically impossible)
+        const target = safeWinningTargets[Math.floor(Math.random() * safeWinningTargets.length)];
 
-        disc.style.transform = `rotate(${rotDegree}deg)`;
+        disc.style.transform = `rotate(${target.deg}deg)`;
 
         setTimeout(() => {
-            balance += reward;
+            balance += target.reward;
             updateTierAndUI();
 
-            // Trigger Fireworks/Confetti Effect
             if (typeof confetti === 'function') {
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
             }
 
-            document.getElementById('win-modal-val').innerText = `+$${reward}`;
+            document.getElementById('win-modal-val').innerText = `+$${target.reward}`;
             document.getElementById('spin-win-modal').style.display = 'flex';
 
             disc.style.transition = 'none';
@@ -931,34 +935,11 @@
     }
 
     function simulateRefJoin() {
-        const mockIds = ["@User_Alpha", "@CryptoSagor", "@TelegramKing"];
-        const randomId = mockIds[Math.floor(Math.random() * mockIds.length)] + Math.floor(Math.random() * 1000);
-        
-        referredUsers.push({ id: randomId, status: 'Online', level: 1, hasDeposited: true, activeWorking: true });
+        const randomId = "@User_" + Math.floor(Math.random() * 8999 + 1000);
+        referredUsers.push({ id: randomId });
         balance += 0.0010;
         updateTierAndUI();
         alert(`New referral joined: ${randomId}!`);
-    }
-
-    function renderReferralsList() {
-        const container = document.getElementById('referrals-list-container');
-        if (referredUsers.length === 0) {
-            container.innerHTML = `<p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 10px;">No referrals yet.</p>`;
-            return;
-        }
-
-        let html = '';
-        referredUsers.forEach((ref) => {
-            html += `
-                <div class="ref-user-card">
-                    <div>
-                        <div style="font-size: 13px; font-weight:700; color:#fff;">${ref.id}</div>
-                        <div style="font-size: 10px; color: var(--text-secondary);">Active Member</div>
-                    </div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
     }
 
     function copyRefLink() {
@@ -991,25 +972,6 @@
         updateTierAndUI();
 
         alert(`Withdrawal Requested!\nNet Payout: $${(amount - fee).toFixed(4)}`);
-    }
-
-    function startCountdownTimer(elementId, seconds, onComplete) {
-        const timerBox = document.getElementById(elementId);
-        timerBox.style.display = "block";
-        let left = seconds;
-
-        const interval = setInterval(() => {
-            let h = Math.floor(left / 3600);
-            let m = Math.floor((left % 3600) / 60);
-            let s = left % 60;
-            timerBox.innerText = `Reset in: ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            left--;
-            if (left < 0) {
-                clearInterval(interval);
-                timerBox.style.display = "none";
-                if(onComplete) onComplete();
-            }
-        }, 1000);
     }
 </script>
 </body>
