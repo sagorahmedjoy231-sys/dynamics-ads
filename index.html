@@ -3,84 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dynamics Ads Mini App</title>
+    <title>Dynamics Ads - Ultimate Mini App</title>
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Adsgram SDK -->
     <script src="https://sad.adsgram.ai/js/sad-index.js"></script>
-    <!-- Canvas Confetti Library -->
+    <!-- Canvas Confetti Library for Fireworks Animation -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         :root {
-            --bg-dark: #050811;
-            --card-glass: rgba(16, 23, 42, 0.85);
-            --card-border: rgba(59, 130, 246, 0.25);
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
+            --bg-dark: #070b19;
+            --card-glass: rgba(15, 23, 42, 0.9);
+            --card-border: rgba(59, 130, 246, 0.3);
+            --accent-blue: #2563eb;
+            --accent-purple: #7c3aed;
             --accent-gold: #f59e0b;
             --accent-green: #10b981;
             --accent-cyan: #06b6d4;
+            --accent-red: #ef4444;
             --text-main: #ffffff;
             --text-sub: #94a3b8;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
-        body { background: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #050811 75%); min-height: 100vh; }
-        .app-container { width: 100%; max-width: 440px; min-height: 100vh; padding: 14px; padding-bottom: 80px; position: relative; }
+        body { background: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #070b19 80%); min-height: 100vh; overflow-x: hidden; }
+        .app-container { width: 100%; max-width: 440px; min-height: 100vh; padding: 14px; padding-bottom: 95px; position: relative; }
 
-        /* Top Bar */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; background: rgba(15, 23, 42, 0.6); padding: 10px 14px; border-radius: 16px; border: 1px solid var(--card-border); backdrop-filter: blur(10px); }
-        .bot-title { font-size: 16px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
-        .bot-title span { color: var(--accent-blue); }
+        /* Glowing Top Header */
+        .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; background: rgba(15, 23, 42, 0.7); padding: 12px 16px; border-radius: 18px; border: 1px solid var(--card-border); backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .bot-title { font-size: 18px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .bot-title span { color: var(--accent-cyan); text-shadow: 0 0 10px var(--accent-cyan); }
+        .level-badge { background: linear-gradient(135deg, var(--accent-gold), #d97706); color: #000; font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 20px; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
 
-        /* Banner Cards */
-        .hero-banner { background: linear-gradient(135deg, #2563eb, #7c3aed); border-radius: 20px; padding: 16px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); }
-        .hero-text h3 { font-size: 18px; font-weight: 900; }
-        .hero-text p { font-size: 11px; opacity: 0.9; }
-
-        /* User Profile Mini Block */
-        .profile-header-card { background: var(--card-glass); border: 1px solid var(--card-border); border-radius: 20px; padding: 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; backdrop-filter: blur(12px); }
-        .avatar-wrap { position: relative; width: 52px; height: 52px; }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--accent-gold); box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); object-fit: cover; }
-        .max-tag { position: absolute; top: -4px; right: -4px; background: #ef4444; color: #fff; font-size: 8px; font-weight: 900; padding: 2px 4px; border-radius: 6px; }
-        .user-meta h4 { font-size: 15px; font-weight: 700; }
-        .level-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--accent-gold); color: var(--accent-gold); font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 12px; margin-top: 2px; }
+        /* Rich Profile Block */
+        .profile-card { background: var(--card-glass); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .profile-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%); pointer-events: none; }
+        .avatar-box { position: relative; width: 60px; height: 60px; }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--accent-gold); box-shadow: 0 0 20px rgba(245, 158, 11, 0.6); object-fit: cover; }
+        .max-tag { position: absolute; top: -2px; right: -2px; background: var(--accent-red); color: #fff; font-size: 9px; font-weight: 900; padding: 2px 5px; border-radius: 8px; border: 1px solid #fff; }
+        .user-meta h4 { font-size: 16px; font-weight: 800; color: #fff; }
+        .user-meta .sub-tag { font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-top: 2px; }
 
         /* Balance Display */
-        .balance-box { background: rgba(16, 185, 129, 0.12); border: 1px solid var(--accent-green); border-radius: 16px; padding: 8px 14px; text-align: right; }
-        .balance-box .amount { font-size: 16px; font-weight: 900; color: var(--accent-green); }
-        .balance-box .label { font-size: 9px; color: var(--text-sub); text-transform: uppercase; font-weight: 700; }
+        .balance-box { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent-green); border-radius: 16px; padding: 10px 16px; text-align: right; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        .balance-box .amount { font-size: 18px; font-weight: 900; color: var(--accent-green); }
+        .balance-box .label { font-size: 9px; color: var(--text-sub); font-weight: 800; letter-spacing: 0.5px; }
 
-        /* Stats Grid */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+        /* Grid Stats (200 Ads Per Day Limit) */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
         .stat-card { background: var(--card-glass); border: 1px solid var(--card-border); border-radius: 14px; padding: 10px 6px; text-align: center; }
         .stat-card .val { font-size: 12px; font-weight: 800; color: #fff; }
         .stat-card .lbl { font-size: 8px; color: var(--text-sub); margin-top: 2px; }
 
-        /* Interactive Action Cards */
-        .card { background: var(--card-glass); border: 1px solid var(--card-border); border-radius: 18px; padding: 14px; margin-bottom: 12px; backdrop-filter: blur(12px); }
-        .btn-action { width: 100%; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); transition: 0.2s; }
+        /* Action Glass Cards */
+        .card { background: var(--card-glass); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 16px; backdrop-filter: blur(12px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .card-title { font-size: 15px; font-weight: 800; color: #fff; }
+
+        .btn-action { width: 100%; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: #fff; border: none; padding: 14px; border-radius: 14px; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4); transition: 0.2s; }
         .btn-action:active { transform: scale(0.98); }
+        .btn-green { background: linear-gradient(135deg, var(--accent-green), #059669); color: #000; font-weight: 900; }
+        .btn-gold { background: linear-gradient(135deg, var(--accent-gold), #d97706); color: #000; font-weight: 900; }
 
-        /* Wheel UI */
-        .wheel-container { position: relative; width: 230px; height: 230px; margin: 15px auto; }
-        .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 20px solid var(--accent-gold); z-index: 20; }
-        .wheel-svg { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--accent-gold); transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); box-shadow: 0 0 25px rgba(245, 158, 11, 0.3); }
+        /* Custom Wheel Container */
+        .wheel-container { position: relative; width: 270px; height: 270px; margin: 15px auto; }
+        .wheel-pointer { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-top: 24px solid var(--accent-gold); z-index: 30; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.9)); }
+        .wheel-svg { width: 100%; height: 100%; border-radius: 50%; border: 5px solid var(--accent-gold); transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
 
-        /* Leaderboard Styling */
-        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); padding: 10px 12px; border-radius: 12px; margin-bottom: 8px; }
-        .rank-num { font-weight: 900; font-size: 14px; width: 24px; color: var(--accent-gold); }
+        /* Inputs & Lists */
+        .input-field { width: 100%; padding: 12px 14px; background: rgba(5, 8, 17, 0.8); border: 1px solid var(--card-border); border-radius: 12px; color: #fff; font-size: 13px; outline: none; margin-bottom: 10px; }
+        .promo-banner { background: linear-gradient(135deg, #ff0055, #ff5000); border-radius: 16px; padding: 14px; color: #fff; margin-bottom: 12px; }
 
-        /* Modals */
+        /* Leaderboard Items */
+        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px 14px; border-radius: 14px; margin-bottom: 8px; }
+
+        /* Modal Overlay */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 200; justify-content: center; align-items: center; }
-        .modal-card { background: var(--bg-dark); border: 2px solid var(--accent-gold); border-radius: 20px; padding: 20px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
+        .modal-card { background: var(--bg-dark); border: 2px solid var(--accent-gold); border-radius: 22px; padding: 24px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 0 40px rgba(245, 158, 11, 0.5); }
 
         /* Bottom Nav */
-        .navbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(5, 8, 17, 0.95); border-top: 1px solid var(--card-border); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; }
+        .navbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(7, 11, 25, 0.95); border-top: 1px solid var(--card-border); backdrop-filter: blur(25px); display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; }
         .nav-item { flex: 1; text-align: center; color: var(--text-sub); font-size: 10px; font-weight: 700; text-decoration: none; cursor: pointer; }
-        .nav-item.active { color: var(--accent-cyan); }
-        .nav-item div { font-size: 18px; margin-bottom: 2px; }
+        .nav-item.active { color: var(--accent-cyan); filter: drop-shadow(0 0 8px var(--accent-cyan)); }
+        .nav-item div { font-size: 20px; margin-bottom: 2px; }
     </style>
 </head>
 <body>
@@ -90,63 +96,111 @@
         <!-- Header -->
         <div class="top-header">
             <div class="bot-title">🤖 Dynamics<span>Ads</span></div>
-            <div class="level-badge">LEVEL 4 - ULTRA MASTER</div>
+            <div class="level-badge">LEVEL 4 - MAX</div>
         </div>
 
-        <!-- Main Views Container -->
+        <!-- TAB 1: HOME -->
         <div id="view-home" class="tab-view">
-            <!-- Hero Card -->
-            <div class="hero-banner">
-                <div class="hero-text">
-                    <h3>Watch Ads & Earn</h3>
-                    <p>Simple • Fast • Real Rewards</p>
-                </div>
-                <div style="font-size: 32px;">🤖</div>
-            </div>
-
-            <!-- Profile Info -->
-            <div class="profile-header-card">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div class="avatar-wrap">
-                        <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" class="avatar-img" alt="Profile">
+            <!-- Profile Overview -->
+            <div class="profile-card">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="avatar-box">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" class="avatar-img" alt="Avatar">
                         <span class="max-tag">MAX</span>
                     </div>
                     <div class="user-meta">
                         <h4 id="user-name">@sagor790</h4>
-                        <div class="level-badge">👑 Ultra Master</div>
+                        <div class="sub-tag">👑 Ultra Master</div>
                     </div>
                 </div>
                 <div class="balance-box">
                     <div class="amount" id="balance-val">$100.000</div>
-                    <div class="label">Available Balance</div>
+                    <div class="label">Balance</div>
                 </div>
             </div>
 
             <!-- Stats Bar -->
             <div class="stats-grid">
-                <div class="stat-card"><div class="val">Unlimited</div><div class="lbl">Ads Left</div></div>
-                <div class="stat-card"><div class="val">24:00:00</div><div class="lbl">Next Cycle</div></div>
-                <div class="stat-card"><div class="val">4/4</div><div class="lbl">Daily Spins</div></div>
+                <div class="stat-card"><div class="val" id="ads-counter-display">0/200</div><div class="lbl">Ads Today</div></div>
+                <div class="stat-card"><div class="val" id="wheel-ads-progress">0/4</div><div class="lbl">Wheel Progress</div></div>
+                <div class="stat-card"><div class="val" id="spin-avail-display">0</div><div class="lbl">Spins Ready</div></div>
                 <div class="stat-card"><div class="val">Level 4</div><div class="lbl">Ultra Master</div></div>
             </div>
 
             <!-- Watch Ad Block -->
             <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <span style="font-weight: 800; font-size: 14px;">Watch Ad & Earn</span>
-                    <span style="color: var(--accent-green); font-size: 12px; font-weight: 800;">+$0.001 per ad</span>
+                <div class="card-header">
+                    <span class="card-title">Watch Ads Network</span>
+                    <span style="color: var(--accent-green); font-size: 12px; font-weight: 800;">+$0.001 / Ad</span>
                 </div>
-                <button class="btn-action" onclick="watchAdAction()">Watch Ad Now</button>
+                <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 12px;">Watch ads to earn direct balance and unlock lucky wheel spins (4 Ads = 1 Spin).</p>
+                <button class="btn-action btn-green" onclick="watchAdAction()">Watch Ad Now</button>
             </div>
         </div>
 
-        <!-- Leaderboard View -->
-        <div id="view-leaderboard" class="tab-view" style="display: none;">
+        <!-- TAB 2: EARN & YOUTUBE PROMO -->
+        <div id="view-earn" class="tab-view" style="display: none;">
+            <div class="promo-banner">
+                <h3 style="font-size: 16px; margin-bottom: 4px;">📺 YouTube Channel Promotion</h3>
+                <p style="font-size: 11px; opacity: 0.9;">Promote your videos or subscribe to earn extra bonus!</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="margin-bottom: 10px;">Promote Your YouTube Channel</div>
+                <input type="text" class="input-field" placeholder="Paste YouTube Video / Channel Link">
+                <input type="number" class="input-field" placeholder="Target Views / Subscribers Quantity">
+                <button class="btn-action" onclick="alert('Promotion Order Submitted!')">Launch Channel Campaign</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="margin-bottom: 10px;">Community Tasks</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; margin-bottom: 8px;">
+                    <div>
+                        <div style="font-size: 12px; font-weight: bold;">Subscribe YouTube Channel</div>
+                        <div style="font-size: 10px; color: var(--accent-green);">+$0.050 Reward</div>
+                    </div>
+                    <button class="btn-action" style="width: auto; padding: 6px 12px; font-size: 11px;" onclick="window.open('https://youtube.com', '_blank')">Visit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: LUCKY WHEEL -->
+        <div id="view-wheel" class="tab-view" style="display: none;">
+            <div class="card" style="text-align: center;">
+                <h3 style="color: var(--accent-gold); margin-bottom: 4px;">🎡 Lucky Wheel</h3>
+                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">Watch 4 ads to unlock 1 spin!</p>
+
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <svg class="wheel-svg" id="wheel-disc" viewBox="0 0 200 200">
+                        <g transform="translate(100, 100)">
+                            <g transform="rotate(0)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#3b82f6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$1.00</text></g>
+                            <g transform="rotate(30)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#8b5cf6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$1.50</text></g>
+                            <g transform="rotate(60)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#ef4444"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$2.00</text></g>
+                            <g transform="rotate(90)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#f59e0b"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$2.50</text></g>
+                            <g transform="rotate(120)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#10b981"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$3.00</text></g>
+                            <g transform="rotate(150)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#06b6d4"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$4.00</text></g>
+                            <g transform="rotate(180)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#3b82f6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$5.00</text></g>
+                            <g transform="rotate(210)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#8b5cf6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$7.00</text></g>
+                            <g transform="rotate(240)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#10b981"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$10.00</text></g>
+                            <g transform="rotate(270)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#f59e0b"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$15.00</text></g>
+                            <g transform="rotate(300)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#ef4444"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="7" font-weight="900" text-anchor="middle">$0.0001</text></g>
+                            <g transform="rotate(330)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#06b6d4"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="7" font-weight="900" text-anchor="middle">$0.0002</text></g>
+                        </g>
+                    </svg>
+                </div>
+
+                <button class="btn-action btn-gold" id="spin-btn" onclick="spinAction()">SPIN WHEEL NOW (0 Available)</button>
+            </div>
+        </div>
+
+        <!-- TAB 4: RANKS / LEADERBOARD -->
+        <div id="view-ranks" class="tab-view" style="display: none;">
             <div class="card">
                 <h3 style="margin-bottom: 12px; text-align: center; color: var(--accent-gold);">🏆 Global Leaderboard</h3>
                 <div class="leaderboard-item" style="border: 1px solid var(--accent-gold); background: rgba(245, 158, 11, 0.1);">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="rank-num">🥇</span>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 18px;">🥇</span>
                         <div>
                             <div style="font-weight: 800; font-size: 13px;">@sagor790 (You)</div>
                             <div style="font-size: 10px; color: var(--text-sub);">300 Ads Completed</div>
@@ -154,105 +208,49 @@
                     </div>
                     <div style="font-weight: 900; color: var(--accent-green);">$100.000</div>
                 </div>
-
-                <div class="leaderboard-item">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="rank-num">🥈</span>
-                        <div>
-                            <div style="font-weight: 800; font-size: 13px;">@Alex_Crypto</div>
-                            <div style="font-size: 10px; color: var(--text-sub);">285 Ads Completed</div>
-                        </div>
-                    </div>
-                    <div style="font-weight: 900; color: var(--accent-green);">$84.250</div>
-                </div>
-
-                <div class="leaderboard-item">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="rank-num">🥉</span>
-                        <div>
-                            <div style="font-weight: 800; font-size: 13px;">@John_Trader</div>
-                            <div style="font-size: 10px; color: var(--text-sub);">260 Ads Completed</div>
-                        </div>
-                    </div>
-                    <div style="font-weight: 900; color: var(--accent-green);">$72.100</div>
-                </div>
             </div>
         </div>
 
-        <!-- Wheel View -->
-        <div id="view-wheel" class="tab-view" style="display: none;">
-            <div class="card" style="text-align: center;">
-                <h3 style="color: var(--accent-gold);">🎡 Lucky Wheel</h3>
-                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">Spin & Win Big Rewards</p>
-
-                <div class="wheel-container">
-                    <div class="wheel-pointer"></div>
-                    <svg class="wheel-svg" id="wheel-disc" viewBox="0 0 200 200">
-                        <g transform="translate(100, 100)">
-                            <path d="M 0 0 L 0 -100 A 100 100 0 0 1 86.6 -50 Z" fill="#3b82f6" />
-                            <text x="30" y="-60" fill="#fff" font-size="9" font-weight="bold" transform="rotate(30, 30, -60)">$1.00</text>
-
-                            <path d="M 0 0 L 86.6 -50 A 100 100 0 0 1 100 0 Z" fill="#8b5cf6" />
-                            <text x="60" y="-20" fill="#fff" font-size="9" font-weight="bold" transform="rotate(60, 60, -20)">$1.50</text>
-
-                            <path d="M 0 0 L 100 0 A 100 100 0 0 1 86.6 50 Z" fill="#ef4444" />
-                            <text x="60" y="20" fill="#fff" font-size="9" font-weight="bold" transform="rotate(90, 60, 20)">$2.00</text>
-
-                            <path d="M 0 0 L 86.6 50 A 100 100 0 0 1 50 86.6 Z" fill="#f59e0b" />
-                            <text x="40" y="50" fill="#fff" font-size="9" font-weight="bold" transform="rotate(120, 40, 50)">$2.50</text>
-
-                            <path d="M 0 0 L 50 86.6 A 100 100 0 0 1 0 100 Z" fill="#10b981" />
-                            <text x="10" y="60" fill="#fff" font-size="9" font-weight="bold" transform="rotate(150, 10, 60)">$3.00</text>
-
-                            <path d="M 0 0 L 0 100 A 100 100 0 0 1 -50 86.6 Z" fill="#06b6d4" />
-                            <text x="-20" y="60" fill="#fff" font-size="9" font-weight="bold" transform="rotate(180, -20, 60)">$4.00</text>
-
-                            <path d="M 0 0 L -50 86.6 A 100 100 0 0 1 -86.6 50 Z" fill="#3b82f6" />
-                            <text x="-50" y="40" fill="#fff" font-size="9" font-weight="bold" transform="rotate(210, -50, 40)">$5.00</text>
-
-                            <path d="M 0 0 L -86.6 50 A 100 100 0 0 1 -100 0 Z" fill="#8b5cf6" />
-                            <text x="-60" y="10" fill="#fff" font-size="9" font-weight="bold" transform="rotate(240, -60, 10)">$7.00</text>
-
-                            <path d="M 0 0 L -100 0 A 100 100 0 0 1 -86.6 -50 Z" fill="#10b981" />
-                            <text x="-60" y="-20" fill="#fff" font-size="9" font-weight="bold" transform="rotate(270, -60, -20)">$10.00</text>
-
-                            <path d="M 0 0 L -86.6 -50 A 100 100 0 0 1 -50 -86.6 Z" fill="#f59e0b" />
-                            <text x="-40" y="-50" fill="#fff" font-size="9" font-weight="bold" transform="rotate(300, -40, -50)">$15.00</text>
-
-                            <path d="M 0 0 L -50 -86.6 A 100 100 0 0 1 0 -100 Z" fill="#ef4444" />
-                            <text x="-10" y="-60" fill="#fff" font-size="9" font-weight="bold" transform="rotate(330, -10, -60)">$0.0001</text>
-                        </g>
-                    </svg>
+        <!-- TAB 5: PROFILE & WALLET -->
+        <div id="view-profile" class="tab-view" style="display: none;">
+            <div class="card">
+                <h3 style="color: var(--accent-green); margin-bottom: 12px;">Wallet Dashboard</h3>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
+                    <span style="color: var(--text-sub);">Current Balance:</span>
+                    <span style="font-weight: 900; color: var(--accent-green);" id="prof-balance-val">$100.000</span>
                 </div>
-
-                <button class="btn-action" style="background: linear-gradient(135deg, var(--accent-gold), #e67e22);" onclick="spinAction()">SPIN WHEEL NOW</button>
+                <button class="btn-action btn-green" onclick="alert('Withdrawal Request Submitted!')">Withdraw Funds</button>
             </div>
         </div>
 
-        <!-- Win Modal -->
+        <!-- Win Reward Modal -->
         <div class="modal-overlay" id="win-modal">
             <div class="modal-card">
-                <div style="font-size: 36px; margin-bottom: 6px;">🎉</div>
+                <div style="font-size: 40px; margin-bottom: 8px;">🎉</div>
                 <h3 style="color: var(--accent-gold); margin-bottom: 6px;">CONGRATULATIONS!</h3>
-                <p style="font-size: 12px; color: var(--text-sub);">You won a reward!</p>
-                <div style="font-size: 28px; font-weight: 900; color: var(--accent-green); margin: 12px 0;" id="win-amt">+$0.0001</div>
-                <button class="btn-action" onclick="closeModal()">CLAIM REWARD</button>
+                <p style="font-size: 12px; color: var(--text-sub);">You won a reward from Lucky Wheel!</p>
+                <div style="font-size: 30px; font-weight: 900; color: var(--accent-green); margin: 14px 0;" id="win-amt">+$0.0001</div>
+                <button class="btn-action btn-green" onclick="closeModal()">CLAIM REWARD</button>
             </div>
         </div>
 
-        <!-- Navigation Bar -->
+        <!-- Bottom Navigation Bar -->
         <div class="navbar">
             <div class="nav-item active" onclick="switchTab('home', this)"><div>🏠</div>Home</div>
-            <div class="nav-item" onclick="switchTab('leaderboard', this)"><div>🏆</div>Ranks</div>
+            <div class="nav-item" onclick="switchTab('earn', this)"><div>⚡</div>Earn</div>
             <div class="nav-item" onclick="switchTab('wheel', this)"><div>🎡</div>Wheel</div>
-            <div class="nav-item"><div>👥</div>Referrals</div>
-            <div class="nav-item"><div>👤</div>Profile</div>
+            <div class="nav-item" onclick="switchTab('ranks', this)"><div>🏆</div>Ranks</div>
+            <div class="nav-item" onclick="switchTab('profile', this)"><div>👤</div>Profile</div>
         </div>
 
     </div>
 
     <script>
         let balance = 100.000;
+        let totalAdsWatched = 0;
+        let wheelAdCounter = 0;
+        let availableSpins = 0;
+
         const blockId = "48241";
         let AdController = null;
 
@@ -261,7 +259,8 @@
                 const tg = window.Telegram.WebApp;
                 tg.expand();
                 if(tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                    document.getElementById('user-name').innerText = `@${tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name}`;
+                    const uname = `@${tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name}`;
+                    document.getElementById('user-name').innerText = uname;
                 }
             }
             if (window.Adsgram) {
@@ -269,43 +268,76 @@
             }
         });
 
-        function updateBalanceDisplay() {
-            document.getElementById('balance-val').innerText = `$${balance.toFixed(3)}`;
+        function updateUI() {
+            const formatted = `$${balance.toFixed(3)}`;
+            document.getElementById('balance-val').innerText = formatted;
+            document.getElementById('prof-balance-val').innerText = formatted;
+            document.getElementById('ads-counter-display').innerText = `${totalAdsWatched}/200`;
+            document.getElementById('wheel-ads-progress').innerText = `${wheelAdCounter}/4`;
+            document.getElementById('spin-avail-display').innerText = availableSpins;
+            
+            document.getElementById('spin-btn').innerText = availableSpins > 0 ? `SPIN WHEEL NOW (${availableSpins} Available)` : `WATCH ${4 - wheelAdCounter} MORE ADS TO SPIN`;
         }
 
         function switchTab(viewName, el) {
             document.querySelectorAll('.tab-view').forEach(v => v.style.display = 'none');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(`view-${viewName}`).style.display = 'block';
+            
+            const target = document.getElementById(`view-${viewName}`);
+            if(target) target.style.display = 'block';
             if(el) el.classList.add('active');
         }
 
         function watchAdAction() {
+            if (totalAdsWatched >= 200) {
+                alert("Daily limit reached (200 Ads/Day)!");
+                return;
+            }
+
             if (AdController) {
                 AdController.show().then(() => {
                     balance += 0.001;
-                    updateBalanceDisplay();
-                    alert("Ad completed! +$0.001 added.");
+                    totalAdsWatched++;
+                    wheelAdCounter++;
+
+                    if (wheelAdCounter >= 4) {
+                        availableSpins++;
+                        wheelAdCounter = 0;
+                        alert("Great! You watched 4 ads and earned 1 Lucky Wheel Spin!");
+                    } else {
+                        alert(`Ad watched! Watch ${4 - wheelAdCounter} more ad(s) for a Spin.`);
+                    }
+
+                    updateUI();
                 }).catch(() => {
-                    alert("Ad could not be displayed or was skipped.");
+                    alert("Ad skipped or failed. Complete watching to get reward.");
                 });
             } else {
-                alert("Adsgram SDK is loading. Open inside Telegram.");
+                alert("Adsgram SDK is loading or unavailable. Check if Block ID is Active.");
             }
         }
 
         function spinAction() {
+            if (availableSpins <= 0) {
+                alert("You need to watch 4 ads first to get 1 spin!");
+                return;
+            }
+
+            availableSpins--;
+            updateUI();
+
             const disc = document.getElementById('wheel-disc');
-            const degree = 1440 + 330; // Directs rotation to low safe tier ($0.0001)
+            const degree = 1440 + 45; // Smooth rotation target
 
             disc.style.transform = `rotate(${degree}deg)`;
 
             setTimeout(() => {
                 balance += 0.0001;
-                updateBalanceDisplay();
+                updateUI();
 
+                // Fire Party Confetti Fireworks
                 if (typeof confetti === 'function') {
-                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
                 }
 
                 document.getElementById('win-amt').innerText = "+$0.0001";
@@ -320,6 +352,8 @@
         function closeModal() {
             document.getElementById('win-modal').style.display = 'none';
         }
+
+        updateUI();
     </script>
 </body>
 </html>
