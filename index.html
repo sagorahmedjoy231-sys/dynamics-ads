@@ -416,6 +416,20 @@
             margin-bottom: 12px;
         }
 
+        /* Ad Center - stacked green watch buttons */
+        .ad-batch-list { display:flex; flex-direction:column; gap:10px; margin:14px 0; }
+        .ad-batch-button {
+            width:100%; min-height:78px; border:1px solid rgba(16,185,129,.55); border-radius:16px;
+            padding:12px 14px; background:linear-gradient(135deg,var(--accent-green),#059669); color:#03130d;
+            display:grid; grid-template-columns:1fr auto; grid-template-rows:auto auto; align-items:center;
+            text-align:left; cursor:pointer; box-shadow:0 8px 22px rgba(16,185,129,.20);
+            transition:transform .15s ease,filter .15s ease;
+        }
+        .ad-batch-button:active { transform:scale(.985); filter:brightness(.95); }
+        .ad-batch-count { font-size:22px; line-height:1.05; font-weight:950; }
+        .ad-batch-name { font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; margin-top:4px; }
+        .ad-watch-label { grid-column:2; grid-row:1 / span 2; align-self:center; padding:10px 13px; border-radius:12px; background:rgba(0,0,0,.16); color:#001c11; font-size:12px; font-weight:950; white-space:nowrap; }
+
         /* Wheel UI */
         .wheel-wrapper {
             position: relative;
@@ -768,15 +782,40 @@
             <!-- TAB 2: ADS CENTER -->
             <section id="view-ads" class="tab-view">
                 <div class="card">
-                    <div class="card-header"><span class="card-title highlight-cyan">🎬 Ad Center</span><span class="reward-tag">200 ads/day</span></div>
-                    <p class="card-desc">Tap a batch to watch a rewarded ad. Every completed rewarded ad is credited after AdsGram confirms completion.</p>
-                    <div class="batch-grid">
-                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Daily Ad')"><strong>100</strong><span>DAILY AD</span></button>
-                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Extra Ad')"><strong>50</strong><span>EXTRA AD</span></button>
-                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Bonus Ad')"><strong>50</strong><span>BONUS AD</span></button>
+                    <div class="card-header">
+                        <span class="card-title highlight-cyan">🎬 Ad Center</span>
+                        <span class="reward-tag">250 ads/day</span>
                     </div>
+                    <p class="card-desc">Tap any green Watch Now button to watch a rewarded ad. Each completed ad is credited after AdsGram confirms completion.</p>
+
+                    <div class="ad-batch-list">
+                        <button class="ad-batch-button" type="button" onclick="handleWatchAd('Daily Ad')">
+                            <span class="ad-batch-count">100 Ads</span>
+                            <span class="ad-batch-name">Daily Ad</span>
+                            <span class="ad-watch-label">▶ WATCH NOW</span>
+                        </button>
+                        <button class="ad-batch-button" type="button" onclick="handleWatchAd('Extra Earn')">
+                            <span class="ad-batch-count">50 Ads</span>
+                            <span class="ad-batch-name">Extra Earn</span>
+                            <span class="ad-watch-label">▶ WATCH NOW</span>
+                        </button>
+                        <button class="ad-batch-button" type="button" onclick="handleWatchAd('Bonus Ad')">
+                            <span class="ad-batch-count">50 Ads</span>
+                            <span class="ad-batch-name">Bonus Ad</span>
+                            <span class="ad-watch-label">▶ WATCH NOW</span>
+                        </button>
+                        <button class="ad-batch-button" type="button" onclick="handleWatchAd('Extra Bonus Ad')">
+                            <span class="ad-batch-count">50 Ads</span>
+                            <span class="ad-batch-name">Extra Bonus Ad</span>
+                            <span class="ad-watch-label">▶ WATCH NOW</span>
+                        </button>
+                    </div>
+
                     <div class="section-kicker">Today's progress</div>
-                    <div class="stat-card" style="margin-bottom:10px"><div class="stat-val" id="ads-counter">0/200</div><div class="stat-lbl">Ads Completed Today</div></div>
+                    <div class="stat-card">
+                        <div class="stat-val" id="ads-counter">0/250</div>
+                        <div class="stat-lbl">Ads Completed Today</div>
+                    </div>
                 </div>
             </section>
 
@@ -964,7 +1003,7 @@
         const appData = {
             balance: 100.000,
             totalAdsWatched: 0,
-            dailyAdLimit: 200,
+            dailyAdLimit: 250,
             availableSpins: 4,
             dailySpinLimit: 4,
             selectedCrypto: 'TON',
@@ -1064,7 +1103,7 @@
 
         async function handleWatchAd(source='Ad Center') {
             if (appData.totalAdsWatched >= appData.dailyAdLimit) {
-                alert('Daily ad limit reached: 200/200.');
+                alert(`Daily ad limit reached: ${appData.dailyAdLimit}/${appData.dailyAdLimit}.`);
                 return false;
             }
             if (!AdController) {
@@ -1106,7 +1145,7 @@
         async function handleSpinWheel() {
             if (wheelBusy) return;
             if (appData.availableSpins <= 0) { alert('No spins remaining today.'); return; }
-            if (appData.totalAdsWatched >= appData.dailyAdLimit) { alert('Daily ad limit reached: 200/200.'); return; }
+            if (appData.totalAdsWatched >= appData.dailyAdLimit) { alert(`Daily ad limit reached: ${appData.dailyAdLimit}/${appData.dailyAdLimit}.`); return; }
 
             const btn=document.getElementById('btn-spin');
             wheelBusy=true;
