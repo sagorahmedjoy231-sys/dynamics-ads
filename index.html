@@ -416,6 +416,20 @@
             margin-bottom: 12px;
         }
 
+        /* Ad Center - stacked green watch buttons */
+        .ad-batch-list { display:flex; flex-direction:column; gap:10px; margin:14px 0; }
+        .ad-batch-button {
+            width:100%; min-height:78px; border:1px solid rgba(16,185,129,.55); border-radius:16px;
+            padding:12px 14px; background:linear-gradient(135deg,var(--accent-green),#059669); color:#03130d;
+            display:grid; grid-template-columns:1fr auto; grid-template-rows:auto auto; align-items:center;
+            text-align:left; cursor:pointer; box-shadow:0 8px 22px rgba(16,185,129,.20);
+            transition:transform .15s ease,filter .15s ease;
+        }
+        .ad-batch-button:active { transform:scale(.985); filter:brightness(.95); }
+        .ad-batch-count { font-size:22px; line-height:1.05; font-weight:950; }
+        .ad-batch-name { font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; margin-top:4px; }
+        .ad-watch-label { grid-column:2; grid-row:1 / span 2; align-self:center; padding:10px 13px; border-radius:12px; background:rgba(0,0,0,.16); color:#001c11; font-size:12px; font-weight:950; white-space:nowrap; }
+
         /* Wheel UI */
         .wheel-wrapper {
             position: relative;
@@ -491,6 +505,23 @@
             height: 26px;
             margin-bottom: 4px;
         }
+
+        .crypto-selector-2 { grid-template-columns: repeat(2, 1fr); }
+        .crypto-card { position:relative; color:#fff; font:inherit; }
+        .crypto-card span { display:block; font-weight:900; }
+        .crypto-card small { display:block; color:var(--text-sub); font-size:8px; margin-top:3px; }
+        .wallet-address-box {
+            background:rgba(5,8,17,.72); border:1px solid rgba(6,182,212,.35); border-radius:16px;
+            padding:13px; margin:0 0 12px;
+        }
+        .wallet-address-head { display:flex; align-items:center; gap:9px; margin-bottom:9px; }
+        .wallet-address-head img { width:30px; height:30px; border-radius:50%; }
+        .wallet-address-name { font-weight:900; font-size:12px; }
+        .wallet-network { color:var(--text-sub); font-size:9px; margin-top:2px; }
+        .wallet-address-text { word-break:break-all; font-size:11px; line-height:1.5; color:#fff; margin-bottom:10px; }
+        .wallet-copy-btn { width:100%; padding:10px; border:1px solid rgba(255,255,255,.15); border-radius:11px; background:rgba(255,255,255,.07); color:#fff; font-weight:800; cursor:pointer; }
+        .withdraw-selector { grid-template-columns:repeat(3,1fr); }
+        .withdraw-selector .crypto-card img { width:30px; height:30px; }
 
         /* Modal Popup */
         .modal-overlay {
@@ -620,7 +651,20 @@
         .earning-value{font-size:18px;font-weight:900;color:#fff;text-shadow:0 0 12px rgba(255,255,255,.25)}
         .earning-label{font-size:9px;color:var(--text-sub);margin-top:5px;font-weight:800}
 
-        .batch-action{cursor:pointer;color:#fff;font:inherit;width:100%;transition:transform .18s ease,box-shadow .18s ease}.batch-action:hover{transform:translateY(-2px);box-shadow:0 0 25px rgba(6,182,212,.28)}.batch-card small{display:block;margin-top:5px;font-size:8px;color:#67e8f9;font-weight:800}.task-grid-2{grid-template-columns:1fr 1fr}.social-task{position:relative;overflow:hidden}.social-logo{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#fff;font-size:28px;font-weight:1000;margin-bottom:8px;box-shadow:0 0 25px rgba(255,255,255,.16)}.youtube-logo{background:linear-gradient(135deg,#ff0033,#ff4d6d)}.facebook-logo{background:linear-gradient(135deg,#1877f2,#4f8cff)}.telegram-logo{background:linear-gradient(135deg,#18aeea,#287be8)}.tiktok-logo{background:linear-gradient(135deg,#111827,#ec4899)}.task-packages{display:grid;gap:5px;margin:8px 0 10px}.task-packages div{display:flex;justify-content:space-between;gap:5px;padding:6px 7px;border-radius:9px;background:rgba(255,255,255,.055);font-size:8px;color:var(--text-sub)}.task-packages b{color:#fff}.task-grid-2 .task-card p{min-height:22px}.task-grid-2 .task-card .btn{width:100%}
+        .batch-action{cursor:pointer;color:#fff;font:inherit;width:100%;transition:transform .18s ease,box-shadow .18s ease}.batch-action:hover{transform:translateY(-2px);box-shadow:0 0 25px rgba(6,182,212,.28)}.batch-card small{display:block;margin-top:5px;font-size:8px;color:#67e8f9;font-weight:800}
+        /* Compact social task selector + dynamic task list */
+        .social-platforms{display:flex;justify-content:center;align-items:center;gap:12px;margin:2px 0 14px}
+        .social-platform-logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;font-size:22px;font-weight:1000;box-shadow:0 0 18px rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16)}
+        .social-platform-logo svg{width:23px;height:23px;fill:#fff}
+        .social-platform-logo.youtube{background:#ff0033}.social-platform-logo.facebook{background:#1877f2}.social-platform-logo.telegram{background:#229ed9}.social-platform-logo.tiktok{background:#111827}
+        .social-task-list{display:grid;gap:9px}
+        .social-task-item{display:flex;align-items:center;gap:10px;padding:11px;border-radius:15px;border:1px solid var(--card-border);background:linear-gradient(135deg,rgba(15,23,42,.94),rgba(30,41,59,.72))}
+        .social-task-item .task-mini-logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;font-size:19px;font-weight:1000;flex:0 0 auto}
+        .social-task-item .task-main{min-width:0;flex:1}.social-task-item h3{font-size:12px;margin:0 0 3px}.social-task-item p{font-size:9px;color:var(--text-sub);margin:0}.social-task-item .task-reward{font-size:11px;font-weight:900;color:#34d399;margin-top:3px}
+        .social-task-item .task-actions{display:flex;gap:6px;flex:0 0 auto}.social-task-item .task-actions .btn{padding:8px 9px;font-size:9px;white-space:nowrap}.social-task-empty{text-align:center;padding:18px;color:var(--text-sub);font-size:10px;border:1px dashed rgba(148,163,184,.28);border-radius:14px}
+
+
+        .promo-platforms{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:0 2px}.promo-platform-logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;box-shadow:0 0 16px rgba(255,255,255,.12);flex:0 0 auto}.promo-platform-logo svg{width:25px;height:25px;display:block}.promo-platform-logo.youtube{background:#ff0033}.promo-platform-logo.facebook{background:#1877f2}.promo-platform-logo.telegram{background:#229ed9}.promo-platform-logo.tiktok{background:#111827}.promo-platform-logo svg{fill:#fff}
 
         /* Ads + Tasks */
         .batch-grid,.task-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -646,18 +690,6 @@
         .highlight-green { color: var(--accent-green); }
         .highlight-cyan { color: var(--accent-cyan); }
         .highlight-purple { color: var(--accent-purple); }
-
-        .referral-row{grid-template-columns:42px minmax(0,1fr) auto auto;}
-        .ref-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--accent-cyan);box-shadow:0 0 12px rgba(6,182,212,.35)}
-        .ref-right{text-align:right;line-height:1.5}
-        .referral-empty{padding:14px;text-align:center;font-size:10px;color:var(--text-sub);border:1px dashed var(--card-border);border-radius:14px}
-        .profile-hero::before,.profile-hero::after{content:"";position:absolute;left:50%;top:46px;width:120px;height:120px;margin:-60px;border-radius:50%;border:1px solid rgba(245,158,11,.55);animation:profileOrbit 3.2s linear infinite;pointer-events:none}
-        .profile-hero::after{width:150px;height:150px;margin:-75px;border-color:rgba(6,182,212,.35);animation-duration:5s;animation-direction:reverse}
-        .profile-hero .avatar-container{position:relative;z-index:2}
-        .profile-hero .avatar-container::before{content:"";position:absolute;inset:-10px;border-radius:50%;border:2px dashed rgba(245,158,11,.75);animation:profileOrbit 2.2s linear infinite;pointer-events:none}
-        @keyframes profileOrbit{to{transform:rotate(360deg)}}
-        .badge-max{animation:maxBadgePulse 1s ease-in-out infinite}
-        @keyframes maxBadgePulse{50%{transform:scale(1.12);box-shadow:0 0 18px rgba(239,68,68,.95)}}
     </style>
 </head>
 <body>
@@ -670,7 +702,7 @@
                 <span class="bot-icon">🤖</span>
                 <div class="title-text">Dynamics<span>Ads</span></div>
             </div>
-            <div class="level-badge" id="top-level-badge">LEVEL 1 - NORMAL</div>
+            <div class="level-badge">LEVEL 4 - ULTRA MASTER</div>
         </header>
 
         <!-- Main Content View -->
@@ -691,23 +723,23 @@
                 <div class="profile-card">
                     <div class="profile-left">
                         <div class="avatar-container">
-                            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile Avatar" class="avatar-img" id="user-avatar">
+                            <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="Profile Avatar" class="avatar-img" id="user-avatar">
                             <span class="badge-max">MAX</span>
                         </div>
                         <div class="user-details">
-                            <h4 id="user-username">Telegram User</h4>
-                            <span class="tg-id" id="user-tg-id">Telegram ID: —</span>
+                            <h4 id="user-username">@sagor790</h4>
+                            <span class="tg-id" id="user-tg-id">Telegram ID: 8014446179</span>
                             <div class="status-indicator">
                                 <span class="dot-online"></span> Online
                             </div>
-                            <div class="user-rank" id="home-level">👑 Level 1 - Normal</div><div class="user-rank" id="home-referrals">👥 Referrals: 0</div>
+                            <div class="user-rank">👑 Level 4 - Ultra Master</div>
                         </div>
                     </div>
                     
                     <div class="profile-right">
                         <div class="balance-card">
                             <span class="balance-label">Available Balance</span>
-                            <div class="balance-value" id="main-balance">$0.000</div>
+                            <div class="balance-value" id="main-balance">$100.000</div>
                         </div>
                     </div>
                 </div>
@@ -726,8 +758,8 @@
                         <div class="stat-lbl">Daily Spins</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-val" id="home-stat-level">Level 1</div>
-                        <div class="stat-lbl" id="home-stat-level-name">Normal</div>
+                        <div class="stat-val">Level 4</div>
+                        <div class="stat-lbl">Ultra Master</div>
                     </div>
                 </div>
 
@@ -750,17 +782,40 @@
             <!-- TAB 2: ADS CENTER -->
             <section id="view-ads" class="tab-view">
                 <div class="card">
-                    <div class="card-header"><span class="card-title highlight-cyan">🎬 Ad Center</span><span class="reward-tag">200 ads/day</span></div>
-                    <p class="card-desc">Choose an ad batch. Every completed rewarded ad is credited after AdsGram confirms completion.</p>
-                    <div class="batch-grid">
-                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Daily Ad')"><strong>100</strong><span>DAILY AD</span><small>Watch & Earn</small></button>
-                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Extra Ad')"><strong>50</strong><span>EXTRA AD</span><small>Watch & Earn</small></button>
-                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Bonus Ad')"><strong>50</strong><span>BONUS AD</span><small>Watch & Earn</small></button>
+                    <div class="card-header">
+                        <span class="card-title highlight-cyan">🎬 Ad Center</span>
+                        <span class="reward-tag">250 ads/day</span>
                     </div>
+                    <p class="card-desc">Tap any green Watch Now button to watch a rewarded ad. Each completed ad is credited after AdsGram confirms completion.</p>
+
+                    <div class="ad-batch-list">
+                        <button class="ad-batch-button" type="button" onclick="handleWatchAd('Daily Ad')">
+                            <span class="ad-batch-count">100 Ads</span>
+                            <span class="ad-batch-name">Daily Ad</span>
+                            <span class="ad-watch-label">▶ WATCH NOW</span>
+                        </button>
+                        <button class="ad-batch-button" type="button" onclick="handleWatchAd('Extra Earn')">
+                            <span class="ad-batch-count">50 Ads</span>
+                            <span class="ad-batch-name">Extra Earn</span>
+                            <span class="ad-watch-label">▶ WATCH NOW</span>
+                        </button>
+                        <button class="ad-batch-button" type="button" onclick="handleWatchAd('Bonus Ad')">
+                            <span class="ad-batch-count">50 Ads</span>
+                            <span class="ad-batch-name">Bonus Ad</span>
+                            <span class="ad-watch-label">▶ WATCH NOW</span>
+                        </button>
+                        <button class="ad-batch-button" type="button" onclick="handleWatchAd('Extra Bonus Ad')">
+                            <span class="ad-batch-count">50 Ads</span>
+                            <span class="ad-batch-name">Extra Bonus Ad</span>
+                            <span class="ad-watch-label">▶ WATCH NOW</span>
+                        </button>
+                    </div>
+
                     <div class="section-kicker">Today's progress</div>
-                    <div class="stat-card" style="margin-bottom:10px"><div class="stat-val" id="ads-counter">0/200</div><div class="stat-lbl">Ads Completed Today</div></div>
-                    <button class="btn btn-primary btn-green" type="button" onclick="handleWatchAd('Ad Center')">▶ WATCH AD NOW</button>
-                    <div id="ads-status" class="section-kicker" style="text-align:center;margin-top:10px">AdsGram: loading…</div>
+                    <div class="stat-card">
+                        <div class="stat-val" id="ads-counter">0/250</div>
+                        <div class="stat-lbl">Ads Completed Today</div>
+                    </div>
                 </div>
             </section>
 
@@ -768,42 +823,59 @@
             <section id="view-tasks" class="tab-view">
                 <div class="card">
                     <div class="card-header"><span class="card-title highlight-green">✅ Tasks</span><span class="reward-tag">Social Tasks</span></div>
-                    <p class="card-desc">YouTube, Facebook, Telegram and TikTok tasks are kept here so the Home screen stays clean.</p>
-                    <div class="task-grid task-grid-2">
-                        <div class="task-card social-task">
-                            <div class="social-logo youtube-logo">▶</div><h3>YouTube</h3><p>Subscribe to the configured channel.</p>
-                            <div class="task-packages">
-                                <div>100 subscribers <b>$0.60</b></div><div>500 subscribers <b>$1.00</b></div><div>1,000 subscribers <b>$1.60</b></div><div>2,000 subscribers <b>$2.10</b></div><div>4,000 subscribers <b>$3.20</b></div>
-                            </div>
-                            <button class="btn btn-primary" onclick="completeTask('YouTube')">Complete Task</button>
-                        </div>
-                        <div class="task-card social-task">
-                            <div class="social-logo facebook-logo">f</div><h3>Facebook</h3><p>Follow the configured page.</p>
-                            <div class="task-packages">
-                                <div>100 followers <b>$0.60</b></div><div>500 followers <b>$1.00</b></div><div>1,000 followers <b>$1.60</b></div><div>2,000 followers <b>$2.10</b></div><div>4,000 followers <b>$3.20</b></div>
-                            </div>
-                            <button class="btn btn-primary" onclick="completeTask('Facebook')">Complete Task</button>
-                        </div>
-                        <div class="task-card social-task">
-                            <div class="social-logo telegram-logo">✈</div><h3>Telegram</h3><p>Join the configured channel.</p>
-                            <div class="task-packages">
-                                <div>100 members <b>$0.60</b></div><div>500 members <b>$1.00</b></div><div>1,000 members <b>$1.60</b></div><div>2,000 members <b>$2.10</b></div><div>4,000 members <b>$3.20</b></div>
-                            </div>
-                            <button class="btn btn-primary" onclick="completeTask('Telegram')">Complete Task</button>
-                        </div>
-                        <div class="task-card social-task">
-                            <div class="social-logo tiktok-logo">♪</div><h3>TikTok</h3><p>Follow the configured account.</p>
-                            <div class="task-packages">
-                                <div>100 followers <b>$0.60</b></div><div>500 followers <b>$1.00</b></div><div>1,000 followers <b>$1.60</b></div><div>2,000 followers <b>$2.10</b></div><div>4,000 followers <b>$3.20</b></div>
-                            </div>
-                            <button class="btn btn-primary" onclick="completeTask('TikTok')">Complete Task</button>
-                        </div>
+                    <p class="card-desc">Choose a platform below. Available follow/subscribe tasks will appear here.</p>
+
+                    <div class="social-platforms" aria-label="Social platforms">
+                        <div class="social-platform-logo youtube" title="YouTube" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.9V8.1l6.8 3.9-6.8 3.9Z"/></svg></div>
+                        <div class="social-platform-logo facebook" title="Facebook" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v4h4v-4h3.2l.8-4H13V9c0-.7.3-1 1-1Z"/></svg></div>
+                        <div class="social-platform-logo telegram" title="Telegram" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="m21.7 3.4-3.3 16.1c-.3 1.1-.9 1.4-1.9.9l-5.2-3.8-2.5 2.4c-.3.3-.5.5-1 .5l.4-5.3 9.7-8.8c.4-.4-.1-.6-.6-.2L5.3 13.1.2 11.5c-1.1-.3-1.1-1 .2-1.5L20.3 2.4c.9-.3 1.7.2 1.4 1Z"/></svg></div>
+                        <div class="social-platform-logo tiktok" title="TikTok" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M15.7 3c.3 2.1 1.5 3.5 3.5 3.8V10c-1.5 0-2.8-.4-3.9-1.1v6.4a5.7 5.7 0 1 1-4.9-5.7v3.3a2.5 2.5 0 1 0 1.7 2.4V3h3.6Z"/></svg></div>
                     </div>
+
+                    <div id="social-task-list" class="social-task-list"></div>
                 </div>
             </section>
 
-            <!-- TAB 3: LUCKY WHEEL -->
-            <!-- TAB 3: LUCKY WHEEL -->
+            <!-- TAB 3: ADS PROMOTION -->
+            <section id="view-promotion" class="tab-view">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📣 Buy Social Media Promotion</span>
+                    </div>
+                    <p class="card-desc">Boost your YouTube, Telegram, or TikTok channel with the selected promotion package.</p>
+
+                    <div class="form-group">
+                        <label>Target Channel / Video Link:</label>
+                        <div class="promo-platforms" aria-label="Promotion platforms">
+                            <div class="promo-platform-logo youtube" title="YouTube" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.9V8.1l6.8 3.9-6.8 3.9Z"/></svg></div>
+                            <div class="promo-platform-logo facebook" title="Facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v4h4v-4h3.2l.8-4H13V9c0-.7.3-1 1-1Z"/></svg></div>
+                            <div class="promo-platform-logo telegram" title="Telegram" aria-label="Telegram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21.7 3.4-3.3 16.1c-.3 1.1-.9 1.4-1.9.9l-5.2-3.8-2.5 2.4c-.3.3-.5.5-1 .5l.4-5.3 9.7-8.8c.4-.4-.1-.6-.6-.2L5.3 13.1.2 11.5c-1.1-.3-1.1-1 .2-1.5L20.3 2.4c.9-.3 1.7.2 1.4 1Z"/></svg></div>
+                            <div class="promo-platform-logo tiktok" title="TikTok" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.7 3c.3 2.1 1.5 3.5 3.5 3.8V10c-1.5 0-2.8-.4-3.9-1.1v6.4a5.7 5.7 0 1 1-4.9-5.7v3.3a2.5 2.5 0 1 0 1.7 2.4V3h3.6Z"/></svg></div>
+                        </div>
+                        <input type="text" id="promo-link" class="input-control" placeholder="https://t.me/yourchannel or video URL">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Promotion Package:</label>
+                        <select id="promo-package" class="select-control" onchange="calculatePromoCost()">
+                            <option value="0.60">100 Subscribers / Members - $0.60</option>
+                            <option value="1.00">500 Subscribers / Members - $1.00</option>
+                            <option value="1.60">1,000 Subscribers / Members - $1.60</option>
+                            <option value="2.10">2,000 Subscribers / Members - $2.10</option>
+                            <option value="3.20">4,000 Subscribers / Members - $3.20</option>
+                        </select>
+                    </div>
+
+                    <div class="cost-summary">
+                        Total Price: <span id="total-promo-cost">$0.60</span>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="handleBuyPromotion()">Purchase Promotion Campaign</button>
+                </div>
+            </section>
+
+            <!-- TAB 4: LUCKY WHEEL -->
+            <!-- TAB 4: LUCKY WHEEL -->
             <section id="view-wheel" class="tab-view">
                 <div class="card wheel-card">
                     <h2 class="section-title">🎡 Lucky Wheel</h2>
@@ -848,22 +920,37 @@
             <section id="view-profile" class="tab-view">
                 <div class="profile-hero card">
                     <span class="profile-spark"></span><span class="profile-spark"></span><span class="profile-spark"></span><span class="profile-spark"></span>
-                    <div class="avatar-container"><img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Telegram profile" class="avatar-img" id="profile-avatar"></div>
-                    <h2 id="profile-name">Telegram User</h2><p id="profile-handle">@user</p><p id="profile-level">👑 Level 1 • Normal</p><p id="profile-referrals">👥 Referrals: 0</p>
+                    <div class="avatar-container"><img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="Telegram profile" class="avatar-img" id="profile-avatar"></div>
+                    <h2 id="profile-name">Telegram User</h2><p id="profile-handle">@user</p><p>👑 Level 4 • Ultra Master</p>
                 </div>
-                <div class="card">
+                <div class="card wallet-card">
                     <div class="card-header"><span class="card-title highlight-cyan">Deposit Funds (Min $1 - Max $100)</span></div>
-                    <div class="crypto-selector">
-                        <div class="crypto-card active" onclick="selectCrypto(this, 'TON')"><img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON"><span>TON</span></div>
-                        <div class="crypto-card" onclick="selectCrypto(this, 'USDT')"><img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT"><span>USDT</span></div>
-                        <div class="crypto-card" onclick="selectCrypto(this, 'BNB')"><img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="BNB"><span>BNB</span></div>
+                    <div class="crypto-selector crypto-selector-2">
+                        <button type="button" class="crypto-card active" onclick="selectDepositAsset(this, 'TON')">
+                            <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON logo"><span>TON</span><small>TON Network</small>
+                        </button>
+                        <button type="button" class="crypto-card" onclick="selectDepositAsset(this, 'USDT')">
+                            <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT logo"><span>USDT</span><small>BEP20 • BNB Smart Chain</small>
+                        </button>
                     </div>
+                    <div id="deposit-wallet-display" class="wallet-address-box"></div>
                     <div class="form-group"><input type="number" id="deposit-amount" class="input-control" placeholder="Enter Deposit Amount ($1 - $100)"></div>
                     <button class="btn btn-primary" onclick="handleDeposit()">Deposit Funds</button>
                 </div>
-                <div class="card">
+                <div class="card wallet-card">
                     <div class="card-header"><span class="card-title highlight-green">Withdraw Funds (Min $1.00)</span></div>
-                    <div class="form-group"><input type="text" id="withdraw-address" class="input-control" placeholder="Wallet Address / Pay ID"></div>
+                    <div class="crypto-selector withdraw-selector">
+                        <button type="button" class="crypto-card active" onclick="selectWithdrawAsset(this, 'TON')">
+                            <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON logo"><span>TON</span>
+                        </button>
+                        <button type="button" class="crypto-card" onclick="selectWithdrawAsset(this, 'USDT')">
+                            <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT logo"><span>USDT</span><small>BEP20</small>
+                        </button>
+                        <button type="button" class="crypto-card" onclick="selectWithdrawAsset(this, 'BTC')">
+                            <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" alt="Bitcoin logo"><span>Bitcoin</span><small>BTC Network</small>
+                        </button>
+                    </div>
+                    <div class="form-group"><label>Wallet Address</label><input type="text" id="withdraw-address" class="input-control" placeholder="Enter recipient wallet address"></div>
                     <div class="form-group"><input type="number" id="withdraw-amount" class="input-control" placeholder="Amount ($1.00 Min)"></div>
                     <button class="btn btn-primary btn-green" onclick="handleWithdraw()">Submit Withdrawal Request</button>
                 </div>
@@ -894,6 +981,9 @@
             <button class="nav-btn" type="button" onclick="switchTab('tasks', this)">
                 <span class="nav-icon">✅</span><span class="nav-label">Tasks</span>
             </button>
+            <button class="nav-btn" type="button" onclick="switchTab('promotion', this)">
+                <span class="nav-icon">📣</span><span class="nav-label">Promotion</span>
+            </button>
             <button class="nav-btn" type="button" onclick="switchTab('wheel', this)">
                 <span class="nav-icon">🎡</span><span class="nav-label">Wheel</span>
             </button>
@@ -911,9 +1001,9 @@
     <script>
         // ===== App state =====
         const appData = {
-            balance: 0.000,
+            balance: 100.000,
             totalAdsWatched: 0,
-            dailyAdLimit: 200,
+            dailyAdLimit: 250,
             availableSpins: 4,
             dailySpinLimit: 4,
             selectedCrypto: 'TON',
@@ -938,120 +1028,19 @@
             { label:'0.05000', value:0.05, active:true }
         ];
 
-        // Never ship fake referral accounts. Real referrals must come from your backend.
-        let referrals = [];
-
-        const DEVELOPER_TELEGRAM_ID = '8014446179';
-        const ACCOUNT_STORAGE_PREFIX = 'dynamicsAds.account.v4.';
-        const DEFAULT_ACCOUNT = { balance:0, totalAdsWatched:0, availableSpins:0, wheelSpinsUsed:0, referralCount:0, level:1, levelName:'Normal', referralCode:'', referredBy:'', isWorking:true, hasDeposited:false, depositStatus:'Not deposited' };
-        let currentTelegramUser = null;
-        let currentUserId = '';
-
-        function accountKey(id){ return `${ACCOUNT_STORAGE_PREFIX}${String(id)}`; }
-        function levelForReferrals(count){
-            if(count >= 15) return {level:4,name:'Legend'};
-            if(count >= 8) return {level:3,name:'Master'};
-            if(count >= 3) return {level:2,name:'Pro'};
-            return {level:1,name:'Normal'};
-        }
-        function makeReferralCode(id){
-            const digits=String(id||'').replace(/\D/g,'');
-            return `DA${digits.slice(-8) || Math.random().toString(36).slice(2,8).toUpperCase()}`;
-        }
-        function getStartParam(){
-            const tgParam=window.Telegram?.WebApp?.initDataUnsafe?.start_param;
-            if(tgParam) return String(tgParam);
-            const q=new URLSearchParams(location.search);
-            return q.get('tgWebAppStartParam') || q.get('startapp') || q.get('start') || '';
-        }
-        function saveAccount(){
-            if(!currentUserId) return;
-            localStorage.setItem(accountKey(currentUserId), JSON.stringify(appData));
-        }
-        function loadAccount(user){
-            currentTelegramUser=user; currentUserId=String(user.id);
-            let saved={};
-            try{ saved=JSON.parse(localStorage.getItem(accountKey(currentUserId))||'{}'); }catch(e){}
-            const isDev=currentUserId===DEVELOPER_TELEGRAM_ID;
-            const lvl=levelForReferrals(Number(saved.referralCount||0));
-            Object.assign(appData, DEFAULT_ACCOUNT, saved, {
-                balance: saved.balance !== undefined ? Number(saved.balance) : (isDev ? 100 : 0),
-                totalAdsWatched:Number(saved.totalAdsWatched||0),
-                availableSpins:Number(saved.availableSpins||0),
-                wheelSpinsUsed:Number(saved.wheelSpinsUsed||0),
-                referralCount:Number(saved.referralCount||0),
-                referralCode:saved.referralCode||makeReferralCode(user.id),
-                level:isDev?4:lvl.level, levelName:isDev?'Legend':lvl.name,
-                telegramId:currentUserId,
-                username:user.username?`@${user.username}`:(user.first_name||'Telegram User'),
-                firstName:user.first_name||'', lastName:user.last_name||'', photoUrl:user.photo_url||''
-            });
-            // Only the developer account gets the initial $100. New users start at $0.
-            if(!isDev && saved.balance===undefined) appData.balance=0;
-            saveAccount();
-        }
-        function applyIncomingReferral(){
-            const param=getStartParam();
-            if(!param || !currentUserId || !String(param).toLowerCase().startsWith('ref')) return;
-            const referrerId=String(param).slice(3).replace(/\D/g,'');
-            if(!referrerId || referrerId===currentUserId || appData.referredBy) return;
-            appData.referredBy=referrerId;
-            // Local test fallback only. Production must record this server-side.
-            try{
-                const key=accountKey(referrerId);
-                const ref=JSON.parse(localStorage.getItem(key)||'{}');
-                if(Object.keys(ref).length){
-                    ref.referralCount=Number(ref.referralCount||0)+1;
-                    const lv=levelForReferrals(ref.referralCount);
-                    if(referrerId===DEVELOPER_TELEGRAM_ID){ref.level=4;ref.levelName='Legend';}else{ref.level=lv.level;ref.levelName=lv.name;}
-                    localStorage.setItem(key,JSON.stringify(ref));
-                }
-            }catch(e){}
-            saveAccount();
-        }
-        function referralLink(){
-            if(!currentUserId) return '';
-            return `https://t.me/DynamicsAdsBot/dynamicsads?startapp=ref${encodeURIComponent(currentUserId)}`;
-        }
-        function updateIdentity(){
-            const u=currentTelegramUser;
-            const username=u?(u.username?`@${u.username}`:(u.first_name||'Telegram User')):'Telegram User';
-            const fullName=u?`${u.first_name||''} ${u.last_name||''}`.trim():'Telegram User';
-            const photo=u?.photo_url || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-            const idEl=document.getElementById('user-tg-id'); if(idEl) idEl.innerText=u?.id?`Telegram ID: ${u.id}`:'Telegram ID: —';
-            const userEl=document.getElementById('user-username'); if(userEl) userEl.innerText=username;
-            const pn=document.getElementById('profile-name'); if(pn) pn.innerText=fullName;
-            const ph=document.getElementById('profile-handle'); if(ph) ph.innerText=username;
-            ['user-avatar','profile-avatar'].forEach(id=>{const el=document.getElementById(id);if(el)el.src=photo;});
-            const ri=document.getElementById('ref-link-input'); if(ri) ri.value=referralLink();
-        }
-        function renderAccountDetails(){
-            const isDev=currentUserId===DEVELOPER_TELEGRAM_ID;
-            const lv=isDev?{level:4,name:'Legend'}:levelForReferrals(Number(appData.referralCount||0));
-            appData.level=lv.level; appData.levelName=lv.name;
-            const set=(id,v)=>{const el=document.getElementById(id);if(el)el.innerText=v;};
-            set('top-level-badge',isDev?'LEVEL 4 - LEGEND':`LEVEL ${lv.level} - ${lv.name.toUpperCase()}`);
-            set('home-level',`👑 Level ${lv.level} - ${lv.name}`);
-            set('home-referrals',`👥 Referrals: ${appData.referralCount||0}`);
-            set('home-stat-level',`Level ${lv.level}`); set('home-stat-level-name',lv.name);
-            set('profile-level',`👑 Level ${lv.level} • ${lv.name}`);
-            set('profile-referrals',`👥 Referrals: ${appData.referralCount||0}`);
-            saveAccount();
-        }
-        function localAccounts(){
-            const out=[];
-            for(let i=0;i<localStorage.length;i++){
-                const k=localStorage.key(i)||''; if(!k.startsWith(ACCOUNT_STORAGE_PREFIX)) continue;
-                try{const a=JSON.parse(localStorage.getItem(k)||'{}');if(a.telegramId)out.push(a);}catch(e){}
-            }
-            return out;
-        }
+        const referrals = [
+            // Backend should replace this sample array with verified referral records.
+            { id:'User A', level:'Level 1', working:true, deposited:false },
+            { id:'User B', level:'Level 2', working:true, deposited:true }
+        ];
 
         window.addEventListener('DOMContentLoaded', () => {
             initTelegramApp();
             initAdsgram();
             buildWheel();
+            renderDepositWallet();
             renderReferrals();
+            renderSocialTasks();
             updateUI();
         });
 
@@ -1059,61 +1048,34 @@
             if (!(window.Telegram && window.Telegram.WebApp)) return;
             const tg = window.Telegram.WebApp;
             tg.expand();
-            tg.ready();
             const user = tg.initDataUnsafe?.user;
-            if (!user?.id) {
-                currentTelegramUser = null;
-                currentUserId = '';
-                appData.balance = 0;
-                appData.referralCode = '';
-                updateIdentity();
-                updateUI();
-                return;
+            if (!user) return;
+            const username = `@${user.username || user.first_name || 'user'}`;
+            const photo = user.photo_url || '';
+            document.getElementById('user-username').innerText = username;
+            document.getElementById('user-tg-id').innerText = `Telegram ID: ${user.id}`;
+            document.getElementById('profile-name').innerText = `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Telegram User';
+            document.getElementById('profile-handle').innerText = username;
+            if (photo) {
+                document.getElementById('user-avatar').src = photo;
+                document.getElementById('profile-avatar').src = photo;
             }
-            loadAccount(user);
-            updateIdentity();
-            applyIncomingReferral();
-            renderAccountDetails();
-            renderReferrals();
-            updateUI();
+            const botUsername = 'DynamicsAdsBot';
+            document.getElementById('ref-link-input').value = `https://t.me/${botUsername}/dynamicsads?start=ref${user.id}`;
         }
 
-        // Identity-only refresh: keeps each user's Telegram profile current
-        // without changing any layout, styling, ads, wheel, deposit or withdraw UI.
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState !== 'visible') return;
-            const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-            if (!user?.id) return;
-            if (String(user.id) !== String(currentUserId)) {
-                loadAccount(user);
-                applyIncomingReferral();
-            } else {
-                currentTelegramUser = user;
-            }
-            updateIdentity();
-            renderAccountDetails();
-            renderReferrals();
-            updateUI();
-        });
-
         function initAdsgram() {
-            const status = document.getElementById('ads-status');
-            if (!window.Adsgram) {
-                if (status) status.innerText = 'AdsGram: SDK not loaded';
-                return;
-            }
+            if (!window.Adsgram) return;
             try {
                 AdController = window.Adsgram.init({ blockId: appData.blockId });
-                if (status) status.innerText = `AdsGram: ready • Block ${appData.blockId}`;
             } catch (e) {
                 console.error('AdsGram init failed:', e);
-                if (status) status.innerText = 'AdsGram: initialization failed';
             }
         }
 
         function updateUI() {
             const main = document.getElementById('main-balance');
-            if (main) main.innerText = `$${Number(appData.balance||0).toFixed(3)}`;
+            if (main) main.innerText = `$${appData.balance.toFixed(3)}`;
             const ads = document.getElementById('ads-counter');
             if (ads) ads.innerText = `${appData.totalAdsWatched}/${appData.dailyAdLimit}`;
             const spin = document.getElementById('spin-counter');
@@ -1124,8 +1086,6 @@
             document.getElementById('ref-earnings').innerText = `$${appData.earnings.referral.toFixed(3)}`;
             document.getElementById('deposit-earnings').innerText = `$${appData.earnings.deposit.toFixed(3)}`;
             document.getElementById('promo-earnings').innerText = `$${appData.earnings.promotion.toFixed(3)}`;
-            renderAccountDetails();
-            saveAccount();
         }
 
         function switchTab(tabName, clickedBtn) {
@@ -1143,7 +1103,7 @@
 
         async function handleWatchAd(source='Ad Center') {
             if (appData.totalAdsWatched >= appData.dailyAdLimit) {
-                alert('Daily ad limit reached: 200/200.');
+                alert(`Daily ad limit reached: ${appData.dailyAdLimit}/${appData.dailyAdLimit}.`);
                 return false;
             }
             if (!AdController) {
@@ -1155,9 +1115,7 @@
                 appData.balance += appData.adReward;
                 appData.earnings.ad += appData.adReward;
                 appData.totalAdsWatched += 1;
-                if (appData.totalAdsWatched % 4 === 0 && appData.availableSpins < appData.dailySpinLimit) appData.availableSpins += 1;
                 updateUI();
-                saveAccount();
                 showRewardToast(`+$${appData.adReward.toFixed(3)} added to Main Balance`);
                 return true;
             } catch (error) {
@@ -1187,7 +1145,7 @@
         async function handleSpinWheel() {
             if (wheelBusy) return;
             if (appData.availableSpins <= 0) { alert('No spins remaining today.'); return; }
-            if (appData.totalAdsWatched >= appData.dailyAdLimit) { alert('Daily ad limit reached: 200/200.'); return; }
+            if (appData.totalAdsWatched >= appData.dailyAdLimit) { alert(`Daily ad limit reached: ${appData.dailyAdLimit}/${appData.dailyAdLimit}.`); return; }
 
             const btn=document.getElementById('btn-spin');
             wheelBusy=true;
@@ -1220,7 +1178,6 @@
                 const reward=WHEEL_REWARDS[index];
                 appData.balance += reward.value;
                 updateUI();
-                saveAccount();
                 if (typeof confetti==='function') confetti({particleCount:160,spread:90,origin:{y:.58}});
                 document.getElementById('modal-prize-amount').innerText=`+${reward.label}`;
                 document.querySelector('#reward-modal .modal-desc').innerText='Reward credited to Main Balance.';
@@ -1235,37 +1192,100 @@
             document.body.appendChild(toast); setTimeout(()=>toast.remove(),1800);
         }
 
-        function completeTask(platform){ alert(`${platform} task opened. Subscription/follow completion must be verified by your backend before the reward is credited.`); }
-        function renderReferrals(){
-            const list=document.getElementById('referral-list'); if(!list)return;
-            const myId=String(currentUserId||'');
-            const members=localAccounts().filter(r=>String(r.referredBy||'')===myId);
-            referrals=members;
-            document.getElementById('ref-count').innerText=`${members.length} users`;
-            if(!members.length){
-                list.innerHTML='<div class="referral-empty">No referred users found on this device. Cross-device/all-user data requires your backend.</div>';
+        /*
+         * Tasks are data-driven. A backend/admin panel can populate window.DYNAMICS_TASKS
+         * with objects like:
+         * {id:'t1', platform:'Telegram', title:'Join our channel', url:'https://t.me/example', reward:0.60}
+         * Real follow/subscribe verification and balance credit must be performed server-side.
+         */
+        window.DYNAMICS_TASKS = Array.isArray(window.DYNAMICS_TASKS) ? window.DYNAMICS_TASKS : [];
+        const TASK_PLATFORM = {
+            YouTube:{cls:'youtube', icon:'▶'},
+            Facebook:{cls:'facebook', icon:'f'},
+            Telegram:{cls:'telegram', icon:'✈'},
+            TikTok:{cls:'tiktok', icon:'♪'}
+        };
+        function renderSocialTasks(){
+            const list=document.getElementById('social-task-list'); if(!list)return;
+            const tasks=window.DYNAMICS_TASKS.filter(t=>t&&t.url);
+            if(!tasks.length){
+                list.innerHTML='<div class="social-task-empty">No social tasks available right now.</div>';
                 return;
             }
-            list.innerHTML=members.map(r=>{
-                const lv=(String(r.telegramId)===DEVELOPER_TELEGRAM_ID)?{level:4,name:'Legend'}:levelForReferrals(Number(r.referralCount||0));
-                const photo=r.photoUrl||'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-                const name=r.username||r.firstName||'Telegram User';
-                return `<div class="referral-row">
-                    <img src="${escapeHtml(photo)}" class="ref-avatar" alt="Telegram profile photo">
-                    <div><div class="ref-user">${escapeHtml(name)}</div><div class="ref-meta">Telegram ID: ${escapeHtml(String(r.telegramId||'—'))}</div><div class="ref-meta">${escapeHtml(`Level ${lv.level} • ${lv.name}`)}</div></div>
-                    <div class="status-pill">${r.isWorking!==false?'Working':'Inactive'}</div>
-                    <div class="ref-meta ref-right">${r.hasDeposited?'Deposit: Yes':'Deposit: No'}<br>Refs: ${Number(r.referralCount||0)}</div>
-                </div>`;
+            list.innerHTML=tasks.map((t,i)=>{
+                const p=TASK_PLATFORM[t.platform]||{cls:'telegram',icon:'•'};
+                const reward=Number(t.reward||0);
+                return `<div class="social-task-item"><div class="task-mini-logo ${p.cls}">${p.icon}</div><div class="task-main"><h3>${escapeHtml(t.title||`${t.platform||'Social'} Task`)}</h3><p>${escapeHtml(t.action||('Follow / Subscribe and return to complete the task.'))}</p><div class="task-reward">+$${reward.toFixed(3)}</div></div><div class="task-actions"><button class="btn btn-primary" type="button" onclick="openSocialTask(${i})">Open</button><button class="btn btn-green" type="button" onclick="completeSocialTask(${i})">Complete</button></div></div>`;
             }).join('');
+        }
+        function openSocialTask(index){
+            const task=window.DYNAMICS_TASKS[index]; if(!task?.url)return;
+            window.open(task.url,'_blank','noopener,noreferrer');
+        }
+        async function completeSocialTask(index){
+            const task=window.DYNAMICS_TASKS[index]; if(!task)return;
+            const userId=window.Telegram?.WebApp?.initDataUnsafe?.user?.id || '';
+            if(!task.id || !task.reward){ alert('This task is not configured correctly.'); return; }
+            /* Set your real verification endpoint in window.DYNAMICS_TASK_VERIFY_URL. */
+            const endpoint=window.DYNAMICS_TASK_VERIFY_URL;
+            if(!endpoint){
+                alert('Task opened. Follow/subscribe verification is not connected yet, so no balance was credited.');
+                return;
+            }
+            try{
+                const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({taskId:task.id,userId,platform:task.platform})});
+                const data=await res.json();
+                if(!res.ok || !data.verified){ alert(data.message||'Task could not be verified.'); return; }
+                const amount=Number(data.reward ?? task.reward);
+                appData.balance+=amount;
+                appData.earnings.promotion+=amount;
+                updateUI();
+                showRewardToast(`Task Complete! +$${amount.toFixed(3)} added to Main Balance`);
+                if(typeof confetti==='function') confetti({particleCount:70,spread:65,origin:{y:.7}});
+            }catch(e){ console.error('Task verification error:',e); alert('Verification server is unavailable. Please try again.'); }
+        }
+        function completeTask(platform){
+            const task=window.DYNAMICS_TASKS.find(t=>t.platform===platform);
+            if(task){ completeSocialTask(window.DYNAMICS_TASKS.indexOf(task)); }
+            else alert('No task is available for this platform right now.');
+        }
+        function renderReferrals(){
+            const list=document.getElementById('referral-list'); if(!list)return;
+            document.getElementById('ref-count').innerText=`${referrals.length} users`;
+            list.innerHTML=referrals.map(r=>`<div class="referral-row"><div><div class="ref-user">${escapeHtml(r.id)}</div><div class="ref-meta">${escapeHtml(r.level)} • ${r.deposited?'Deposit: Yes':'Deposit: No'}</div></div><div class="status-pill">${r.working?'Working':'Inactive'}</div><div class="ref-meta">ID/status from backend</div></div>`).join('');
         }
         function escapeHtml(v){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 
         function calculatePromoCost() { const el=document.getElementById('promo-package'); const out=document.getElementById('total-promo-cost'); if(el&&out) out.innerText=`$${el.value}`; }
         function handleBuyPromotion() { alert('Promotion orders should be confirmed by your backend before balance is changed.'); }
         function handleCopyReferral() { const ref=document.getElementById('ref-link-input'); if(!ref)return; navigator.clipboard?.writeText(ref.value).then(()=>alert('Referral link copied!')).catch(()=>{ref.select();document.execCommand('copy');alert('Referral link copied!');}); }
-        function selectCrypto(element, cryptoType) { document.querySelectorAll('.crypto-card').forEach(c=>c.classList.remove('active')); element.classList.add('active'); appData.selectedCrypto=cryptoType; }
-        function handleDeposit() { const amount=parseFloat(document.getElementById('deposit-amount').value); if(!amount||amount<1||amount>100){alert('Deposit amount must be between $1 and $100!');return;} appData.hasDeposited=true; appData.depositStatus=`Pending • ${appData.selectedCrypto}`; saveAccount(); updateUI(); renderReferrals(); alert(`Deposit request of $${amount.toFixed(2)} via ${appData.selectedCrypto} created. Backend confirmation is required.`); }
-        function handleWithdraw() { const address=document.getElementById('withdraw-address').value.trim(); const amount=parseFloat(document.getElementById('withdraw-amount').value); if(!address){alert('Please enter a wallet address!');return;} if(!amount||amount<1){alert('Minimum withdrawal is $1.00!');return;} if(appData.balance<amount){alert('Insufficient balance!');return;} alert('Withdrawal request sent for backend/admin review.'); }
+        const WALLET_CONFIG = {
+            TON: { name:'TON', network:'TON Network', address:'UQD2KsEcAoJc8ksG53J0XM5ZZ0YqLCVCDJ_3VyykrAY0yJGz', logo:'https://cryptologos.cc/logos/toncoin-ton-logo.png' },
+            USDT: { name:'USDT', network:'BEP20 • BNB Smart Chain', address:'0xa4356b9Bcf0e0195D5473eC154e474a2739Ae5D3', logo:'https://cryptologos.cc/logos/tether-usdt-logo.png' }
+        };
+        let selectedDepositAsset = 'TON';
+        let selectedWithdrawAsset = 'TON';
+
+        function renderDepositWallet() {
+            const w=WALLET_CONFIG[selectedDepositAsset], box=document.getElementById('deposit-wallet-display');
+            if(!box||!w)return;
+            box.innerHTML=`<div class="wallet-address-head"><img src="${w.logo}" alt="${w.name} logo"><div><div class="wallet-address-name">${w.name} Deposit Wallet</div><div class="wallet-network">${w.network}</div></div></div><div class="wallet-address-text">${w.address}</div><button type="button" class="wallet-copy-btn" onclick="copyWalletAddress('${w.address}')">📋 Copy ${w.name} Address</button>`;
+        }
+        function selectDepositAsset(element, asset) {
+            document.querySelectorAll('.crypto-selector-2 .crypto-card').forEach(c=>c.classList.remove('active'));
+            element.classList.add('active'); selectedDepositAsset=asset; appData.selectedCrypto=asset; renderDepositWallet();
+        }
+        function selectWithdrawAsset(element, asset) {
+            document.querySelectorAll('.withdraw-selector .crypto-card').forEach(c=>c.classList.remove('active'));
+            element.classList.add('active'); selectedWithdrawAsset=asset;
+            const input=document.getElementById('withdraw-address');
+            if(input) input.placeholder = asset==='BTC' ? 'Enter Bitcoin (BTC) wallet address' : asset==='USDT' ? 'Enter USDT BEP20 wallet address' : 'Enter TON wallet address';
+        }
+        function copyWalletAddress(address) {
+            navigator.clipboard?.writeText(address).then(()=>alert('Wallet address copied!')).catch(()=>{ const t=document.createElement('textarea'); t.value=address; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); alert('Wallet address copied!'); });
+        }
+        function handleDeposit() { const amount=parseFloat(document.getElementById('deposit-amount').value); if(!amount||amount<1||amount>100){alert('Deposit amount must be between $1 and $100!');return;} alert(`Deposit request of $${amount.toFixed(2)} via ${selectedDepositAsset} created. Backend confirmation is required.`); }
+        function handleWithdraw() { const address=document.getElementById('withdraw-address').value.trim(); const amount=parseFloat(document.getElementById('withdraw-amount').value); if(!address){alert('Please enter a wallet address!');return;} if(!amount||amount<1){alert('Minimum withdrawal is $1.00!');return;} if(appData.balance<amount){alert('Insufficient balance!');return;} alert(`Withdrawal request sent for ${selectedWithdrawAsset}. Backend/admin review is required.`); }
         function closeRewardModal() { document.getElementById('reward-modal').style.display='none'; }
     </script>
 </body>
