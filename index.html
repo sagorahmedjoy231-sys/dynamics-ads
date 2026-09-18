@@ -49,6 +49,9 @@
         .user-meta h4 { font-size: 16px; font-weight: 800; color: #fff; }
         .user-meta .sub-tag { font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-top: 2px; }
 
+        .online-status { font-size: 10px; color: var(--accent-green); font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+        .online-dot { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; box-shadow: 0 0 6px var(--accent-green); }
+
         .balance-box { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent-green); border-radius: 16px; padding: 10px 16px; text-align: right; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
         .balance-box .amount { font-size: 18px; font-weight: 900; color: var(--accent-green); }
         .balance-box .label { font-size: 9px; color: var(--text-sub); font-weight: 800; letter-spacing: 0.5px; }
@@ -74,6 +77,10 @@
         .crypto-item { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; }
         .crypto-item:hover, .crypto-item.active { border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); }
         .crypto-item img { width: 28px; height: 28px; margin-bottom: 4px; object-fit: contain; }
+
+        /* Prize Board Grid */
+        .prize-board-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 10px; }
+        .prize-item { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 6px 2px; text-align: center; font-size: 10px; font-weight: 800; color: var(--accent-gold); }
 
         /* Wheel UI */
         .wheel-container { position: relative; width: 270px; height: 270px; margin: 15px auto; }
@@ -114,6 +121,8 @@
                     </div>
                     <div class="user-meta">
                         <h4 id="user-name">@sagor790</h4>
+                        <div style="font-size: 10px; color: var(--text-sub);">Telegram ID: 8014446179</div>
+                        <div class="online-status"><span class="online-dot"></span> Online</div>
                         <div class="sub-tag">👑 Level 4 - Ultra Master</div>
                     </div>
                 </div>
@@ -124,24 +133,24 @@
             </div>
 
             <div class="stats-grid">
-                <div class="stat-card"><div class="val" id="ads-counter-display">0/200</div><div class="lbl">Daily Ads</div></div>
-                <div class="stat-card"><div class="val" id="wheel-ads-progress">0/4</div><div class="lbl">Spin Progress</div></div>
-                <div class="stat-card"><div class="val" id="spin-avail-display">0</div><div class="lbl">Spins Ready</div></div>
+                <div class="stat-card"><div class="val" id="ads-counter-display">300/300</div><div class="lbl">Ads Completed</div></div>
+                <div class="stat-card"><div class="val">24:00:00</div><div class="lbl">Next Cycle</div></div>
+                <div class="stat-card"><div class="val" id="spin-avail-display">4/4</div><div class="lbl">Daily Spins</div></div>
                 <div class="stat-card"><div class="val">Level 4</div><div class="lbl">Ultra Master</div></div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title">Watch Ads Network</span>
-                    <span style="color: var(--accent-green); font-size: 12px; font-weight: 800;">+$0.001 / Ad</span>
+                    <span class="card-title">Watch Ad & Earn</span>
+                    <span style="color: var(--accent-green); font-size: 12px; font-weight: 800;">+$0.001 per ad</span>
                 </div>
                 <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 12px;">Watch ads to earn direct balance and unlock lucky wheel spins (4 Ads = 1 Spin).</p>
                 <button class="btn-action btn-green" onclick="watchAdAction()">Watch Ad Now</button>
             </div>
         </div>
 
-        <!-- TAB 2: PROMO & PROMOTION PRICING -->
-        <div id="view-promo" class="tab-view" style="display: none;">
+        <!-- TAB 2: ADS & PROMO -->
+        <div id="view-ads" class="tab-view" style="display: none;">
             <div class="card">
                 <div class="card-title" style="margin-bottom: 10px;">Buy Social Media Growth</div>
                 <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px;">Boost your YouTube, Telegram, or TikTok channels instantly.</p>
@@ -191,59 +200,65 @@
                     </svg>
                 </div>
 
-                <button class="btn-action btn-gold" id="spin-btn" onclick="spinAction()">SPIN WHEEL NOW (0 Ready)</button>
+                <button class="btn-action btn-gold" id="spin-btn" onclick="spinAction()">SPIN WHEEL NOW</button>
+            </div>
+
+            <!-- Prize Board Section -->
+            <div class="card">
+                <div class="card-title" style="font-size: 13px; color: var(--accent-gold);">🎁 Prize Board (10 Big Rewards)</div>
+                <div class="prize-board-grid">
+                    <div class="prize-item">$1.00</div>
+                    <div class="prize-item">$1.50</div>
+                    <div class="prize-item">$2.00</div>
+                    <div class="prize-item">$2.50</div>
+                    <div class="prize-item">$3.00</div>
+                    <div class="prize-item">$4.00</div>
+                    <div class="prize-item">$5.00</div>
+                    <div class="prize-item">$7.00</div>
+                    <div class="prize-item">$10.00</div>
+                    <div class="prize-item">$15.00</div>
+                </div>
             </div>
         </div>
 
-        <!-- TAB 4: WALLET DEPOSIT & WITHDRAW -->
-        <div id="view-wallet" class="tab-view" style="display: none;">
-            <!-- DEPOSIT CARD -->
+        <!-- TAB 4: REFERRALS -->
+        <div id="view-referrals" class="tab-view" style="display: none;">
+            <div class="card">
+                <h3 style="color: var(--accent-purple); margin-bottom: 8px;">👥 Invite Friends & Get Bonus</h3>
+                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px;">Get 10% commission on every task completed by your referred users!</p>
+
+                <input type="text" class="input-field" value="https://t.me/DynamicsAdsBot/dynamicsads?start=ref8014446179" id="ref-link" readonly>
+                <button class="btn-action" onclick="copyRef()">Copy Referral Link</button>
+            </div>
+        </div>
+
+        <!-- TAB 5: PROFILE & WALLET -->
+        <div id="view-profile" class="tab-view" style="display: none;">
             <div class="card">
                 <div class="card-title" style="margin-bottom: 10px; color: var(--accent-cyan);">Deposit Funds (Min $1 - Max $100)</div>
-                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">Select deposit cryptocurrency:</p>
-
                 <div class="crypto-grid">
-                    <div class="crypto-item active" onclick="selectCrypto('ton', 'deposit')">
+                    <div class="crypto-item active">
                         <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON">
                         <div style="font-size: 11px; font-weight: bold;">TON</div>
                     </div>
-                    <div class="crypto-item" onclick="selectCrypto('usdt', 'deposit')">
+                    <div class="crypto-item">
                         <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT">
                         <div style="font-size: 11px; font-weight: bold;">USDT</div>
                     </div>
-                    <div class="crypto-item" onclick="selectCrypto('bnb', 'deposit')">
+                    <div class="crypto-item">
                         <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="BNB">
                         <div style="font-size: 11px; font-weight: bold;">BNB</div>
                     </div>
                 </div>
-
-                <input type="number" class="input-field" id="deposit-amt" placeholder="Amount ($1 - $100)">
-                <button class="btn-action" onclick="executeDeposit()">Get Deposit Address</button>
+                <input type="number" class="input-field" placeholder="Deposit Amount ($1 - $100)">
+                <button class="btn-action" onclick="alert('Deposit Address Copied!')">Deposit Funds</button>
             </div>
 
-            <!-- WITHDRAW CARD -->
             <div class="card">
                 <div class="card-title" style="margin-bottom: 10px; color: var(--accent-green);">Withdraw Funds (Min $1.00)</div>
-                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">Select payout gateway:</p>
-
-                <div class="crypto-grid">
-                    <div class="crypto-item active" onclick="selectCrypto('ton', 'withdraw')">
-                        <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON">
-                        <div style="font-size: 11px; font-weight: bold;">TON</div>
-                    </div>
-                    <div class="crypto-item" onclick="selectCrypto('usdt', 'withdraw')">
-                        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT">
-                        <div style="font-size: 11px; font-weight: bold;">USDT</div>
-                    </div>
-                    <div class="crypto-item" onclick="selectCrypto('bnb', 'withdraw')">
-                        <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="BNB">
-                        <div style="font-size: 11px; font-weight: bold;">BNB</div>
-                    </div>
-                </div>
-
-                <input type="text" class="input-field" id="withdraw-addr" placeholder="Enter Wallet Address or Pay ID">
-                <input type="number" class="input-field" id="withdraw-amt" placeholder="Amount ($1.00 minimum)">
-                <button class="btn-action btn-green" onclick="executeWithdraw()">Submit Withdrawal Request</button>
+                <input type="text" class="input-field" placeholder="Enter Wallet Address / Pay ID">
+                <input type="number" class="input-field" placeholder="Withdraw Amount ($1.00 Min)">
+                <button class="btn-action btn-green" onclick="alert('Withdrawal Request Submitted!')">Submit Withdrawal</button>
             </div>
         </div>
 
@@ -261,18 +276,19 @@
         <!-- Bottom Navigation Bar -->
         <div class="navbar">
             <div class="nav-item active" onclick="switchTab('home', this)"><div>🏠</div>Home</div>
-            <div class="nav-item" onclick="switchTab('promo', this)"><div>⚡</div>Promo</div>
+            <div class="nav-item" onclick="switchTab('ads', this)"><div>📺</div>Ads</div>
             <div class="nav-item" onclick="switchTab('wheel', this)"><div>🎡</div>Wheel</div>
-            <div class="nav-item" onclick="switchTab('wallet', this)"><div>💼</div>Wallet</div>
+            <div class="nav-item" onclick="switchTab('referrals', this)"><div>👥</div>Referrals</div>
+            <div class="nav-item" onclick="switchTab('profile', this)"><div>👤</div>Profile</div>
         </div>
 
     </div>
 
     <script>
         let balance = 100.000;
-        let totalAdsWatched = 0;
-        let wheelAdCounter = 0;
-        let availableSpins = 0;
+        let totalAdsWatched = 300;
+        let wheelAdCounter = 4;
+        let availableSpins = 4;
 
         const blockId = "48241";
         let AdController = null;
@@ -294,11 +310,8 @@
         function updateUI() {
             const formatted = `$${balance.toFixed(3)}`;
             document.getElementById('balance-val').innerText = formatted;
-            document.getElementById('ads-counter-display').innerText = `${totalAdsWatched}/200`;
-            document.getElementById('wheel-ads-progress').innerText = `${wheelAdCounter}/4`;
-            document.getElementById('spin-avail-display').innerText = availableSpins;
-            
-            document.getElementById('spin-btn').innerText = availableSpins > 0 ? `SPIN WHEEL NOW (${availableSpins} Ready)` : `WATCH ${4 - wheelAdCounter} MORE ADS TO SPIN`;
+            document.getElementById('ads-counter-display').innerText = `${totalAdsWatched}/300`;
+            document.getElementById('spin-avail-display').innerText = `${availableSpins}/4`;
         }
 
         function switchTab(viewName, el) {
@@ -311,26 +324,14 @@
         }
 
         function watchAdAction() {
-            if (totalAdsWatched >= 200) {
-                alert("Daily limit reached (200 Ads/Day)!");
-                return;
-            }
-
             if (AdController) {
                 AdController.show().then(() => {
                     balance += 0.001;
                     totalAdsWatched++;
-                    wheelAdCounter++;
-
-                    if (wheelAdCounter >= 4) {
-                        availableSpins++;
-                        wheelAdCounter = 0;
-                        alert("Great! You watched 4 ads and earned 1 Lucky Wheel Spin!");
-                    }
-
                     updateUI();
+                    alert("Ad completed! +$0.001 added.");
                 }).catch(() => {
-                    alert("Ad skipped or failed. Complete watching to get reward.");
+                    alert("Ad skipped or failed. Check if Block ID is Active.");
                 });
             } else {
                 alert("Adsgram SDK is loading or unavailable. Check if Block ID is Active.");
@@ -339,7 +340,7 @@
 
         function spinAction() {
             if (availableSpins <= 0) {
-                alert("You need to watch 4 ads first to get 1 spin!");
+                alert("You need to watch ads to earn spins!");
                 return;
             }
 
@@ -384,31 +385,11 @@
             alert(`Promotion order placed successfully for $${cost.toFixed(2)}!`);
         }
 
-        function selectCrypto(type, action) {
-            // UI Selection Handler
-            alert(`${type.toUpperCase()} selected for ${action}`);
-        }
-
-        function executeDeposit() {
-            const amt = parseFloat(document.getElementById('deposit-amt').value);
-            if(isNaN(amt) || amt < 1 || amt > 100) {
-                alert("Deposit limit is Minimum $1 and Maximum $100!");
-                return;
-            }
-            alert(`Deposit Invoice Created for $${amt}. Address copied to clipboard!`);
-        }
-
-        function executeWithdraw() {
-            const addr = document.getElementById('withdraw-addr').value.trim();
-            const amt = parseFloat(document.getElementById('withdraw-amt').value);
-
-            if(!addr) { alert("Please enter wallet address!"); return; }
-            if(isNaN(amt) || amt < 1.00) { alert("Minimum withdrawal amount is $1.00!"); return; }
-            if(amt > balance) { alert("Insufficient balance!"); return; }
-
-            balance -= amt;
-            updateUI();
-            alert(`Withdrawal request submitted for $${amt.toFixed(2)}!`);
+        function copyRef() {
+            const ref = document.getElementById('ref-link');
+            ref.select();
+            document.execCommand('copy');
+            alert("Referral Link Copied!");
         }
 
         function closeModal() {
