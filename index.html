@@ -911,7 +911,7 @@
     <script>
         // ===== App state =====
         const appData = {
-            balance: 100.000,
+            balance: 0.000,
             totalAdsWatched: 0,
             dailyAdLimit: 200,
             availableSpins: 4,
@@ -1010,9 +1010,8 @@
             saveAccount();
         }
         function referralLink(){
-            return currentUserId
-                ? `https://t.me/DynamicsAdsBot/dynamicsads?startapp=ref${currentUserId}`
-                : '';
+            if(!currentUserId) return '';
+            return `https://t.me/DynamicsAdsBot/dynamicsads?startapp=ref${encodeURIComponent(currentUserId)}`;
         }
         function updateIdentity(){
             const u=currentTelegramUser;
@@ -1062,7 +1061,15 @@
             tg.expand();
             tg.ready();
             const user = tg.initDataUnsafe?.user;
-            if (!user) return;
+            if (!user?.id) {
+                currentTelegramUser = null;
+                currentUserId = '';
+                appData.balance = 0;
+                appData.referralCode = '';
+                updateIdentity();
+                updateUI();
+                return;
+            }
             loadAccount(user);
             updateIdentity();
             applyIncomingReferral();
