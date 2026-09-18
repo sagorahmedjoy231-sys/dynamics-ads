@@ -620,6 +620,8 @@
         .earning-value{font-size:18px;font-weight:900;color:#fff;text-shadow:0 0 12px rgba(255,255,255,.25)}
         .earning-label{font-size:9px;color:var(--text-sub);margin-top:5px;font-weight:800}
 
+        .batch-action{cursor:pointer;color:#fff;font:inherit;width:100%;transition:transform .18s ease,box-shadow .18s ease}.batch-action:hover{transform:translateY(-2px);box-shadow:0 0 25px rgba(6,182,212,.28)}.batch-card small{display:block;margin-top:5px;font-size:8px;color:#67e8f9;font-weight:800}.task-grid-2{grid-template-columns:1fr 1fr}.social-task{position:relative;overflow:hidden}.social-logo{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#fff;font-size:28px;font-weight:1000;margin-bottom:8px;box-shadow:0 0 25px rgba(255,255,255,.16)}.youtube-logo{background:linear-gradient(135deg,#ff0033,#ff4d6d)}.facebook-logo{background:linear-gradient(135deg,#1877f2,#4f8cff)}.telegram-logo{background:linear-gradient(135deg,#18aeea,#287be8)}.tiktok-logo{background:linear-gradient(135deg,#111827,#ec4899)}.task-packages{display:grid;gap:5px;margin:8px 0 10px}.task-packages div{display:flex;justify-content:space-between;gap:5px;padding:6px 7px;border-radius:9px;background:rgba(255,255,255,.055);font-size:8px;color:var(--text-sub)}.task-packages b{color:#fff}.task-grid-2 .task-card p{min-height:22px}.task-grid-2 .task-card .btn{width:100%}
+
         /* Ads + Tasks */
         .batch-grid,.task-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
         .batch-card,.task-card{padding:14px;border-radius:18px;border:1px solid var(--card-border);background:linear-gradient(135deg,rgba(15,23,42,.92),rgba(30,41,59,.75));text-align:center}
@@ -733,19 +735,19 @@
                 </div>
             </section>
 
-            <!-- TAB 2: ADS PROMOTION -->
+            <!-- TAB 2: ADS CENTER -->
             <section id="view-ads" class="tab-view">
                 <div class="card">
                     <div class="card-header"><span class="card-title highlight-cyan">🎬 Ad Center</span><span class="reward-tag">200 ads/day</span></div>
-                    <p class="card-desc">Each completed rewarded ad credits its configured earning directly to Main Balance after AdsGram confirms completion.</p>
+                    <p class="card-desc">Choose an ad batch. Every completed rewarded ad is credited after AdsGram confirms completion.</p>
                     <div class="batch-grid">
-                        <div class="batch-card"><strong>100</strong><span>Batch A</span></div>
-                        <div class="batch-card"><strong>50</strong><span>Batch B</span></div>
-                        <div class="batch-card"><strong>50</strong><span>Batch C</span></div>
+                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Daily Ad')"><strong>100</strong><span>DAILY AD</span><small>Watch & Earn</small></button>
+                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Extra Ad')"><strong>50</strong><span>EXTRA AD</span><small>Watch & Earn</small></button>
+                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Bonus Ad')"><strong>50</strong><span>BONUS AD</span><small>Watch & Earn</small></button>
                     </div>
                     <div class="section-kicker">Today's progress</div>
                     <div class="stat-card" style="margin-bottom:10px"><div class="stat-val" id="ads-counter">0/200</div><div class="stat-lbl">Ads Completed Today</div></div>
-                    <button class="btn btn-primary btn-green" onclick="handleWatchAd()">▶ WATCH AD NOW</button>
+                    <button class="btn btn-primary btn-green" type="button" onclick="handleWatchAd('Ad Center')">▶ WATCH AD NOW</button>
                     <div id="ads-status" class="section-kicker" style="text-align:center;margin-top:10px">AdsGram: loading…</div>
                 </div>
             </section>
@@ -753,17 +755,40 @@
             <!-- TAB 2B: TASKS -->
             <section id="view-tasks" class="tab-view">
                 <div class="card">
-                    <div class="card-header"><span class="card-title highlight-green">✅ Tasks</span><span class="reward-tag">Complete & earn</span></div>
-                    <p class="card-desc">Social tasks stay here so the Home screen remains clean.</p>
-                    <div class="task-grid">
-                        <div class="task-card"><div class="task-icon">▶️</div><h3>YouTube</h3><p>Subscribe to the configured channel.</p><button class="btn btn-primary" onclick="completeTask('YouTube')">Complete</button></div>
-                        <div class="task-card"><div class="task-icon">📘</div><h3>Facebook</h3><p>Follow the configured page.</p><button class="btn btn-primary" onclick="completeTask('Facebook')">Complete</button></div>
-                        <div class="task-card"><div class="task-icon">✈️</div><h3>Telegram</h3><p>Join the configured channel.</p><button class="btn btn-primary" onclick="completeTask('Telegram')">Complete</button></div>
-                        <div class="task-card"><div class="task-icon">🎵</div><h3>TikTok</h3><p>Follow the configured account.</p><button class="btn btn-primary" onclick="completeTask('TikTok')">Complete</button></div>
+                    <div class="card-header"><span class="card-title highlight-green">✅ Tasks</span><span class="reward-tag">Social Tasks</span></div>
+                    <p class="card-desc">YouTube, Facebook, Telegram and TikTok tasks are kept here so the Home screen stays clean.</p>
+                    <div class="task-grid task-grid-2">
+                        <div class="task-card social-task">
+                            <div class="social-logo youtube-logo">▶</div><h3>YouTube</h3><p>Subscribe to the configured channel.</p>
+                            <div class="task-packages">
+                                <div>100 subscribers <b>$0.60</b></div><div>500 subscribers <b>$1.00</b></div><div>1,000 subscribers <b>$1.60</b></div><div>2,000 subscribers <b>$2.10</b></div><div>4,000 subscribers <b>$3.20</b></div>
+                            </div>
+                            <button class="btn btn-primary" onclick="completeTask('YouTube')">Complete Task</button>
+                        </div>
+                        <div class="task-card social-task">
+                            <div class="social-logo facebook-logo">f</div><h3>Facebook</h3><p>Follow the configured page.</p>
+                            <div class="task-packages">
+                                <div>100 followers <b>$0.60</b></div><div>500 followers <b>$1.00</b></div><div>1,000 followers <b>$1.60</b></div><div>2,000 followers <b>$2.10</b></div><div>4,000 followers <b>$3.20</b></div>
+                            </div>
+                            <button class="btn btn-primary" onclick="completeTask('Facebook')">Complete Task</button>
+                        </div>
+                        <div class="task-card social-task">
+                            <div class="social-logo telegram-logo">✈</div><h3>Telegram</h3><p>Join the configured channel.</p>
+                            <div class="task-packages">
+                                <div>100 members <b>$0.60</b></div><div>500 members <b>$1.00</b></div><div>1,000 members <b>$1.60</b></div><div>2,000 members <b>$2.10</b></div><div>4,000 members <b>$3.20</b></div>
+                            </div>
+                            <button class="btn btn-primary" onclick="completeTask('Telegram')">Complete Task</button>
+                        </div>
+                        <div class="task-card social-task">
+                            <div class="social-logo tiktok-logo">♪</div><h3>TikTok</h3><p>Follow the configured account.</p>
+                            <div class="task-packages">
+                                <div>100 followers <b>$0.60</b></div><div>500 followers <b>$1.00</b></div><div>1,000 followers <b>$1.60</b></div><div>2,000 followers <b>$2.10</b></div><div>4,000 followers <b>$3.20</b></div>
+                            </div>
+                            <button class="btn btn-primary" onclick="completeTask('TikTok')">Complete Task</button>
+                        </div>
                     </div>
                 </div>
             </section>
-
 
             <!-- TAB 3: LUCKY WHEEL -->
             <!-- TAB 3: LUCKY WHEEL -->
@@ -978,27 +1003,27 @@
             window.scrollTo({top:0,behavior:'smooth'});
         }
 
-        async function handleWatchAd() {
+        async function handleWatchAd(source='Ad Center') {
             if (appData.totalAdsWatched >= appData.dailyAdLimit) {
                 alert('Daily ad limit reached: 200/200.');
-                return;
+                return false;
             }
             if (!AdController) {
                 alert('AdsGram SDK is not ready. Please wait a moment and try again.');
-                return;
+                return false;
             }
             try {
                 await AdController.show();
                 appData.balance += appData.adReward;
                 appData.earnings.ad += appData.adReward;
                 appData.totalAdsWatched += 1;
-                // Keep 4 completed ads -> 1 spin, capped at 4/day.
-                if (appData.totalAdsWatched % 4 === 0 && appData.availableSpins < appData.dailySpinLimit) appData.availableSpins += 1;
                 updateUI();
                 showRewardToast(`+$${appData.adReward.toFixed(3)} added to Main Balance`);
+                return true;
             } catch (error) {
                 console.error('AdsGram show error:', error);
                 alert(`AdsGram: ${error?.description || 'No ad available or ad was not completed.'}`);
+                return false;
             }
         }
 
@@ -1019,14 +1044,30 @@
             svg.appendChild(g);
         }
 
-        function handleSpinWheel() {
+        async function handleSpinWheel() {
             if (wheelBusy) return;
             if (appData.availableSpins <= 0) { alert('No spins remaining today.'); return; }
+            if (appData.totalAdsWatched >= appData.dailyAdLimit) { alert('Daily ad limit reached: 200/200.'); return; }
+
+            const btn=document.getElementById('btn-spin');
             wheelBusy=true;
-            const btn=document.getElementById('btn-spin'); btn.disabled=true;
-            appData.availableSpins--; appData.wheelSpinsUsed++;
+            btn.disabled=true;
+            btn.innerText='WATCHING AD…';
+
+            // Every spin requires one completed rewarded ad first.
+            const adCompleted = await handleWatchAd('Lucky Wheel Spin');
+            if (!adCompleted) {
+                wheelBusy=false;
+                btn.disabled=false;
+                btn.innerText='SPIN NOW';
+                return;
+            }
+
+            appData.availableSpins--;
+            appData.wheelSpinsUsed++;
             updateUI();
-            // Transparent selection: only the three explicitly marked active rewards can be won.
+            btn.innerText='SPINNING…';
+
             const active=[10,11,12];
             const index=active[Math.floor(Math.random()*active.length)];
             const step=360/WHEEL_REWARDS.length;
@@ -1043,7 +1084,7 @@
                 document.getElementById('modal-prize-amount').innerText=`+${reward.label}`;
                 document.querySelector('#reward-modal .modal-desc').innerText='Reward credited to Main Balance.';
                 document.getElementById('reward-modal').style.display='flex';
-                wheelBusy=false; btn.disabled=false;
+                wheelBusy=false; btn.disabled=false; btn.innerText='SPIN NOW';
             },4100);
         }
 
@@ -1053,7 +1094,7 @@
             document.body.appendChild(toast); setTimeout(()=>toast.remove(),1800);
         }
 
-        function completeTask(platform){ alert(`${platform} task is ready for backend verification.`); }
+        function completeTask(platform){ alert(`${platform} task opened. Subscription/follow completion must be verified by your backend before the reward is credited.`); }
         function renderReferrals(){
             const list=document.getElementById('referral-list'); if(!list)return;
             document.getElementById('ref-count').innerText=`${referrals.length} users`;
