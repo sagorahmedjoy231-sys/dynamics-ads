@@ -4,399 +4,1045 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dynamics Ads Mini App</title>
-    <!-- Telegram WebApp SDK -->
+    
+    <!-- External SDKs -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Adsgram SDK -->
     <script src="https://sad.adsgram.ai/js/sad-index.js"></script>
-    <!-- Canvas Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-    <style>
-        :root {
-            --bg-dark: #050811;
-            --card-glass: rgba(16, 23, 42, 0.9);
-            --card-border: rgba(59, 130, 246, 0.3);
-            --accent-blue: #2563eb;
-            --accent-purple: #7c3aed;
-            --accent-gold: #f59e0b;
-            --accent-green: #10b981;
-            --accent-cyan: #06b6d4;
-            --accent-red: #ef4444;
-            --text-main: #ffffff;
-            --text-sub: #94a3b8;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
-        body { background: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #050811 80%); min-height: 100vh; overflow-x: hidden; }
-        .app-container { width: 100%; max-width: 440px; min-height: 100vh; padding: 14px; padding-bottom: 95px; position: relative; }
-
-        /* Glowing Top Header */
-        .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; background: rgba(15, 23, 42, 0.7); padding: 12px 16px; border-radius: 18px; border: 1px solid var(--card-border); backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-        .bot-title { font-size: 18px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; }
-        .bot-title span { color: var(--accent-cyan); text-shadow: 0 0 10px var(--accent-cyan); }
-        .level-badge { background: linear-gradient(135deg, var(--accent-gold), #d97706); color: #000; font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 20px; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); animation: pulseGlow 2s infinite alternate; }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
-            100% { box-shadow: 0 0 18px rgba(245, 158, 11, 0.9); }
-        }
-
-        /* Profile Banner Card */
-        .profile-card { background: var(--card-glass); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-        .avatar-box { position: relative; width: 60px; height: 60px; }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--accent-gold); box-shadow: 0 0 20px rgba(245, 158, 11, 0.6); object-fit: cover; }
-        .max-tag { position: absolute; top: -2px; right: -2px; background: var(--accent-red); color: #fff; font-size: 9px; font-weight: 900; padding: 2px 5px; border-radius: 8px; border: 1px solid #fff; }
-        .user-meta h4 { font-size: 16px; font-weight: 800; color: #fff; }
-        .user-meta .sub-tag { font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-top: 2px; }
-
-        .online-status { font-size: 10px; color: var(--accent-green); font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: 2px; }
-        .online-dot { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; box-shadow: 0 0 6px var(--accent-green); }
-
-        .balance-box { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent-green); border-radius: 16px; padding: 10px 16px; text-align: right; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
-        .balance-box .amount { font-size: 18px; font-weight: 900; color: var(--accent-green); }
-        .balance-box .label { font-size: 9px; color: var(--text-sub); font-weight: 800; letter-spacing: 0.5px; }
-
-        /* Stats Grid */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
-        .stat-card { background: var(--card-glass); border: 1px solid var(--card-border); border-radius: 14px; padding: 10px 6px; text-align: center; }
-        .stat-card .val { font-size: 12px; font-weight: 800; color: #fff; }
-        .stat-card .lbl { font-size: 8px; color: var(--text-sub); margin-top: 2px; }
-
-        /* General Card UI */
-        .card { background: var(--card-glass); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 16px; backdrop-filter: blur(12px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .card-title { font-size: 15px; font-weight: 800; color: #fff; }
-
-        .btn-action { width: 100%; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: #fff; border: none; padding: 14px; border-radius: 14px; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4); transition: 0.2s; }
-        .btn-action:active { transform: scale(0.98); }
-        .btn-green { background: linear-gradient(135deg, var(--accent-green), #059669); color: #000; font-weight: 900; }
-        .btn-gold { background: linear-gradient(135deg, var(--accent-gold), #d97706); color: #000; font-weight: 900; }
-
-        /* Crypto Payment Grid */
-        .crypto-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
-        .crypto-item { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .crypto-item:hover, .crypto-item.active { border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); }
-        .crypto-item img { width: 28px; height: 28px; margin-bottom: 4px; object-fit: contain; }
-
-        /* Prize Board Grid */
-        .prize-board-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 10px; }
-        .prize-item { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 6px 2px; text-align: center; font-size: 10px; font-weight: 800; color: var(--accent-gold); }
-
-        /* Wheel UI */
-        .wheel-container { position: relative; width: 270px; height: 270px; margin: 15px auto; }
-        .wheel-pointer { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-top: 24px solid var(--accent-gold); z-index: 30; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.9)); }
-        .wheel-svg { width: 100%; height: 100%; border-radius: 50%; border: 5px solid var(--accent-gold); transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
-
-        .input-field, .select-field { width: 100%; padding: 12px 14px; background: rgba(5, 8, 17, 0.8); border: 1px solid var(--card-border); border-radius: 12px; color: #fff; font-size: 13px; outline: none; margin-bottom: 10px; }
-        .select-field option { background: var(--bg-dark); color: #fff; }
-
-        /* Modal Overlay */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 200; justify-content: center; align-items: center; }
-        .modal-card { background: var(--bg-dark); border: 2px solid var(--accent-gold); border-radius: 22px; padding: 24px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 0 40px rgba(245, 158, 11, 0.5); }
-
-        /* Bottom Nav */
-        .navbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(7, 11, 25, 0.95); border-top: 1px solid var(--card-border); backdrop-filter: blur(25px); display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; }
-        .nav-item { flex: 1; text-align: center; color: var(--text-sub); font-size: 10px; font-weight: 700; text-decoration: none; cursor: pointer; }
-        .nav-item.active { color: var(--accent-cyan); filter: drop-shadow(0 0 8px var(--accent-cyan)); }
-        .nav-item div { font-size: 20px; margin-bottom: 2px; }
-    </style>
+    
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="app-container">
         
-        <!-- Top Bar Header -->
-        <div class="top-header">
-            <div class="bot-title">🤖 Dynamics<span>Ads</span></div>
+        <!-- Top App Header -->
+        <header class="top-header">
+            <div class="bot-title">
+                <span class="bot-icon">🤖</span>
+                <div class="title-text">Dynamics<span>Ads</span></div>
+            </div>
             <div class="level-badge">LEVEL 4 - ULTRA MASTER</div>
-        </div>
+        </header>
 
-        <!-- TAB 1: HOME -->
-        <div id="view-home" class="tab-view">
-            <div class="profile-card">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div class="avatar-box">
-                        <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" class="avatar-img" alt="Avatar">
-                        <span class="max-tag">MAX</span>
-                    </div>
-                    <div class="user-meta">
-                        <h4 id="user-name">@sagor790</h4>
-                        <div style="font-size: 10px; color: var(--text-sub);">Telegram ID: 8014446179</div>
-                        <div class="online-status"><span class="online-dot"></span> Online</div>
-                        <div class="sub-tag">👑 Level 4 - Ultra Master</div>
-                    </div>
-                </div>
-                <div class="balance-box">
-                    <div class="amount" id="balance-val">$100.000</div>
-                    <div class="label">Available Balance</div>
-                </div>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card"><div class="val" id="ads-counter-display">300/300</div><div class="lbl">Ads Completed</div></div>
-                <div class="stat-card"><div class="val">24:00:00</div><div class="lbl">Next Cycle</div></div>
-                <div class="stat-card"><div class="val" id="spin-avail-display">4/4</div><div class="lbl">Daily Spins</div></div>
-                <div class="stat-card"><div class="val">Level 4</div><div class="lbl">Ultra Master</div></div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">Watch Ad & Earn</span>
-                    <span style="color: var(--accent-green); font-size: 12px; font-weight: 800;">+$0.001 per ad</span>
-                </div>
-                <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 12px;">Watch ads to earn direct balance and unlock lucky wheel spins (4 Ads = 1 Spin).</p>
-                <button class="btn-action btn-green" onclick="watchAdAction()">Watch Ad Now</button>
-            </div>
-        </div>
-
-        <!-- TAB 2: ADS & PROMO -->
-        <div id="view-ads" class="tab-view" style="display: none;">
-            <div class="card">
-                <div class="card-title" style="margin-bottom: 10px;">Buy Social Media Growth</div>
-                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px;">Boost your YouTube, Telegram, or TikTok channels instantly.</p>
+        <!-- Dynamic Content Section -->
+        <main class="content-area">
+            
+            <!-- TAB 1: HOME VIEW -->
+            <section id="view-home" class="tab-view active">
                 
-                <input type="text" class="input-field" placeholder="Paste Channel / Video Link">
+                <!-- Robot Hero Promo Banner -->
+                <div class="hero-banner">
+                    <div class="hero-info">
+                        <h2>Watch Ads</h2>
+                        <h2 class="highlight-gold">Earn Rewards</h2>
+                        <p class="hero-desc">Simple • Fast • Real Crypto Earnings</p>
+                    </div>
+                    <div class="robot-avatar-glow">🤖</div>
+                </div>
+
+                <!-- User Profile Banner Card -->
+                <div class="profile-card">
+                    <div class="profile-left">
+                        <div class="avatar-container">
+                            <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="Profile Avatar" class="avatar-img" id="user-avatar">
+                            <span class="badge-max">MAX</span>
+                        </div>
+                        <div class="user-details">
+                            <h4 id="user-username">@sagor790</h4>
+                            <span class="tg-id" id="user-tg-id">Telegram ID: 8014446179</span>
+                            <div class="status-indicator">
+                                <span class="dot-online"></span> Online
+                            </div>
+                            <div class="user-rank">👑 Level 4 - Ultra Master</div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-right">
+                        <div class="balance-card">
+                            <span class="balance-label">Available Balance</span>
+                            <div class="balance-value" id="main-balance">$100.000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Dashboard Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-val" id="ads-counter">300/300</div>
+                        <div class="stat-lbl">Ads Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val">24:00:00</div>
+                        <div class="stat-lbl">Next Cycle</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val" id="spin-counter">4/4</div>
+                        <div class="stat-lbl">Daily Spins</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val">Level 4</div>
+                        <div class="stat-lbl">Ultra Master</div>
+                    </div>
+                </div>
+
+                <!-- Main Watch Ad Action Card -->
+                <div class="card action-card">
+                    <div class="card-header">
+                        <span class="card-title">Watch Ad & Earn</span>
+                        <span class="reward-tag">+$0.001 per ad</span>
+                    </div>
+                    <p class="card-desc">Watch video ads to earn direct balance and unlock lucky wheel spins (4 Ads = 1 Spin).</p>
+                    <button class="btn btn-primary btn-green" onclick="handleWatchAd()">Watch Ad Now</button>
+                </div>
+
+                <!-- Quick Navigation Sub Grid -->
+                <div class="sub-grid">
+                    <div class="sub-card" onclick="switchTab('wheel')">
+                        <div class="sub-icon">🎡</div>
+                        <div class="sub-title">Lucky Wheel</div>
+                        <div class="sub-desc">Spin & Win Rewards</div>
+                    </div>
+                    <div class="sub-card" onclick="switchTab('wheel')">
+                        <div class="sub-icon">🎁</div>
+                        <div class="sub-title">Prize Board</div>
+                        <div class="sub-desc">10 Big Cash Rewards</div>
+                    </div>
+                </div>
+
+                <!-- Invite Friends Quick Banner -->
+                <div class="invite-banner" onclick="switchTab('referrals')">
+                    <div class="invite-info">
+                        <h3>Invite Friends</h3>
+                        <p>Get Bonus Together & 10% Lifetime Commission</p>
+                    </div>
+                    <div class="invite-icon">👥</div>
+                </div>
+
+            </section>
+
+            <!-- TAB 2: ADS & PROMOTION VIEW -->
+            <section id="view-ads" class="tab-view">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Buy Social Media Promotion</span>
+                    </div>
+                    <p class="card-desc">Boost your YouTube, Telegram, or TikTok channel instantly with real users.</p>
+                    
+                    <div class="form-group">
+                        <label>Target Channel / Video Link:</label>
+                        <input type="text" id="promo-link" class="input-control" placeholder="https://t.me/yourchannel or video URL">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Promotion Package:</label>
+                        <select id="promo-package" class="select-control" onchange="calculatePromoCost()">
+                            <option value="0.60">100 Subscribers / Members - $0.60</option>
+                            <option value="1.00">500 Subscribers / Members - $1.00</option>
+                            <option value="1.60">1000 Subscribers / Members - $1.60</option>
+                            <option value="2.10">2000 Subscribers / Members - $2.10</option>
+                            <option value="3.20">4000 Subscribers / Members - $3.20</option>
+                        </select>
+                    </div>
+
+                    <div class="cost-summary">
+                        Total Price: <span id="total-promo-cost">$0.60</span>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="handleBuyPromotion()">Purchase Promotion Campaign</button>
+                </div>
+            </section>
+
+            <!-- TAB 3: LUCKY WHEEL VIEW -->
+            <section id="view-wheel" class="tab-view">
+                <div class="card wheel-card">
+                    <h2 class="section-title">🎡 Lucky Wheel</h2>
+                    <p class="card-desc">Watch 4 ads to earn 1 lucky wheel spin!</p>
+
+                    <div class="wheel-wrapper">
+                        <div class="wheel-pointer"></div>
+                        <svg class="wheel-svg" id="wheel-disc" viewBox="0 0 200 200">
+                            <g transform="translate(100, 100)">
+                                <g transform="rotate(0)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#3b82f6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$1.00</text></g>
+                                <g transform="rotate(30)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#8b5cf6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$1.50</text></g>
+                                <g transform="rotate(60)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#ef4444"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$2.00</text></g>
+                                <g transform="rotate(90)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#f59e0b"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$2.50</text></g>
+                                <g transform="rotate(120)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#10b981"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$3.00</text></g>
+                                <g transform="rotate(150)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#06b6d4"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$4.00</text></g>
+                                <g transform="rotate(180)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#3b82f6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$5.00</text></g>
+                                <g transform="rotate(210)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#8b5cf6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$7.00</text></g>
+                                <g transform="rotate(240)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#10b981"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$10.00</text></g>
+                                <g transform="rotate(270)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#f59e0b"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$15.00</text></g>
+                                <g transform="rotate(300)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#ef4444"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="7" font-weight="900" text-anchor="middle">$0.0001</text></g>
+                                <g transform="rotate(330)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#06b6d4"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="7" font-weight="900" text-anchor="middle">$0.0002</text></g>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <button class="btn btn-primary btn-gold" id="btn-spin" onclick="handleSpinWheel()">SPIN WHEEL NOW</button>
+                </div>
+
+                <!-- Prize Board Grid -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title highlight-gold">🎁 Prize Board (10 Big Rewards)</span>
+                    </div>
+                    <div class="prize-board-grid">
+                        <div class="prize-box">$1.00</div>
+                        <div class="prize-box">$1.50</div>
+                        <div class="prize-box">$2.00</div>
+                        <div class="prize-box">$2.50</div>
+                        <div class="prize-box">$3.00</div>
+                        <div class="prize-box">$4.00</div>
+                        <div class="prize-box">$5.00</div>
+                        <div class="prize-box">$7.00</div>
+                        <div class="prize-box">$10.00</div>
+                        <div class="prize-box">$15.00</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: REFERRALS VIEW -->
+            <section id="view-referrals" class="tab-view">
+                <div class="card">
+                    <h2 class="section-title highlight-purple">👥 Invite Friends</h2>
+                    <p class="card-desc">Earn 10% commission for every ad watched by your invited friends!</p>
+                    
+                    <div class="form-group">
+                        <label>Your Referral Link:</label>
+                        <input type="text" id="ref-link-input" class="input-control" value="https://t.me/DynamicsAdsBot/dynamicsads?start=ref8014446179" readonly>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="handleCopyReferral()">Copy Link</button>
+                </div>
+            </section>
+
+            <!-- TAB 5: PROFILE & WALLET VIEW -->
+            <section id="view-profile" class="tab-view">
                 
-                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 4px;">Select Package:</p>
-                <select class="select-field" id="sub-package-select" onchange="updatePromoCost()">
-                    <option value="0.60">100 Subscribers / Follows - $0.60</option>
-                    <option value="1.00">500 Subscribers / Follows - $1.00</option>
-                    <option value="1.60">1000 Subscribers / Follows - $1.60</option>
-                    <option value="2.10">2000 Subscribers / Follows - $2.10</option>
-                    <option value="3.20">4000 Subscribers / Follows - $3.20</option>
-                </select>
-
-                <div style="font-size: 12px; color: var(--accent-green); font-weight: bold; margin-bottom: 12px;" id="promo-cost-text">
-                    Total Price: $0.60
-                </div>
-
-                <button class="btn-action" onclick="purchaseSocialCampaign()">Buy Promotion Campaign</button>
-            </div>
-        </div>
-
-        <!-- TAB 3: LUCKY WHEEL -->
-        <div id="view-wheel" class="tab-view" style="display: none;">
-            <div class="card" style="text-align: center;">
-                <h3 style="color: var(--accent-gold); margin-bottom: 4px;">🎡 Lucky Wheel</h3>
-                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">Watch 4 ads to earn 1 lucky wheel spin!</p>
-
-                <div class="wheel-container">
-                    <div class="wheel-pointer"></div>
-                    <svg class="wheel-svg" id="wheel-disc" viewBox="0 0 200 200">
-                        <g transform="translate(100, 100)">
-                            <g transform="rotate(0)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#3b82f6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$1.00</text></g>
-                            <g transform="rotate(30)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#8b5cf6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$1.50</text></g>
-                            <g transform="rotate(60)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#ef4444"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$2.00</text></g>
-                            <g transform="rotate(90)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#f59e0b"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$2.50</text></g>
-                            <g transform="rotate(120)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#10b981"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$3.00</text></g>
-                            <g transform="rotate(150)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#06b6d4"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$4.00</text></g>
-                            <g transform="rotate(180)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#3b82f6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$5.00</text></g>
-                            <g transform="rotate(210)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#8b5cf6"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$7.00</text></g>
-                            <g transform="rotate(240)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#10b981"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$10.00</text></g>
-                            <g transform="rotate(270)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#f59e0b"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="8" font-weight="900" text-anchor="middle">$15.00</text></g>
-                            <g transform="rotate(300)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#ef4444"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="7" font-weight="900" text-anchor="middle">$0.0001</text></g>
-                            <g transform="rotate(330)"><path d="M 0 0 L 0 -100 A 100 100 0 0 1 50 -86.6 Z" fill="#06b6d4"/><text transform="rotate(15) translate(0, -68)" fill="#fff" font-size="7" font-weight="900" text-anchor="middle">$0.0002</text></g>
-                        </g>
-                    </svg>
-                </div>
-
-                <button class="btn-action btn-gold" id="spin-btn" onclick="spinAction()">SPIN WHEEL NOW</button>
-            </div>
-
-            <!-- Prize Board Section -->
-            <div class="card">
-                <div class="card-title" style="font-size: 13px; color: var(--accent-gold);">🎁 Prize Board (10 Big Rewards)</div>
-                <div class="prize-board-grid">
-                    <div class="prize-item">$1.00</div>
-                    <div class="prize-item">$1.50</div>
-                    <div class="prize-item">$2.00</div>
-                    <div class="prize-item">$2.50</div>
-                    <div class="prize-item">$3.00</div>
-                    <div class="prize-item">$4.00</div>
-                    <div class="prize-item">$5.00</div>
-                    <div class="prize-item">$7.00</div>
-                    <div class="prize-item">$10.00</div>
-                    <div class="prize-item">$15.00</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 4: REFERRALS -->
-        <div id="view-referrals" class="tab-view" style="display: none;">
-            <div class="card">
-                <h3 style="color: var(--accent-purple); margin-bottom: 8px;">👥 Invite Friends & Get Bonus</h3>
-                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px;">Get 10% commission on every task completed by your referred users!</p>
-
-                <input type="text" class="input-field" value="https://t.me/DynamicsAdsBot/dynamicsads?start=ref8014446179" id="ref-link" readonly>
-                <button class="btn-action" onclick="copyRef()">Copy Referral Link</button>
-            </div>
-        </div>
-
-        <!-- TAB 5: PROFILE & WALLET -->
-        <div id="view-profile" class="tab-view" style="display: none;">
-            <div class="card">
-                <div class="card-title" style="margin-bottom: 10px; color: var(--accent-cyan);">Deposit Funds (Min $1 - Max $100)</div>
-                <div class="crypto-grid">
-                    <div class="crypto-item active">
-                        <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON">
-                        <div style="font-size: 11px; font-weight: bold;">TON</div>
+                <!-- Crypto Deposit -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title highlight-cyan">Deposit Funds (Min $1 - Max $100)</span>
                     </div>
-                    <div class="crypto-item">
-                        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT">
-                        <div style="font-size: 11px; font-weight: bold;">USDT</div>
+                    
+                    <div class="crypto-selector">
+                        <div class="crypto-card active" onclick="selectCrypto(this, 'TON')">
+                            <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON">
+                            <span>TON</span>
+                        </div>
+                        <div class="crypto-card" onclick="selectCrypto(this, 'USDT')">
+                            <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT">
+                            <span>USDT</span>
+                        </div>
+                        <div class="crypto-card" onclick="selectCrypto(this, 'BNB')">
+                            <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="BNB">
+                            <span>BNB</span>
+                        </div>
                     </div>
-                    <div class="crypto-item">
-                        <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="BNB">
-                        <div style="font-size: 11px; font-weight: bold;">BNB</div>
+
+                    <div class="form-group">
+                        <input type="number" id="deposit-amount" class="input-control" placeholder="Enter Deposit Amount ($1 - $100)">
                     </div>
+
+                    <button class="btn btn-primary" onclick="handleDeposit()">Deposit Funds</button>
                 </div>
-                <input type="number" class="input-field" placeholder="Deposit Amount ($1 - $100)">
-                <button class="btn-action" onclick="alert('Deposit Address Copied!')">Deposit Funds</button>
-            </div>
 
-            <div class="card">
-                <div class="card-title" style="margin-bottom: 10px; color: var(--accent-green);">Withdraw Funds (Min $1.00)</div>
-                <input type="text" class="input-field" placeholder="Enter Wallet Address / Pay ID">
-                <input type="number" class="input-field" placeholder="Withdraw Amount ($1.00 Min)">
-                <button class="btn-action btn-green" onclick="alert('Withdrawal Request Submitted!')">Submit Withdrawal</button>
-            </div>
-        </div>
+                <!-- Crypto Withdrawal -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title highlight-green">Withdraw Funds (Min $1.00)</span>
+                    </div>
 
-        <!-- Win Reward Modal -->
-        <div class="modal-overlay" id="win-modal">
+                    <div class="form-group">
+                        <input type="text" id="withdraw-address" class="input-control" placeholder="Wallet Address / Pay ID">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="withdraw-amount" class="input-control" placeholder="Amount ($1.00 Min)">
+                    </div>
+
+                    <button class="btn btn-primary btn-green" onclick="handleWithdraw()">Submit Withdrawal Request</button>
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- Reward Modal Popup -->
+        <div class="modal-overlay" id="reward-modal">
             <div class="modal-card">
-                <div style="font-size: 40px; margin-bottom: 8px;">🎉</div>
-                <h3 style="color: var(--accent-gold); margin-bottom: 6px;">CONGRATULATIONS!</h3>
-                <p style="font-size: 12px; color: var(--text-sub);">You won a reward from Lucky Wheel!</p>
-                <div style="font-size: 30px; font-weight: 900; color: var(--accent-green); margin: 14px 0;" id="win-amt">+$0.0001</div>
-                <button class="btn-action btn-green" onclick="closeModal()">CLAIM REWARD</button>
+                <div class="modal-icon">🎉</div>
+                <h3 class="modal-title">CONGRATULATIONS!</h3>
+                <p class="modal-desc">You won a prize from the Lucky Wheel!</p>
+                <div class="modal-prize" id="modal-prize-amount">+$0.0001</div>
+                <button class="btn btn-primary btn-green" onclick="closeRewardModal()">CLAIM REWARD</button>
             </div>
         </div>
 
         <!-- Bottom Navigation Bar -->
-        <div class="navbar">
-            <div class="nav-item active" onclick="switchTab('home', this)"><div>🏠</div>Home</div>
-            <div class="nav-item" onclick="switchTab('ads', this)"><div>📺</div>Ads</div>
-            <div class="nav-item" onclick="switchTab('wheel', this)"><div>🎡</div>Wheel</div>
-            <div class="nav-item" onclick="switchTab('referrals', this)"><div>👥</div>Referrals</div>
-            <div class="nav-item" onclick="switchTab('profile', this)"><div>👤</div>Profile</div>
-        </div>
+        <nav class="bottom-navbar">
+            <button class="nav-btn active" onclick="switchTab('home', this)">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button class="nav-btn" onclick="switchTab('ads', this)">
+                <span class="nav-icon">📺</span>
+                <span class="nav-label">Ads</span>
+            </button>
+            <button class="nav-btn" onclick="switchTab('wheel', this)">
+                <span class="nav-icon">🎡</span>
+                <span class="nav-label">Wheel</span>
+            </button>
+            <button class="nav-btn" onclick="switchTab('referrals', this)">
+                <span class="nav-icon">👥</span>
+                <span class="nav-label">Referrals</span>
+            </button>
+            <button class="nav-btn" onclick="switchTab('profile', this)">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </button>
+        </nav>
 
     </div>
 
-    <script>
-        let balance = 100.000;
-        let totalAdsWatched = 300;
-        let wheelAdCounter = 4;
-        let availableSpins = 4;
-
-        const blockId = "48241";
-        let AdController = null;
-
-        window.addEventListener('DOMContentLoaded', () => {
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = window.Telegram.WebApp;
-                tg.expand();
-                if(tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                    const uname = `@${tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name}`;
-                    document.getElementById('user-name').innerText = uname;
-                }
-            }
-            if (window.Adsgram) {
-                AdController = window.Adsgram.init({ blockId: blockId });
-            }
-        });
-
-        function updateUI() {
-            const formatted = `$${balance.toFixed(3)}`;
-            document.getElementById('balance-val').innerText = formatted;
-            document.getElementById('ads-counter-display').innerText = `${totalAdsWatched}/300`;
-            document.getElementById('spin-avail-display').innerText = `${availableSpins}/4`;
-        }
-
-        function switchTab(viewName, el) {
-            document.querySelectorAll('.tab-view').forEach(v => v.style.display = 'none');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            const target = document.getElementById(`view-${viewName}`);
-            if(target) target.style.display = 'block';
-            if(el) el.classList.add('active');
-        }
-
-        function watchAdAction() {
-            if (AdController) {
-                AdController.show().then(() => {
-                    balance += 0.001;
-                    totalAdsWatched++;
-                    updateUI();
-                    alert("Ad completed! +$0.001 added.");
-                }).catch(() => {
-                    alert("Ad skipped or failed. Check if Block ID is Active.");
-                });
-            } else {
-                alert("Adsgram SDK is loading or unavailable. Check if Block ID is Active.");
-            }
-        }
-
-        function spinAction() {
-            if (availableSpins <= 0) {
-                alert("You need to watch ads to earn spins!");
-                return;
-            }
-
-            availableSpins--;
-            updateUI();
-
-            const disc = document.getElementById('wheel-disc');
-            const degree = 1440 + 45;
-
-            disc.style.transform = `rotate(${degree}deg)`;
-
-            setTimeout(() => {
-                balance += 0.0001;
-                updateUI();
-
-                if (typeof confetti === 'function') {
-                    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-                }
-
-                document.getElementById('win-amt').innerText = "+$0.0001";
-                document.getElementById('win-modal').style.display = 'flex';
-
-                disc.style.transition = 'none';
-                disc.style.transform = 'rotate(0deg)';
-                setTimeout(() => { disc.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)'; }, 50);
-            }, 4000);
-        }
-
-        function updatePromoCost() {
-            const cost = document.getElementById('sub-package-select').value;
-            document.getElementById('promo-cost-text').innerText = `Total Price: $${cost}`;
-        }
-
-        function purchaseSocialCampaign() {
-            const cost = parseFloat(document.getElementById('sub-package-select').value);
-            if(balance < cost) {
-                alert("Insufficient wallet balance!");
-                return;
-            }
-            balance -= cost;
-            updateUI();
-            alert(`Promotion order placed successfully for $${cost.toFixed(2)}!`);
-        }
-
-        function copyRef() {
-            const ref = document.getElementById('ref-link');
-            ref.select();
-            document.execCommand('copy');
-            alert("Referral Link Copied!");
-        }
-
-        function closeModal() {
-            document.getElementById('win-modal').style.display = 'none';
-        }
-
-        updateUI();
-    </script>
+    <!-- Link JS -->
+    <script src="app.js"></script>
 </body>
 </html>
+r.  :root {
+    --bg-dark: #050811;
+    --card-glass: rgba(15, 23, 42, 0.85);
+    --card-border: rgba(59, 130, 246, 0.25);
+    --accent-blue: #2563eb;
+    --accent-purple: #7c3aed;
+    --accent-gold: #f59e0b;
+    --accent-green: #10b981;
+    --accent-cyan: #06b6d4;
+    --accent-red: #ef4444;
+    --text-main: #ffffff;
+    --text-sub: #94a3b8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    user-select: none;
+}
+
+body {
+    background: var(--bg-dark);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #050811 80%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 440px;
+    min-height: 100vh;
+    padding: 14px;
+    padding-bottom: 95px;
+    position: relative;
+}
+
+/* Header UI */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    background: rgba(15, 23, 42, 0.7);
+    padding: 12px 16px;
+    border-radius: 18px;
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(12px);
+}
+
+.bot-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.bot-title span {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 10px var(--accent-cyan);
+}
+
+.level-badge {
+    background: linear-gradient(135deg, var(--accent-gold), #d97706);
+    color: #000;
+    font-size: 10px;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+}
+
+/* Hero Banner */
+.hero-banner {
+    background: linear-gradient(135deg, #1e1b4b, #2563eb);
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+.hero-info h2 {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.hero-desc {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-top: 2px;
+}
+
+.robot-avatar-glow {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    border: 2px solid var(--accent-cyan);
+    box-shadow: 0 0 15px var(--accent-cyan);
+}
+
+/* Profile Card */
+.profile-card {
+    background: var(--card-glass);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 14px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(12px);
+}
+
+.profile-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar-container {
+    position: relative;
+    width: 56px;
+    height: 56px;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid var(--accent-gold);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+    object-fit: cover;
+}
+
+.badge-max {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--accent-red);
+    color: #fff;
+    font-size: 8px;
+    font-weight: 900;
+    padding: 2px 5px;
+    border-radius: 8px;
+    border: 1px solid #fff;
+}
+
+.user-details h4 {
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.tg-id {
+    font-size: 10px;
+    color: var(--text-sub);
+    display: block;
+}
+
+.status-indicator {
+    font-size: 10px;
+    color: var(--accent-green);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dot-online {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-green);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--accent-green);
+}
+
+.user-rank {
+    font-size: 10px;
+    color: var(--accent-gold);
+    font-weight: 800;
+    margin-top: 2px;
+}
+
+.balance-card {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid var(--accent-green);
+    border-radius: 16px;
+    padding: 10px 14px;
+    text-align: right;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+}
+
+.balance-label {
+    font-size: 8px;
+    color: var(--text-sub);
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.balance-value {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--accent-green);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.stat-card {
+    background: var(--card-glass);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 10px 4px;
+    text-align: center;
+}
+
+.stat-val {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.stat-lbl {
+    font-size: 8px;
+    color: var(--text-sub);
+    margin-top: 2px;
+}
+
+/* Cards & Layout */
+.card {
+    background: var(--card-glass);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 14px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.card-title {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.card-desc {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-bottom: 12px;
+}
+
+.reward-tag {
+    color: var(--accent-green);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-green {
+    background: linear-gradient(135deg, var(--accent-green), #059669);
+    color: #000;
+    font-weight: 900;
+}
+
+.btn-gold {
+    background: linear-gradient(135deg, var(--accent-gold), #d97706);
+    color: #000;
+    font-weight: 900;
+}
+
+/* Sub Card Grid */
+.sub-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.sub-card {
+    background: var(--card-glass);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.sub-icon {
+    font-size: 26px;
+    margin-bottom: 4px;
+}
+
+.sub-title {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.sub-desc {
+    font-size: 9px;
+    color: var(--text-sub);
+}
+
+/* Invite Banner */
+.invite-banner {
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    border-radius: 18px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    cursor: pointer;
+}
+
+.invite-info h3 {
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.invite-info p {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.invite-icon {
+    font-size: 28px;
+}
+
+/* Form Controls */
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    font-size: 11px;
+    color: var(--text-sub);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.input-control, .select-control {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(5, 8, 17, 0.8);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+}
+
+.cost-summary {
+    font-size: 12px;
+    color: var(--accent-green);
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+/* Wheel Styling */
+.wheel-wrapper {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin: 15px auto;
+}
+
+.wheel-pointer {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 24px solid var(--accent-gold);
+    z-index: 30;
+}
+
+.wheel-svg {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid var(--accent-gold);
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+}
+
+/* Prize Board */
+.prize-board-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.prize-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--accent-gold);
+    border-radius: 8px;
+    padding: 6px 2px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--accent-gold);
+}
+
+/* Crypto Selector */
+.crypto-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.crypto-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.crypto-card.active {
+    border-color: var(--accent-cyan);
+    background: rgba(6, 182, 212, 0.1);
+}
+
+.crypto-card img {
+    width: 26px;
+    height: 26px;
+    margin-bottom: 4px;
+}
+
+/* Modal UI */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-card {
+    background: var(--bg-dark);
+    border: 2px solid var(--accent-gold);
+    border-radius: 22px;
+    padding: 24px;
+    text-align: center;
+    width: 85%;
+    max-width: 320px;
+}
+
+/* Bottom Nav */
+.bottom-navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(7, 11, 25, 0.95);
+    border-top: 1px solid var(--card-border);
+    backdrop-filter: blur(25px);
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    z-index: 100;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-sub);
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    flex: 1;
+}
+
+.nav-btn.active {
+    color: var(--accent-cyan);
+}
+
+.nav-icon {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.tab-view {
+    display: none;
+}
+
+.tab-view.active {
+    display: block;
+}
+
+.highlight-gold { color: var(--accent-gold); }
+.highlight-green { color: var(--accent-green); }
+.highlight-cyan { color: var(--accent-cyan); }
+.highlight-purple { color: var(--accent-purple); } 
+    // App State Variables
+let appData = {
+    balance: 100.000,
+    totalAdsWatched: 300,
+    availableSpins: 4,
+    selectedCrypto: 'TON',
+    blockId: "48241"
+};
+
+let AdController = null;
+
+// Initialize Application
+window.addEventListener('DOMContentLoaded', () => {
+    initTelegramApp();
+    initAdsgram();
+    updateUI();
+});
+
+// Telegram WebApp Setup
+function initTelegramApp() {
+    if (window.Telegram && window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            const user = tg.initDataUnsafe.user;
+            const username = `@${user.username || user.first_name}`;
+            document.getElementById('user-username').innerText = username;
+            document.getElementById('user-tg-id').innerText = `Telegram ID: ${user.id}`;
+        }
+    }
+}
+
+// Adsgram SDK Setup
+function initAdsgram() {
+    if (window.Adsgram) {
+        AdController = window.Adsgram.init({ blockId: appData.blockId });
+    }
+}
+
+// Update UI States
+function updateUI() {
+    document.getElementById('main-balance').innerText = `$${appData.balance.toFixed(3)}`;
+    document.getElementById('ads-counter').innerText = `${appData.totalAdsWatched}/300`;
+    document.getElementById('spin-counter').innerText = `${appData.availableSpins}/4`;
+}
+
+// Tab Switching
+function switchTab(tabName, clickedBtn) {
+    document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+    const targetTab = document.getElementById(`view-${tabName}`);
+    if (targetTab) targetTab.classList.add('active');
+
+    if (clickedBtn) {
+        clickedBtn.classList.add('active');
+    }
+}
+
+// Watch Ad Handler
+function handleWatchAd() {
+    if (AdController) {
+        AdController.show().then(() => {
+            appData.balance += 0.001;
+            appData.totalAdsWatched++;
+            updateUI();
+            alert("Success: Ad completed! +$0.001 added.");
+        }).catch(() => {
+            alert("Adsgram Notice: Ad skipped or block ID is not active yet.");
+        });
+    } else {
+        alert("Adsgram SDK Notice: Block ID is currently inactive or loading.");
+    }
+}
+
+// Spin Wheel Handler
+function handleSpinWheel() {
+    if (appData.availableSpins <= 0) {
+        alert("No spins remaining! Watch ads to unlock spins.");
+        return;
+    }
+
+    appData.availableSpins--;
+    updateUI();
+
+    const disc = document.getElementById('wheel-disc');
+    const degree = 1440 + 45;
+
+    disc.style.transform = `rotate(${degree}deg)`;
+
+    setTimeout(() => {
+        appData.balance += 0.0001;
+        updateUI();
+
+        if (typeof confetti === 'function') {
+            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+        }
+
+        document.getElementById('modal-prize-amount').innerText = "+$0.0001";
+        document.getElementById('reward-modal').style.display = 'flex';
+
+        disc.style.transition = 'none';
+        disc.style.transform = 'rotate(0deg)';
+        setTimeout(() => { 
+            disc.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)'; 
+        }, 50);
+    }, 4000);
+}
+
+// Social Promotion Calculation
+function calculatePromoCost() {
+    const selectedCost = document.getElementById('promo-package').value;
+    document.getElementById('total-promo-cost').innerText = `$${selectedCost}`;
+}
+
+function handleBuyPromotion() {
+    const cost = parseFloat(document.getElementById('promo-package').value);
+    const link = document.getElementById('promo-link').value;
+
+    if (!link) {
+        alert("Please enter a valid link!");
+        return;
+    }
+
+    if (appData.balance < cost) {
+        alert("Insufficient balance!");
+        return;
+    }
+
+    appData.balance -= cost;
+    updateUI();
+    alert(`Success: Campaign created for $${cost.toFixed(2)}!`);
+}
+
+// Referral Link Copy
+function handleCopyReferral() {
+    const refInput = document.getElementById('ref-link-input');
+    refInput.select();
+    document.execCommand('copy');
+    alert("Referral link copied to clipboard!");
+}
+
+// Crypto Selection & Transactions
+function selectCrypto(element, cryptoType) {
+    document.querySelectorAll('.crypto-card').forEach(card => card.classList.remove('active'));
+    element.classList.add('active');
+    appData.selectedCrypto = cryptoType;
+}
+
+function handleDeposit() {
+    const amount = document.getElementById('deposit-amount').value;
+    if (!amount || amount < 1 || amount > 100) {
+        alert("Deposit amount must be between $1 and $100!");
+        return;
+    }
+    alert(`Deposit request of $${amount} via ${appData.selectedCrypto} generated!`);
+}
+
+function handleWithdraw() {
+    const address = document.getElementById('withdraw-address').value;
+    const amount = parseFloat(document.getElementById('withdraw-amount').value);
+
+    if (!address) {
+        alert("Please enter a wallet address!");
+        return;
+    }
+
+    if (!amount || amount < 1.00) {
+        alert("Minimum withdrawal is $1.00!");
+        return;
+    }
+
+    if (appData.balance < amount) {
+        alert("Insufficient balance!");
+        return;
+    }
+
+    appData.balance -= amount;
+    updateUI();
+    alert(`Withdrawal request for $${amount.toFixed(2)} submitted successfully!`);
+}
+
+function closeRewardModal() {
+    document.getElementById('reward-modal').style.display = 'none';
+}
