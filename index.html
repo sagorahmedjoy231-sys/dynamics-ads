@@ -241,6 +241,43 @@ body{background:
 .title{letter-spacing:.2px}
 </style>
 
+
+<style id="v6-wheel-fix">
+.wheel-v5 .wlabel{
+  width:auto;height:auto;margin:0;padding:0;
+  background:transparent!important;border:0!important;box-shadow:none!important;
+  border-radius:0!important;
+  left:50%;top:50%;
+  transform:rotate(var(--a)) translateY(-132px) rotate(calc(var(--a) * -1));
+  white-space:nowrap;
+  color:#fff;
+  text-shadow:0 2px 5px #000,0 0 8px rgba(255,255,255,.35);
+}
+.wheel-v5 .active-slot{font-size:13px;font-weight:1000;color:#fff!important;filter:drop-shadow(0 0 7px #00eaff);}
+.wheel-v5 .locked-slot{font-size:15px;font-weight:1000;color:#fff!important;opacity:1;}
+.wheel-v5 .spin-core,.wheel-v5 #spin-button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+.nav{z-index:999!important;pointer-events:auto!important;touch-action:manipulation;}
+.nav button{position:relative;z-index:1000;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent;cursor:pointer;}
+@media(max-width:390px){.wheel-v5 .wlabel{transform:rotate(var(--a)) translateY(-126px) rotate(calc(var(--a) * -1));font-size:13px}.wheel-v5 .active-slot{font-size:11px}}
+</style>
+
+<style id="v7-task-ui">
+.task-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.task-card{position:relative;overflow:hidden;border:1px solid rgba(39,230,255,.35);border-radius:20px;padding:16px;background:linear-gradient(145deg,rgba(10,24,55,.96),rgba(35,10,60,.9));box-shadow:0 0 24px rgba(35,167,255,.12)}
+.task-card:before{content:"";position:absolute;inset:-80px;background:conic-gradient(from 0deg,transparent,rgba(39,230,255,.08),transparent,rgba(255,43,181,.08),transparent);animation:taskGlow 6s linear infinite}
+.task-card>*{position:relative}
+.task-head{display:flex;align-items:center;gap:12px}.task-icon{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:25px;background:linear-gradient(135deg,#23a7ff,#8b3dff,#ff2bb5);box-shadow:0 0 18px rgba(35,167,255,.35)}
+.task-title{font-size:18px;font-weight:1000}.task-sub{color:#9fb0ce;font-size:12px;margin-top:3px}
+.task-meta{display:flex;justify-content:space-between;gap:8px;margin:13px 0;font-size:13px}.task-reward{color:#39f29a;font-weight:1000}.task-status{color:#ffd45b;font-weight:900}
+.task-btn{width:100%;border:0;border-radius:14px;padding:12px;font-weight:1000;color:white;background:linear-gradient(90deg,#168cff,#7d36ff,#ed28a7);box-shadow:0 0 18px rgba(125,54,255,.28)}
+.task-note{font-size:11px;color:#8ea0bd;line-height:1.5}
+.nav{grid-template-columns:repeat(6,1fr)!important}
+.nav button{min-width:0;padding-left:3px!important;padding-right:3px!important;font-size:10px!important}
+.nav button b{font-size:18px!important}
+@keyframes taskGlow{to{transform:rotate(360deg)}}
+@media(max-width:390px){.nav button{font-size:9px!important}.nav button b{font-size:17px!important}}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -266,7 +303,7 @@ body{background:
     <div class="stats">
       <div class="stat"><b id="ads-count">0/200</b><span>Ads Today</span></div>
       <div class="stat"><b id="cycle">24:00:00</b><span>Next Cycle</span></div>
-      <div class="stat"><b id="spins">0/200</b><span>Spins</span></div>
+      <div class="stat"><b id="spins">0/4</b><span>Spins Today</span></div>
       <div class="stat"><b id="level-stat">MAX</b><span>Level</span></div>
     </div>
   </div>
@@ -283,15 +320,15 @@ body{background:
   </div>
 
   <div class="card">
-    <div class="title-row"><span class="title">🎬 Watch Ad & Earn</span><span class="micro">+$0.002 / ad</span></div>
-    <p class="muted">1 completed rewarded ad = 1 spin credit. Daily limit: 200 ads (100 + 50 + 50). Each completed ad adds $0.002.</p>
-    <button id="watch-home" class="btn green" onclick="handleWatchAd()">▶ Watch Ad Now</button>
-    <div id="ad-status" class="micro" style="margin-top:8px;text-align:center">AdsGram: checking…</div><div class="batch-grid"><div id="batch-1" class="batch"><b>100</b><span>Batch 1</span></div><div id="batch-2" class="batch"><b>50</b><span>Batch 2</span></div><div id="batch-3" class="batch"><b>50</b><span>Batch 3</span></div></div>
+    <div class="title-row"><span class="title">🎬 Ad Center</span><span class="micro">200 ads/day</span></div>
+    <p class="muted">Open the Ad Center to view your 100 + 50 + 50 ad batches. Completed rewarded ads add the configured ad earning to Main Balance.</p>
+    <button id="watch-home" class="btn green" onclick="switchTab('ads')">▶ Open Ad Center</button>
+    <div id="ad-status" class="micro" style="margin-top:8px;text-align:center">AdsGram: checking…</div>
   </div>
 
   <div class="quick" style="margin-top:13px">
-    <div class="card" onclick="switchTab('wheel')"><div style="font-size:28px">🎡</div><b>Lucky Wheel</b><div class="micro">1 ad → 1 spin</div></div>
-    <div class="card" onclick="switchTab('ads')"><div style="font-size:28px">📣</div><b>Promote</b><div class="micro">YouTube • Facebook • Telegram • TikTok</div></div>
+    <div class="card" onclick="switchTab('wheel')"><div style="font-size:28px">🎡</div><b>Lucky Wheel</b><div class="micro">4 spins / day</div></div>
+    <div class="card" onclick="switchTab('tasks')"><div style="font-size:28px">✅</div><b>Tasks</b><div class="micro">Ads • YouTube • Facebook • Telegram • TikTok</div></div>
   </div>
 </section>
 
@@ -317,41 +354,87 @@ body{background:
 </section>
 
 
+
+<section id="view-tasks" class="view">
+  <div class="card">
+    <div class="title">✅ Tasks</div>
+    <p class="muted">Complete available promotional tasks from one place. Advertising tasks and social promotion tasks are kept off the Home screen.</p>
+  </div>
+
+  <div class="card">
+    <div class="title-row"><span class="title">🎬 Ad Tasks</span><span class="micro">200/day</span></div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-head"><div class="task-icon">🎬</div><div><div class="task-title">Ad Batch 1</div><div class="task-sub">Watch rewarded ads</div></div></div>
+        <div class="task-meta"><span>100 ads</span><span class="task-reward">+$0.002 / completed ad</span></div>
+        <button class="task-btn" onclick="switchTab('ads')">Open Ad Center</button>
+      </div>
+      <div class="task-card">
+        <div class="task-head"><div class="task-icon">⚡</div><div><div class="task-title">Ad Batch 2</div><div class="task-sub">Watch rewarded ads</div></div></div>
+        <div class="task-meta"><span>50 ads</span><span class="task-reward">+$0.002 / completed ad</span></div>
+        <button class="task-btn" onclick="switchTab('ads')">Open Ad Center</button>
+      </div>
+      <div class="task-card">
+        <div class="task-head"><div class="task-icon">🔥</div><div><div class="task-title">Ad Batch 3</div><div class="task-sub">Watch rewarded ads</div></div></div>
+        <div class="task-meta"><span>50 ads</span><span class="task-reward">+$0.002 / completed ad</span></div>
+        <button class="task-btn" onclick="switchTab('ads')">Open Ad Center</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title-row"><span class="title">📣 Social Promotion Tasks</span><span class="micro">YouTube • Facebook • Telegram • TikTok</span></div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-head"><div class="task-icon">▶️</div><div><div class="task-title">YouTube</div><div class="task-sub">Subscribe / promotion campaign</div></div></div>
+        <div class="task-meta"><span>Available campaigns</span><span class="task-status">Pending verification</span></div>
+        <button class="task-btn" onclick="openPromotionTask('YouTube')">View YouTube Tasks</button>
+      </div>
+      <div class="task-card">
+        <div class="task-head"><div class="task-icon">f</div><div><div class="task-title">Facebook</div><div class="task-sub">Follow / page promotion</div></div></div>
+        <div class="task-meta"><span>Available campaigns</span><span class="task-status">Pending verification</span></div>
+        <button class="task-btn" onclick="openPromotionTask('Facebook')">View Facebook Tasks</button>
+      </div>
+      <div class="task-card">
+        <div class="task-head"><div class="task-icon">✈️</div><div><div class="task-title">Telegram</div><div class="task-sub">Join / channel promotion</div></div></div>
+        <div class="task-meta"><span>Available campaigns</span><span class="task-status">Pending verification</span></div>
+        <button class="task-btn" onclick="openPromotionTask('Telegram')">View Telegram Tasks</button>
+      </div>
+      <div class="task-card">
+        <div class="task-head"><div class="task-icon">♪</div><div><div class="task-title">TikTok</div><div class="task-sub">Follow / promotion</div></div></div>
+        <div class="task-meta"><span>Available campaigns</span><span class="task-status">Pending verification</span></div>
+        <button class="task-btn" onclick="openPromotionTask('TikTok')">View TikTok Tasks</button>
+      </div>
+    </div>
+    <p class="task-note" style="margin-top:12px">Social actions should be verified by your backend/provider before any reward is credited. This front-end does not falsely mark a follow or subscription as completed.</p>
+  </div>
+</section>
+
 <section id="view-wheel" class="view">
   <div class="card wheel-card wheel-v5">
     <div class="title">🎡 Lucky Wheel</div>
-    <div class="wheel-note">Watch 1 rewarded ad → 1 spin. The 3 colored crypto slots are the only selectable rewards. The 10 dollar slots are display-only.</div>
     <div class="wheel-stage">
       <div class="pointer"></div>
       <div id="wheel" class="wheel">
         <div class="wlabel locked-slot" style="--a:13.846154deg">$1.00</div>
-<div class="wlabel locked-slot" style="--a:41.538462deg">$1.50</div>
-<div class="wlabel locked-slot" style="--a:69.230769deg">$2.00</div>
-<div class="wlabel locked-slot" style="--a:96.923077deg">$2.50</div>
-<div class="wlabel locked-slot" style="--a:124.615385deg">$3.00</div>
-<div class="wlabel locked-slot" style="--a:152.307692deg">$4.00</div>
-<div class="wlabel locked-slot" style="--a:180.000000deg">$5.00</div>
-<div class="wlabel locked-slot" style="--a:207.692308deg">$7.00</div>
-<div class="wlabel locked-slot" style="--a:235.384615deg">$10.00</div>
-<div class="wlabel locked-slot" style="--a:263.076923deg">$15.00</div>
-<div class="wlabel active-slot" style="--a:290.769231deg">0.00020000</div>
-<div class="wlabel active-slot" style="--a:318.461538deg">0.000070000</div>
-<div class="wlabel active-slot" style="--a:346.153846deg">0.05000</div>
+        <div class="wlabel locked-slot" style="--a:41.538462deg">$1.50</div>
+        <div class="wlabel locked-slot" style="--a:69.230769deg">$2.00</div>
+        <div class="wlabel locked-slot" style="--a:96.923077deg">$2.50</div>
+        <div class="wlabel locked-slot" style="--a:124.615385deg">$3.00</div>
+        <div class="wlabel locked-slot" style="--a:152.307692deg">$4.00</div>
+        <div class="wlabel locked-slot" style="--a:180deg">$5.00</div>
+        <div class="wlabel locked-slot" style="--a:207.692308deg">$7.00</div>
+        <div class="wlabel locked-slot" style="--a:235.384615deg">$10.00</div>
+        <div class="wlabel locked-slot" style="--a:263.076923deg">$15.00</div>
+        <div class="wlabel active-slot" style="--a:290.769231deg">0.00020000</div>
+        <div class="wlabel active-slot" style="--a:318.461538deg">0.000070000</div>
+        <div class="wlabel active-slot" style="--a:346.153846deg">0.05000</div>
       </div>
-      <button class="spin-core" id="spin-core" onclick="handleSpin()"><span>SPIN</span></button>
+      <button class="spin-core" id="spin-core" onclick="handleWheelSpin(event)"><span>SPIN</span></button>
     </div>
-    <div class="wheel-meta"><span>Available spins</span><b id="wheel-spins">0/200</b></div>
-    <button id="spin-button" class="btn gold" onclick="handleSpin()">🎡 SPIN WHEEL</button>
+    <div class="wheel-meta"><span>Available spins</span><b id="wheel-spins">0/4</b></div>
+    <button id="spin-button" class="btn gold" onclick="handleWheelSpin(event)">SPIN NOW</button>
     <div id="tomorrow" class="daily-done" style="display:none">Tomorrow — Try Again Tomorrow</div>
-  </div>
-  <div class="card">
-    <div class="title-row"><span class="title">🎁 Spin Rewards</span><b style="color:#2cffaa">3 Active Slots</b></div>
-    <div class="special-rewards">
-      <div class="special-reward c1"><b>0.00020000</b><span>ACTIVE REWARD</span></div>
-      <div class="special-reward c2"><b>0.000070000</b><span>ACTIVE REWARD</span></div>
-      <div class="special-reward c3"><b>0.05000</b><span>ACTIVE REWARD</span></div>
-    </div>
-    <div class="micro">The 10 dollar labels remain visible on the wheel but are locked and can never be selected.</div>
   </div>
 </section>
 
@@ -393,7 +476,7 @@ body{background:
       </div>
       <div class="crown">👑</div><div class="max-text">LEVEL 4 • LEGEND • MAX</div>
       <div class="max-sub">⚡ MAX PROFILE • 🌈 ULTRA ENERGY • 💥 LEGEND EFFECTS</div>
-      <div class="profile-counters"><span>15+ Referrals</span><span>200 Ads/Day</span><span>20K Spin Milestone</span></div>
+      <div class="profile-counters"><span>15+ Referrals</span><span>4 Ads/Day</span><span>20K Spin Milestone</span></div>
     </div>
   </div>
 
@@ -427,11 +510,12 @@ body{background:
 </main>
 
 <nav class="nav">
-  <button class="active" onclick="switchTab('home',this)"><b>⌂</b>Home</button>
-  <button onclick="switchTab('ads',this)"><b>🎬</b>Ads</button>
-  <button onclick="switchTab('wheel',this)"><b>🎡</b>Wheel</button>
-  <button onclick="switchTab('referrals',this)"><b>👥</b>Referrals</button>
-  <button onclick="switchTab('profile',this)"><b>👤</b>Profile</button>
+  <button class="active" data-tab="home"><b>⌂</b>Home</button>
+  <button data-tab="ads"><b>🎬</b>Ads</button>
+  <button data-tab="tasks"><b>✅</b>Tasks</button>
+  <button data-tab="wheel"><b>🎡</b>Wheel</button>
+  <button data-tab="referrals"><b>👥</b>Referrals</button>
+  <button data-tab="profile"><b>👤</b>Profile</button>
 </nav>
 </div>
 
@@ -443,7 +527,7 @@ const CONFIG = {
   blockId: "48456",
   adReward: 0.002,
   maxAdsPerDay: 200,
-  maxSpinsPerDay: 200,
+  maxSpinsPerDay: 4,
   adBatches: [100,50,50],
   milestoneSpins: 20000,
   milestoneTonReward: 1,
@@ -481,13 +565,14 @@ const ACTIVE_WHEEL_INDEXES = [10,11,12];
 const WHEEL_SEGMENT = 360 / 13;
 let AdController = null, spinning = false, selectedPackage = 0, selectedPlatform = "YouTube", selectedAsset = "TON";
 let state = JSON.parse(localStorage.getItem("dynamicsAdsState") || "null") || {
-  balance: CONFIG.startingBalance, adsToday:0, spinsAvailable:0, dayKey:new Date().toDateString(),
+  balance: CONFIG.startingBalance, adsToday:0, spinsAvailable:0, pendingWheelSpin:false, dayKey:new Date().toDateString(),
   referrals:CONFIG.referralCount, campaigns:[], deposits:[], referralMembers:[], lifetimeSpins:0, rewardBalance:0, tonBalance:0, tonMilestoneAwarded:false, adEarnings:0, referralEarnings:0, depositEarnings:0, promotionEarnings:0
 };
 
 function save(){localStorage.setItem("dynamicsAdsState",JSON.stringify(state))}
-state.adsToday = Number(state.adsToday||0);
-state.spinsAvailable = Number(state.spinsAvailable||0);
+state.adsToday = Math.min(Number(state.adsToday||0), CONFIG.maxAdsPerDay);
+state.spinsAvailable = Math.min(Number(state.spinsAvailable||0), CONFIG.maxSpinsPerDay);
+state.pendingWheelSpin = Boolean(state.pendingWheelSpin);
 state.lifetimeSpins = Number(state.lifetimeSpins||0);
 state.rewardBalance = Number(state.rewardBalance||0);
 state.tonBalance = Number(state.tonBalance||0);
@@ -525,25 +610,41 @@ function initAdsgram(){
     s.textContent=`AdsGram: ready • Block ${CONFIG.blockId}`;s.style.color="#39f29a";
   }catch(e){console.error(e);s.textContent="AdsGram: initialization failed";s.style.color="#ff6a83"}
 }
-async function handleWatchAd(){
+async function handleWatchAd(autoSpin=false){
   todayReset();
-  if(spinning)return;
-  if(state.adsToday>=CONFIG.maxAdsPerDay){toast("Tomorrow — Try again tomorrow.");return}
-  if(!AdController){toast("AdsGram is not ready. Reload the Mini App and check Block 48456.");return}
+  if(spinning)return false;
+  if(state.adsToday>=CONFIG.maxAdsPerDay){toast("Daily ad limit reached. Try again tomorrow.");render();return false}
+  if(!AdController){toast("AdsGram is not ready. Reload the Mini App and check Block 48456.");return false}
   try{
     const result=await AdController.show();
     console.log("AdsGram result:",result);
     state.adsToday++;
-    state.spinsAvailable=Math.min(CONFIG.maxSpinsPerDay,state.spinsAvailable+1);
     state.balance+=CONFIG.adReward;
     state.adEarnings+=CONFIG.adReward;
+    if(autoSpin){ state.spinsAvailable=Math.min(CONFIG.maxSpinsPerDay,state.spinsAvailable+1); }
     const bal=document.getElementById("balance"); if(bal){bal.classList.remove("balance-hit"); void bal.offsetWidth; bal.classList.add("balance-hit");}
     save();render();
     showAdRewardAnimation(CONFIG.adReward);
+    if(autoSpin){
+      setTimeout(()=>handleSpin(true),900);
+    }
+    return true;
   }catch(err){
     console.error("AdsGram show error:",err);
     toast("No rewarded ad available: "+(err?.description||"please try again later"));
+    return false;
   }
+}
+function handleWheelSpin(e){
+  if(e){e.preventDefault();e.stopPropagation();}
+  todayReset();
+  if(spinning)return;
+  if(state.spinsAvailable>=CONFIG.maxSpinsPerDay){
+    toast("Daily spin limit reached. Try again tomorrow.");
+    return;
+  }
+  // Each wheel spin requires a completed rewarded ad.
+  handleWatchAd(true);
 }
 function showAdRewardAnimation(amount){
   const old=document.getElementById("ad-reward-overlay"); if(old) old.remove();
@@ -577,11 +678,11 @@ function render(){
   document.getElementById("ref-rank").textContent="👑 Level 4 • Legend • MAX";
   renderBatchProgress();renderPackages();renderCampaigns();renderDeposits();renderWallet();
 }
-function handleSpin(){
+function handleSpin(fromAd=false){
   todayReset();
   if(spinning)return;
   if(state.spinsAvailable<=0){
-    toast(state.adsToday>=CONFIG.maxAdsPerDay?"Tomorrow — Try again tomorrow.":"Watch a rewarded ad first to get 1 spin.");
+    toast("Watch a rewarded ad first to unlock a spin.");
     return;
   }
   spinning=true;
@@ -589,12 +690,13 @@ function handleSpin(){
   state.lifetimeSpins++;
   save();render();
 
-  // Only the three crypto slots can ever be selected. The visible dollar slots are decoys.
+  // Only the three colored crypto slots can ever be selected. Dollar labels are display-only.
   const index=ACTIVE_WHEEL_INDEXES[Math.floor(Math.random()*ACTIVE_WHEEL_INDEXES.length)];
   const slot=WHEEL_SLOTS[index];
   const targetAngle=(index+0.5)*WHEEL_SEGMENT;
   const extra=360*6 + (360-targetAngle);
   const wheel=document.getElementById("wheel");
+  wheel.style.transition="transform 4.6s cubic-bezier(.12,.72,.13,1)";
   wheel.style.transform=`rotate(${extra}deg)`;
   setTimeout(()=>{
     let milestone=false;
@@ -603,12 +705,14 @@ function handleSpin(){
       state.tonMilestoneAwarded = true;
       milestone=true;
     }
+    // Spin reward goes directly into Main Balance.
+    state.balance += slot.amount;
     state.rewardBalance += slot.amount;
     save();render();spinning=false;
     wheel.style.transition="none";wheel.style.transform="rotate(0deg)";
     setTimeout(()=>wheel.style.transition="transform 4.6s cubic-bezier(.12,.72,.13,1)",40);
-    document.getElementById("reward-value").textContent=slot.label;
-    document.getElementById("reward-sub").textContent=milestone ? "20,000 spins milestone: +1 TON • One-time maximum reached" : "Active spin reward • Dollar slots are never selected";
+    document.getElementById("reward-value").textContent=slot.label+" TON";
+    document.getElementById("reward-sub").textContent=milestone ? "20,000 spins milestone: +1 TON • One-time maximum reached" : "Reward added to Main Balance";
     document.getElementById("reward-modal").classList.add("open");
     fireworks();
     if(state.adsToday>=CONFIG.maxAdsPerDay&&state.spinsAvailable<=0)document.getElementById("tomorrow").style.display="block";
@@ -626,9 +730,22 @@ function switchTab(name,btn){
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   document.getElementById("view-"+name)?.classList.add("active");
   document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-  if(btn)btn.classList.add("active");else document.querySelector(`.nav button[onclick*="'${name}'"]`)?.classList.add("active");
+  if(btn)btn.classList.add("active");else document.querySelector(`.nav button[data-tab="${name}"]`)?.classList.add("active");
   window.scrollTo({top:0,behavior:"smooth"});
 }
+document.querySelectorAll('.nav button[data-tab]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault(); e.stopPropagation();
+    switchTab(btn.dataset.tab,btn);
+  },{passive:false});
+});
+
+function openPromotionTask(platform){
+  selectPlatform(document.querySelector(`.promo-tab[data-platform="${platform}"]`));
+  switchTab('ads');
+  toast(`${platform} promotion tasks opened.`);
+}
+
 function renderBatchProgress(){
   const els=[document.getElementById("batch-1"),document.getElementById("batch-2"),document.getElementById("batch-3")];
   if(!els[0])return;
