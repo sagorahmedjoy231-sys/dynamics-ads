@@ -707,7 +707,7 @@
                     <div class="profile-right">
                         <div class="balance-card">
                             <span class="balance-label">Available Balance</span>
-                            <div class="balance-value" id="main-balance">$100.000</div>
+                            <div class="balance-value" id="main-balance">$0.000</div>
                         </div>
                     </div>
                 </div>
@@ -1009,7 +1009,11 @@
             }catch(e){}
             saveAccount();
         }
-        function referralLink(){ return `https://t.me/DynamicsAdsBot/dynamicsads?startapp=ref${currentUserId}`; }
+        function referralLink(){
+            return currentUserId
+                ? `https://t.me/DynamicsAdsBot/dynamicsads?startapp=ref${currentUserId}`
+                : '';
+        }
         function updateIdentity(){
             const u=currentTelegramUser;
             const username=u?(u.username?`@${u.username}`:(u.first_name||'Telegram User')):'Telegram User';
