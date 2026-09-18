@@ -158,7 +158,89 @@ body{background:
 @keyframes fireCore{0%,100%{transform:scale(1);filter:saturate(1)}50%{transform:scale(1.045);filter:saturate(1.7) brightness(1.15)}}
 @keyframes fireRing{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+
+/* ===== Dynamics Ads V5 visual correction ===== */
+.wheel-v5{overflow:visible}
+.wheel-stage{width:min(92vw,450px);aspect-ratio:1/1;height:auto;position:relative;margin:0 auto;display:grid;place-items:center}
+.wheel-v5 .wheel{
+  width:92%;height:92%;aspect-ratio:1/1;border-radius:50%;
+  border:10px solid #ffc72c;
+  background:conic-gradient(
+    #ff3b77 0deg 27.6923deg,#ff9c1b 27.6923deg 55.3846deg,
+    #32c7ef 55.3846deg 83.0769deg,#2579ee 83.0769deg 110.7692deg,
+    #18c985 110.7692deg 138.4615deg,#4c35e7 138.4615deg 166.1538deg,
+    #ff2eab 166.1538deg 193.8461deg,#ffba1c 193.8461deg 221.5384deg,
+    #f23b62 221.5384deg 249.2307deg,#a932ee 249.2307deg 276.9230deg,
+    #00d7ff 276.9230deg 304.6153deg,#16e58a 304.6153deg 332.3076deg,
+    #ff2bb5 332.3076deg 360deg
+  );
+  box-shadow:0 0 0 4px rgba(255,199,44,.24),0 0 35px rgba(255,199,44,.35),inset 0 0 35px rgba(0,0,0,.5);
+}
+.wheel-v5 .wheel:after{content:"";position:absolute;inset:2.5%;border-radius:50%;border:2px solid rgba(255,255,255,.28);box-shadow:inset 0 0 35px rgba(255,255,255,.08),0 0 18px rgba(0,234,255,.15)}
+.wheel-v5 .wlabel{
+  width:84px;height:52px;margin:-26px -42px;left:50%;top:50%;
+  transform:rotate(var(--a)) translateY(-153px) rotate(calc(var(--a) * -1));
+  font-size:13px;line-height:1.05;text-align:center;font-weight:1000;z-index:3;
+  text-shadow:0 2px 5px #000,0 0 8px rgba(255,255,255,.3);
+}
+.wheel-v5 .locked-slot{color:#fff}
+.wheel-v5 .active-slot{
+  color:#fff; font-size:11px; padding:6px 4px;border-radius:12px;
+  background:rgba(0,10,25,.35);border:2px solid rgba(255,255,255,.85);
+  box-shadow:0 0 15px #00eaff,0 0 25px rgba(255,43,181,.55);
+}
+.wheel-v5 .pointer{top:-2px;z-index:10;border-left-width:19px;border-right-width:19px;border-top-width:43px}
+.wheel-v5 .spin-core{width:116px;height:116px;z-index:12}
+.wheel-v5 .spin-core span{font-size:22px;color:#fff;text-shadow:0 0 10px #ffb000}
+.earnings-dashboard{background:linear-gradient(145deg,rgba(8,19,43,.98),rgba(12,6,38,.98));}
+.earn-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.earn-box{min-height:82px;border-radius:16px;padding:11px;border:1px solid rgba(255,255,255,.18);display:flex;flex-direction:column;justify-content:center;gap:5px;box-shadow:inset 0 0 20px rgba(255,255,255,.035),0 0 18px rgba(0,0,0,.18)}
+.earn-box b{font-size:20px;color:#fff;text-shadow:0 0 10px currentColor}
+.earn-box span{font-size:10px;color:#cbd7ee;font-weight:800}
+.eb-ad{background:linear-gradient(135deg,rgba(0,205,255,.22),rgba(18,109,255,.08));border-color:#00d9ff}
+.eb-ref{background:linear-gradient(135deg,rgba(175,53,255,.22),rgba(255,43,181,.08));border-color:#c14cff}
+.eb-dep{background:linear-gradient(135deg,rgba(24,229,138,.2),rgba(0,234,255,.08));border-color:#18e58a}
+.eb-promo{background:linear-gradient(135deg,rgba(255,199,44,.22),rgba(255,73,0,.08));border-color:#ffc72c}
+.profile-v5{min-height:270px;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 35%,rgba(255,199,44,.25),transparent 20%),linear-gradient(145deg,#07183a,#18052e 55%,#050b22)}
+.profile-v5:before{content:"";position:absolute;inset:-80%;background:repeating-conic-gradient(from 0deg,transparent 0 7deg,rgba(0,234,255,.12) 8deg 9deg,transparent 10deg 16deg);animation:spinHalo 11s linear infinite}
+.profile-v5:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,transparent 0 16%,rgba(255,43,181,.08) 23%,transparent 43%),radial-gradient(circle at 50% 40%,rgba(0,234,255,.15),transparent 45%);animation:profilePulse 2s ease-in-out infinite}
+.profile-max-inner{z-index:4}
+.avatar-energy{width:150px;height:150px;position:relative;margin:auto;display:grid;place-items:center}
+.max-avatar-wrap{width:105px;height:105px;position:relative;z-index:5}
+.max-avatar{width:105px;height:105px;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 0 0 4px #00eaff,0 0 0 8px #ff2bb5,0 0 0 12px #ffc72c,0 0 30px #00eaff,0 0 65px #ff2bb5,0 0 100px rgba(255,199,44,.5);animation:avatarUltra .85s ease-in-out infinite alternate}
+.energy-ring{position:absolute;inset:7px;border-radius:50%;border:3px solid transparent;z-index:2;animation:energySpin 1.2s linear infinite}
+.energy-ring.r1{border-top-color:#00eaff;border-right-color:#00eaff}
+.energy-ring.r2{inset:-4px;border-bottom-color:#ff2bb5;border-left-color:#ff2bb5;animation-duration:1.8s;animation-direction:reverse}
+.energy-ring.r3{inset:-16px;border-top-color:#ffc72c;border-right-color:#18e58a;border-width:4px;animation-duration:2.4s}
+.profile-particle{position:absolute;z-index:6;font-size:20px;filter:drop-shadow(0 0 10px currentColor);animation:particleOrbit 2.3s ease-in-out infinite}
+.p1{left:12%;top:20%;color:#00eaff}.p2{right:14%;top:18%;color:#ffc72c;animation-delay:.3s}.p3{left:9%;bottom:22%;color:#ff2bb5;animation-delay:.6s}.p4{right:10%;bottom:23%;color:#18e58a;animation-delay:.9s}.p5{left:25%;top:8%;color:#fff;animation-delay:1.2s}.p6{right:25%;top:8%;color:#ff7cff;animation-delay:1.5s}
+.profile-counters{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:10px}
+.profile-counters span{font-size:9px;font-weight:900;padding:6px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.28);color:#fff;box-shadow:0 0 12px rgba(0,234,255,.15)}
+@keyframes avatarUltra{to{transform:scale(1.07) rotate(2deg);filter:brightness(1.35) saturate(1.7) drop-shadow(0 0 15px #ff2bb5)}}
+@keyframes energySpin{to{transform:rotate(360deg)}}
+@keyframes particleOrbit{0%,100%{transform:translateY(0) scale(1) rotate(0)}50%{transform:translateY(-16px) scale(1.35) rotate(180deg)}}
+@keyframes profilePulse{50%{opacity:.8;transform:scale(1.05)}}
+.ad-reward-overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:22px;background:rgba(1,3,12,.82);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .35s}
+.ad-reward-overlay.show{opacity:1}
+.ad-reward-card{width:min(380px,92vw);text-align:center;border-radius:28px;padding:30px 22px;background:linear-gradient(145deg,#061b45,#25073c);border:2px solid #00eaff;box-shadow:0 0 35px #00eaff,0 0 90px rgba(255,43,181,.55),inset 0 0 30px rgba(255,255,255,.06);transform:scale(.7) rotate(-3deg);transition:.45s cubic-bezier(.2,.9,.2,1)}
+.ad-reward-overlay.show .ad-reward-card{transform:scale(1) rotate(0)}
+.ad-burst{font-size:62px;animation:burstIcon .45s ease-out infinite alternate}
+.ad-reward-title{font-size:22px;font-weight:1000;color:#fff;text-shadow:0 0 14px #00eaff}
+.ad-reward-amount{font-size:42px;font-weight:1000;background:linear-gradient(90deg,#00eaff,#fff,#ff2bb5,#ffc72c);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rainbowFlow 2s linear infinite}
+.ad-reward-sub{color:#d7e4ff;font-size:13px;margin:5px 0 12px}
+.ad-reward-spin{display:inline-block;padding:8px 13px;border-radius:999px;background:linear-gradient(90deg,#18e58a,#00eaff,#8b3dff);font-weight:1000;font-size:11px}
+@keyframes burstIcon{to{transform:scale(1.18) rotate(8deg);filter:drop-shadow(0 0 20px #ffc72c)}}
+@media(max-width:390px){.wheel-v5 .wlabel{font-size:11px;width:72px}.wheel-v5 .wlabel.active-slot{font-size:9px}.wheel-v5 .wlabel{transform:rotate(var(--a)) translateY(-139px) rotate(calc(var(--a) * -1))}.wheel-v5 .spin-core{width:105px;height:105px}.earn-box b{font-size:17px}}
+
 </style>
+
+<style id="v5-home-polish">
+.hero{min-height:185px;background:radial-gradient(circle at 15% 30%,rgba(0,234,255,.38),transparent 25%),radial-gradient(circle at 85% 65%,rgba(255,43,181,.42),transparent 28%),linear-gradient(135deg,#071e49,#1b073d 58%,#071b35);box-shadow:0 0 35px rgba(0,234,255,.18),inset 0 0 35px rgba(255,43,181,.08)}
+.hero h2{font-size:28px;text-shadow:0 0 18px rgba(0,234,255,.35)}
+.card{box-shadow:0 0 0 1px rgba(0,234,255,.08),0 10px 35px rgba(0,0,0,.25),inset 0 0 24px rgba(139,61,255,.045)}
+.title{letter-spacing:.2px}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -186,6 +268,17 @@ body{background:
       <div class="stat"><b id="cycle">24:00:00</b><span>Next Cycle</span></div>
       <div class="stat"><b id="spins">0/200</b><span>Spins</span></div>
       <div class="stat"><b id="level-stat">MAX</b><span>Level</span></div>
+    </div>
+  </div>
+
+
+  <div class="card earnings-dashboard">
+    <div class="title-row"><span class="title">💎 Earnings Overview</span><span class="micro">Live account summary</span></div>
+    <div class="earn-grid">
+      <div class="earn-box eb-ad"><b id="ad-earning">$0.000</b><span>🎬 Ad Earnings</span></div>
+      <div class="earn-box eb-ref"><b id="ref-earning">$0.000</b><span>👥 Referral Earnings</span></div>
+      <div class="earn-box eb-dep"><b id="dep-earning">$0.000</b><span>💰 Deposit Earnings</span></div>
+      <div class="earn-box eb-promo"><b id="promo-earning">$0.000</b><span>📣 Promotion Earnings</span></div>
     </div>
   </div>
 
@@ -223,20 +316,27 @@ body{background:
   <div class="card"><div class="title">📋 Campaign History</div><div id="campaign-history"></div></div>
 </section>
 
+
 <section id="view-wheel" class="view">
-  <div class="card wheel-card">
+  <div class="card wheel-card wheel-v5">
     <div class="title">🎡 Lucky Wheel</div>
-    <div class="wheel-note">Watch 1 rewarded ad → 1 spin. The 3 marked crypto slots are the only selectable rewards. The dollar labels are display-only.</div>
+    <div class="wheel-note">Watch 1 rewarded ad → 1 spin. The 3 colored crypto slots are the only selectable rewards. The 10 dollar slots are display-only.</div>
     <div class="wheel-stage">
       <div class="pointer"></div>
       <div id="wheel" class="wheel">
-        <div class="wlabel locked-slot" style="--a:18deg">$1.00</div><div class="wlabel locked-slot" style="--a:54deg">$1.50</div>
-        <div class="wlabel locked-slot" style="--a:90deg">$2.00</div><div class="wlabel locked-slot" style="--a:126deg">$2.50</div>
-        <div class="wlabel locked-slot" style="--a:162deg">$3.00</div><div class="wlabel locked-slot" style="--a:198deg">$4.00</div>
-        <div class="wlabel locked-slot" style="--a:234deg">$5.00</div>
-        <div class="wlabel active-slot" style="--a:270deg">0.00020000</div>
-        <div class="wlabel active-slot" style="--a:306deg">0.000070000</div>
-        <div class="wlabel active-slot" style="--a:342deg">0.05000</div>
+        <div class="wlabel locked-slot" style="--a:13.846154deg">$1.00</div>
+<div class="wlabel locked-slot" style="--a:41.538462deg">$1.50</div>
+<div class="wlabel locked-slot" style="--a:69.230769deg">$2.00</div>
+<div class="wlabel locked-slot" style="--a:96.923077deg">$2.50</div>
+<div class="wlabel locked-slot" style="--a:124.615385deg">$3.00</div>
+<div class="wlabel locked-slot" style="--a:152.307692deg">$4.00</div>
+<div class="wlabel locked-slot" style="--a:180.000000deg">$5.00</div>
+<div class="wlabel locked-slot" style="--a:207.692308deg">$7.00</div>
+<div class="wlabel locked-slot" style="--a:235.384615deg">$10.00</div>
+<div class="wlabel locked-slot" style="--a:263.076923deg">$15.00</div>
+<div class="wlabel active-slot" style="--a:290.769231deg">0.00020000</div>
+<div class="wlabel active-slot" style="--a:318.461538deg">0.000070000</div>
+<div class="wlabel active-slot" style="--a:346.153846deg">0.05000</div>
       </div>
       <button class="spin-core" id="spin-core" onclick="handleSpin()"><span>SPIN</span></button>
     </div>
@@ -251,7 +351,7 @@ body{background:
       <div class="special-reward c2"><b>0.000070000</b><span>ACTIVE REWARD</span></div>
       <div class="special-reward c3"><b>0.05000</b><span>ACTIVE REWARD</span></div>
     </div>
-    <p class="muted">The $1–$15 labels remain as visual slots only and are never selected. The three active slots are the only normal spin outcomes. At 20,000 lifetime spins, one 1 TON milestone reward is granted once per user; no additional TON milestone is granted after that.</p>
+    <div class="micro">The 10 dollar labels remain visible on the wheel but are locked and can never be selected.</div>
   </div>
 </section>
 
@@ -284,10 +384,16 @@ body{background:
 </section>
 
 <section id="view-profile" class="view">
-  <div class="card profile-max">
+  <div class="card profile-max profile-v5">
+    <div class="profile-particle p1">✦</div><div class="profile-particle p2">★</div><div class="profile-particle p3">✧</div><div class="profile-particle p4">◆</div><div class="profile-particle p5">✦</div><div class="profile-particle p6">★</div>
     <div class="profile-max-inner">
-      <div class="max-avatar-wrap"><img id="profile-avatar" class="max-avatar" src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="Telegram profile"></div>
-      <div class="crown">👑</div><div class="max-text">LEVEL 4 • LEGEND</div><div class="max-sub">MAX profile animation enabled • Spin rewards: <span id="reward-balance">0.00000</span> • TON milestone: <span id="ton-balance">0.00000000</span></div>
+      <div class="avatar-energy">
+        <span class="energy-ring r1"></span><span class="energy-ring r2"></span><span class="energy-ring r3"></span>
+        <div class="max-avatar-wrap"><img id="profile-avatar" class="max-avatar" src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="Telegram profile"></div>
+      </div>
+      <div class="crown">👑</div><div class="max-text">LEVEL 4 • LEGEND • MAX</div>
+      <div class="max-sub">⚡ MAX PROFILE • 🌈 ULTRA ENERGY • 💥 LEGEND EFFECTS</div>
+      <div class="profile-counters"><span>15+ Referrals</span><span>200 Ads/Day</span><span>20K Spin Milestone</span></div>
     </div>
   </div>
 
@@ -364,15 +470,19 @@ const WHEEL_SLOTS = [
   {label:"$3.00", active:false, type:"locked"},
   {label:"$4.00", active:false, type:"locked"},
   {label:"$5.00", active:false, type:"locked"},
+  {label:"$7.00", active:false, type:"locked"},
+  {label:"$10.00", active:false, type:"locked"},
+  {label:"$15.00", active:false, type:"locked"},
   {label:"0.00020000", active:true, type:"reward", amount:0.0002},
   {label:"0.000070000", active:true, type:"reward", amount:0.00007},
   {label:"0.05000", active:true, type:"reward", amount:0.05}
 ];
-const ACTIVE_WHEEL_INDEXES = [7,8,9];
+const ACTIVE_WHEEL_INDEXES = [10,11,12];
+const WHEEL_SEGMENT = 360 / 13;
 let AdController = null, spinning = false, selectedPackage = 0, selectedPlatform = "YouTube", selectedAsset = "TON";
 let state = JSON.parse(localStorage.getItem("dynamicsAdsState") || "null") || {
   balance: CONFIG.startingBalance, adsToday:0, spinsAvailable:0, dayKey:new Date().toDateString(),
-  referrals:CONFIG.referralCount, campaigns:[], deposits:[], referralMembers:[], lifetimeSpins:0, rewardBalance:0, tonBalance:0, tonMilestoneAwarded:false
+  referrals:CONFIG.referralCount, campaigns:[], deposits:[], referralMembers:[], lifetimeSpins:0, rewardBalance:0, tonBalance:0, tonMilestoneAwarded:false, adEarnings:0, referralEarnings:0, depositEarnings:0, promotionEarnings:0
 };
 
 function save(){localStorage.setItem("dynamicsAdsState",JSON.stringify(state))}
@@ -383,6 +493,7 @@ state.rewardBalance = Number(state.rewardBalance||0);
 state.tonBalance = Number(state.tonBalance||0);
 state.tonMilestoneAwarded = Boolean(state.tonMilestoneAwarded);
 state.referralMembers = Array.isArray(state.referralMembers) ? state.referralMembers : [];
+state.adEarnings = Number(state.adEarnings||0); state.referralEarnings = Number(state.referralEarnings||0); state.depositEarnings = Number(state.depositEarnings||0); state.promotionEarnings = Number(state.promotionEarnings||0);
 function money(n){return "$"+Number(n).toFixed(3)}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),2600)}
 function todayReset(){
@@ -425,12 +536,23 @@ async function handleWatchAd(){
     state.adsToday++;
     state.spinsAvailable=Math.min(CONFIG.maxSpinsPerDay,state.spinsAvailable+1);
     state.balance+=CONFIG.adReward;
+    state.adEarnings+=CONFIG.adReward;
+    const bal=document.getElementById("balance"); if(bal){bal.classList.remove("balance-hit"); void bal.offsetWidth; bal.classList.add("balance-hit");}
     save();render();
-    toast("Ad completed! +$0.002 and +1 spin.");
+    showAdRewardAnimation(CONFIG.adReward);
   }catch(err){
     console.error("AdsGram show error:",err);
     toast("No rewarded ad available: "+(err?.description||"please try again later"));
   }
+}
+function showAdRewardAnimation(amount){
+  const old=document.getElementById("ad-reward-overlay"); if(old) old.remove();
+  const o=document.createElement("div"); o.id="ad-reward-overlay"; o.className="ad-reward-overlay";
+  o.innerHTML=`<div class="ad-reward-card"><div class="ad-burst">💥</div><div class="ad-reward-title">AD COMPLETED!</div><div class="ad-reward-amount">+$${Number(amount).toFixed(3)}</div><div class="ad-reward-sub">Added to your Main Balance</div><div class="ad-reward-spin">+1 SPIN CREDIT</div></div>`;
+  document.body.appendChild(o);
+  fireworks();
+  setTimeout(()=>o.classList.add("show"),20);
+  setTimeout(()=>{o.classList.remove("show");setTimeout(()=>o.remove(),450)},2400);
 }
 function render(){
   todayReset();
@@ -448,6 +570,10 @@ function render(){
   const rb=document.getElementById("reward-balance"); if(rb)rb.textContent=state.rewardBalance.toFixed(8);
   const ls=document.getElementById("lifetime-spins"); if(ls)ls.textContent=Math.min(state.lifetimeSpins,CONFIG.milestoneSpins).toLocaleString()+" / "+CONFIG.milestoneSpins.toLocaleString();
   const tb=document.getElementById("ton-balance"); if(tb)tb.textContent=state.tonBalance.toFixed(8);
+  const ae=document.getElementById("ad-earning"); if(ae)ae.textContent="$"+state.adEarnings.toFixed(3);
+  const re=document.getElementById("ref-earning"); if(re)re.textContent="$"+state.referralEarnings.toFixed(3);
+  const de=document.getElementById("dep-earning"); if(de)de.textContent="$"+state.depositEarnings.toFixed(3);
+  const pe=document.getElementById("promo-earning"); if(pe)pe.textContent="$"+state.promotionEarnings.toFixed(3);
   document.getElementById("ref-rank").textContent="👑 Level 4 • Legend • MAX";
   renderBatchProgress();renderPackages();renderCampaigns();renderDeposits();renderWallet();
 }
@@ -466,7 +592,8 @@ function handleSpin(){
   // Only the three crypto slots can ever be selected. The visible dollar slots are decoys.
   const index=ACTIVE_WHEEL_INDEXES[Math.floor(Math.random()*ACTIVE_WHEEL_INDEXES.length)];
   const slot=WHEEL_SLOTS[index];
-  const extra=360*5 + (360-(index*36+18));
+  const targetAngle=(index+0.5)*WHEEL_SEGMENT;
+  const extra=360*6 + (360-targetAngle);
   const wheel=document.getElementById("wheel");
   wheel.style.transform=`rotate(${extra}deg)`;
   setTimeout(()=>{
