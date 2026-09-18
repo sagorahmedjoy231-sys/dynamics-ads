@@ -756,16 +756,14 @@
             <section id="view-ads" class="tab-view">
                 <div class="card">
                     <div class="card-header"><span class="card-title highlight-cyan">🎬 Ad Center</span><span class="reward-tag">200 ads/day</span></div>
-                    <p class="card-desc">Choose an ad batch. Every completed rewarded ad is credited after AdsGram confirms completion.</p>
+                    <p class="card-desc">Tap a batch to watch a rewarded ad. Every completed rewarded ad is credited after AdsGram confirms completion.</p>
                     <div class="batch-grid">
-                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Daily Ad')"><strong>100</strong><span>DAILY AD</span><small>Watch & Earn</small></button>
-                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Extra Ad')"><strong>50</strong><span>EXTRA AD</span><small>Watch & Earn</small></button>
-                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Bonus Ad')"><strong>50</strong><span>BONUS AD</span><small>Watch & Earn</small></button>
+                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Daily Ad')"><strong>100</strong><span>DAILY AD</span></button>
+                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Extra Ad')"><strong>50</strong><span>EXTRA AD</span></button>
+                        <button class="batch-card batch-action" type="button" onclick="handleWatchAd('Bonus Ad')"><strong>50</strong><span>BONUS AD</span></button>
                     </div>
                     <div class="section-kicker">Today's progress</div>
                     <div class="stat-card" style="margin-bottom:10px"><div class="stat-val" id="ads-counter">0/200</div><div class="stat-lbl">Ads Completed Today</div></div>
-                    <button class="btn btn-primary btn-green" type="button" onclick="handleWatchAd('Ad Center')">▶ WATCH AD NOW</button>
-                    <div id="ads-status" class="section-kicker" style="text-align:center;margin-top:10px">AdsGram: loading…</div>
                 </div>
             </section>
 
@@ -807,8 +805,40 @@
                 </div>
             </section>
 
-            <!-- TAB 3: LUCKY WHEEL -->
-            <!-- TAB 3: LUCKY WHEEL -->
+            <!-- TAB 3: ADS PROMOTION -->
+            <section id="view-promotion" class="tab-view">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📣 Buy Social Media Promotion</span>
+                    </div>
+                    <p class="card-desc">Boost your YouTube, Telegram, or TikTok channel with the selected promotion package.</p>
+
+                    <div class="form-group">
+                        <label>Target Channel / Video Link:</label>
+                        <input type="text" id="promo-link" class="input-control" placeholder="https://t.me/yourchannel or video URL">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Promotion Package:</label>
+                        <select id="promo-package" class="select-control" onchange="calculatePromoCost()">
+                            <option value="0.60">100 Subscribers / Members - $0.60</option>
+                            <option value="1.00">500 Subscribers / Members - $1.00</option>
+                            <option value="1.60">1,000 Subscribers / Members - $1.60</option>
+                            <option value="2.10">2,000 Subscribers / Members - $2.10</option>
+                            <option value="3.20">4,000 Subscribers / Members - $3.20</option>
+                        </select>
+                    </div>
+
+                    <div class="cost-summary">
+                        Total Price: <span id="total-promo-cost">$0.60</span>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="handleBuyPromotion()">Purchase Promotion Campaign</button>
+                </div>
+            </section>
+
+            <!-- TAB 4: LUCKY WHEEL -->
+            <!-- TAB 4: LUCKY WHEEL -->
             <section id="view-wheel" class="tab-view">
                 <div class="card wheel-card">
                     <h2 class="section-title">🎡 Lucky Wheel</h2>
@@ -914,6 +944,9 @@
             <button class="nav-btn" type="button" onclick="switchTab('tasks', this)">
                 <span class="nav-icon">✅</span><span class="nav-label">Tasks</span>
             </button>
+            <button class="nav-btn" type="button" onclick="switchTab('promotion', this)">
+                <span class="nav-icon">📣</span><span class="nav-label">Promotion</span>
+            </button>
             <button class="nav-btn" type="button" onclick="switchTab('wheel', this)">
                 <span class="nav-icon">🎡</span><span class="nav-label">Wheel</span>
             </button>
@@ -994,17 +1027,11 @@
         }
 
         function initAdsgram() {
-            const status = document.getElementById('ads-status');
-            if (!window.Adsgram) {
-                if (status) status.innerText = 'AdsGram: SDK not loaded';
-                return;
-            }
+            if (!window.Adsgram) return;
             try {
                 AdController = window.Adsgram.init({ blockId: appData.blockId });
-                if (status) status.innerText = `AdsGram: ready • Block ${appData.blockId}`;
             } catch (e) {
                 console.error('AdsGram init failed:', e);
-                if (status) status.innerText = 'AdsGram: initialization failed';
             }
         }
 
