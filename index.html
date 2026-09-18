@@ -913,7 +913,13 @@
         function getTelegramUser() {
             try {
                 const tg = window.Telegram && window.Telegram.WebApp;
-                return tg && tg.initDataUnsafe ? (tg.initDataUnsafe.user || null) : null;
+                if (!tg) return null;
+
+                // Telegram provides the current Mini App user here.
+                // Never fall back to a previous user's profile.
+                return (tg.initDataUnsafe && tg.initDataUnsafe.user)
+                    ? tg.initDataUnsafe.user
+                    : null;
             } catch (e) {
                 return null;
             }
@@ -927,8 +933,12 @@
                 }
             } catch (e) {}
 
+            // Telegram direct Mini App links can expose the value through
+            // tgWebAppStartParam; keep the normal web fallbacks too.
             const params = new URLSearchParams(window.location.search);
-            return params.get('startapp') || params.get('start') || '';
+            return params.get('tgWebAppStartParam') ||
+                   params.get('startapp') ||
+                   params.get('start') || '';
         }
 
         function normalizeReferralCode(value) {
@@ -946,12 +956,25 @@
                 tg.expand();
 
                 const user = getTelegramUser();
-                if (user) {
+                if (user && user.id) {
                     appData.telegramUser = user;
                     renderTelegramIdentity(user);
                 }
             }
         }
+
+        // Refresh only the Telegram identity when the Mini App becomes
+        // visible again. This does not alter any UI/layout; it only prevents
+        // a stale profile from being displayed if Telegram refreshes user data.
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState !== 'visible') return;
+            const user = getTelegramUser();
+            if (user && user.id) {
+                appData.telegramUser = user;
+                renderTelegramIdentity(user);
+                updateUI();
+            }
+        });
 
         function renderTelegramIdentity(user) {
             const username = user.username
@@ -1030,8 +1053,9 @@
                     balance: isOwner ? CONFIG.OWNER_START_BALANCE : 0.000,
                     totalAdsWatched: 0,
                     availableSpins: CONFIG.DAILY_SPIN_LIMIT,
-                    referralCode: appData.telegramUser
-                        ? String(appData.telegramUser.id)
+                    // Every Telegram account gets its own stable referral code.
+                    referralCode: appData.telegramUser && appData.telegramUser.id
+                        ? `tg${String(appData.telegramUser.id)}`
                         : `guest_${Date.now()}`,
                     referredBy: null,
                     referralCount: 0,
@@ -1127,7 +1151,7 @@
                             balance: Number(data.user.balance) || 0,
                             totalAdsWatched: Number(data.user.total_ads_watched) || 0,
                             availableSpins: Number(data.user.available_spins ?? CONFIG.DAILY_SPIN_LIMIT),
-                            referralCode: data.user.referral_code || String(user.id),
+                            referralCode: data.user.referral_code || `tg${String(user.id)}`,
                             referredBy: data.user.referred_by || null,
                             referralCount: Number(data.user.referral_count) || 0,
                             referralLevel: Number(data.user.referral_level) || 1,
