@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dynamics Ads - Ultimate Mini App</title>
+    <title>Dynamics Ads Mini App</title>
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Adsgram SDK -->
     <script src="https://sad.adsgram.ai/js/sad-index.js"></script>
-    <!-- Canvas Confetti Library for Fireworks Animation -->
+    <!-- Canvas Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         :root {
-            --bg-dark: #070b19;
-            --card-glass: rgba(15, 23, 42, 0.9);
+            --bg-dark: #050811;
+            --card-glass: rgba(16, 23, 42, 0.9);
             --card-border: rgba(59, 130, 246, 0.3);
             --accent-blue: #2563eb;
             --accent-purple: #7c3aed;
@@ -27,36 +27,39 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
-        body { background: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #070b19 80%); min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #050811 80%); min-height: 100vh; overflow-x: hidden; }
         .app-container { width: 100%; max-width: 440px; min-height: 100vh; padding: 14px; padding-bottom: 95px; position: relative; }
 
         /* Glowing Top Header */
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; background: rgba(15, 23, 42, 0.7); padding: 12px 16px; border-radius: 18px; border: 1px solid var(--card-border); backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
         .bot-title { font-size: 18px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; }
         .bot-title span { color: var(--accent-cyan); text-shadow: 0 0 10px var(--accent-cyan); }
-        .level-badge { background: linear-gradient(135deg, var(--accent-gold), #d97706); color: #000; font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 20px; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        .level-badge { background: linear-gradient(135deg, var(--accent-gold), #d97706); color: #000; font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 20px; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); animation: pulseGlow 2s infinite alternate; }
 
-        /* Rich Profile Block */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
+            100% { box-shadow: 0 0 18px rgba(245, 158, 11, 0.9); }
+        }
+
+        /* Profile Banner Card */
         .profile-card { background: var(--card-glass); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-        .profile-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%); pointer-events: none; }
         .avatar-box { position: relative; width: 60px; height: 60px; }
         .avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--accent-gold); box-shadow: 0 0 20px rgba(245, 158, 11, 0.6); object-fit: cover; }
         .max-tag { position: absolute; top: -2px; right: -2px; background: var(--accent-red); color: #fff; font-size: 9px; font-weight: 900; padding: 2px 5px; border-radius: 8px; border: 1px solid #fff; }
         .user-meta h4 { font-size: 16px; font-weight: 800; color: #fff; }
         .user-meta .sub-tag { font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-top: 2px; }
 
-        /* Balance Display */
         .balance-box { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent-green); border-radius: 16px; padding: 10px 16px; text-align: right; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
         .balance-box .amount { font-size: 18px; font-weight: 900; color: var(--accent-green); }
         .balance-box .label { font-size: 9px; color: var(--text-sub); font-weight: 800; letter-spacing: 0.5px; }
 
-        /* Grid Stats (200 Ads Per Day Limit) */
+        /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
         .stat-card { background: var(--card-glass); border: 1px solid var(--card-border); border-radius: 14px; padding: 10px 6px; text-align: center; }
         .stat-card .val { font-size: 12px; font-weight: 800; color: #fff; }
         .stat-card .lbl { font-size: 8px; color: var(--text-sub); margin-top: 2px; }
 
-        /* Action Glass Cards */
+        /* General Card UI */
         .card { background: var(--card-glass); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 16px; backdrop-filter: blur(12px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 15px; font-weight: 800; color: #fff; }
@@ -66,17 +69,19 @@
         .btn-green { background: linear-gradient(135deg, var(--accent-green), #059669); color: #000; font-weight: 900; }
         .btn-gold { background: linear-gradient(135deg, var(--accent-gold), #d97706); color: #000; font-weight: 900; }
 
-        /* Custom Wheel Container */
+        /* Crypto Payment Grid */
+        .crypto-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+        .crypto-item { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .crypto-item:hover, .crypto-item.active { border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); }
+        .crypto-item img { width: 28px; height: 28px; margin-bottom: 4px; object-fit: contain; }
+
+        /* Wheel UI */
         .wheel-container { position: relative; width: 270px; height: 270px; margin: 15px auto; }
         .wheel-pointer { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-top: 24px solid var(--accent-gold); z-index: 30; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.9)); }
         .wheel-svg { width: 100%; height: 100%; border-radius: 50%; border: 5px solid var(--accent-gold); transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
 
-        /* Inputs & Lists */
-        .input-field { width: 100%; padding: 12px 14px; background: rgba(5, 8, 17, 0.8); border: 1px solid var(--card-border); border-radius: 12px; color: #fff; font-size: 13px; outline: none; margin-bottom: 10px; }
-        .promo-banner { background: linear-gradient(135deg, #ff0055, #ff5000); border-radius: 16px; padding: 14px; color: #fff; margin-bottom: 12px; }
-
-        /* Leaderboard Items */
-        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px 14px; border-radius: 14px; margin-bottom: 8px; }
+        .input-field, .select-field { width: 100%; padding: 12px 14px; background: rgba(5, 8, 17, 0.8); border: 1px solid var(--card-border); border-radius: 12px; color: #fff; font-size: 13px; outline: none; margin-bottom: 10px; }
+        .select-field option { background: var(--bg-dark); color: #fff; }
 
         /* Modal Overlay */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 200; justify-content: center; align-items: center; }
@@ -93,15 +98,14 @@
 
     <div class="app-container">
         
-        <!-- Header -->
+        <!-- Top Bar Header -->
         <div class="top-header">
             <div class="bot-title">🤖 Dynamics<span>Ads</span></div>
-            <div class="level-badge">LEVEL 4 - MAX</div>
+            <div class="level-badge">LEVEL 4 - ULTRA MASTER</div>
         </div>
 
         <!-- TAB 1: HOME -->
         <div id="view-home" class="tab-view">
-            <!-- Profile Overview -->
             <div class="profile-card">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div class="avatar-box">
@@ -110,24 +114,22 @@
                     </div>
                     <div class="user-meta">
                         <h4 id="user-name">@sagor790</h4>
-                        <div class="sub-tag">👑 Ultra Master</div>
+                        <div class="sub-tag">👑 Level 4 - Ultra Master</div>
                     </div>
                 </div>
                 <div class="balance-box">
                     <div class="amount" id="balance-val">$100.000</div>
-                    <div class="label">Balance</div>
+                    <div class="label">Available Balance</div>
                 </div>
             </div>
 
-            <!-- Stats Bar -->
             <div class="stats-grid">
-                <div class="stat-card"><div class="val" id="ads-counter-display">0/200</div><div class="lbl">Ads Today</div></div>
-                <div class="stat-card"><div class="val" id="wheel-ads-progress">0/4</div><div class="lbl">Wheel Progress</div></div>
+                <div class="stat-card"><div class="val" id="ads-counter-display">0/200</div><div class="lbl">Daily Ads</div></div>
+                <div class="stat-card"><div class="val" id="wheel-ads-progress">0/4</div><div class="lbl">Spin Progress</div></div>
                 <div class="stat-card"><div class="val" id="spin-avail-display">0</div><div class="lbl">Spins Ready</div></div>
                 <div class="stat-card"><div class="val">Level 4</div><div class="lbl">Ultra Master</div></div>
             </div>
 
-            <!-- Watch Ad Block -->
             <div class="card">
                 <div class="card-header">
                     <span class="card-title">Watch Ads Network</span>
@@ -138,29 +140,28 @@
             </div>
         </div>
 
-        <!-- TAB 2: EARN & YOUTUBE PROMO -->
-        <div id="view-earn" class="tab-view" style="display: none;">
-            <div class="promo-banner">
-                <h3 style="font-size: 16px; margin-bottom: 4px;">📺 YouTube Channel Promotion</h3>
-                <p style="font-size: 11px; opacity: 0.9;">Promote your videos or subscribe to earn extra bonus!</p>
-            </div>
-
+        <!-- TAB 2: PROMO & PROMOTION PRICING -->
+        <div id="view-promo" class="tab-view" style="display: none;">
             <div class="card">
-                <div class="card-title" style="margin-bottom: 10px;">Promote Your YouTube Channel</div>
-                <input type="text" class="input-field" placeholder="Paste YouTube Video / Channel Link">
-                <input type="number" class="input-field" placeholder="Target Views / Subscribers Quantity">
-                <button class="btn-action" onclick="alert('Promotion Order Submitted!')">Launch Channel Campaign</button>
-            </div>
+                <div class="card-title" style="margin-bottom: 10px;">Buy Social Media Growth</div>
+                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px;">Boost your YouTube, Telegram, or TikTok channels instantly.</p>
+                
+                <input type="text" class="input-field" placeholder="Paste Channel / Video Link">
+                
+                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 4px;">Select Package:</p>
+                <select class="select-field" id="sub-package-select" onchange="updatePromoCost()">
+                    <option value="0.60">100 Subscribers / Follows - $0.60</option>
+                    <option value="1.00">500 Subscribers / Follows - $1.00</option>
+                    <option value="1.60">1000 Subscribers / Follows - $1.60</option>
+                    <option value="2.10">2000 Subscribers / Follows - $2.10</option>
+                    <option value="3.20">4000 Subscribers / Follows - $3.20</option>
+                </select>
 
-            <div class="card">
-                <div class="card-title" style="margin-bottom: 10px;">Community Tasks</div>
-                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; margin-bottom: 8px;">
-                    <div>
-                        <div style="font-size: 12px; font-weight: bold;">Subscribe YouTube Channel</div>
-                        <div style="font-size: 10px; color: var(--accent-green);">+$0.050 Reward</div>
-                    </div>
-                    <button class="btn-action" style="width: auto; padding: 6px 12px; font-size: 11px;" onclick="window.open('https://youtube.com', '_blank')">Visit</button>
+                <div style="font-size: 12px; color: var(--accent-green); font-weight: bold; margin-bottom: 12px;" id="promo-cost-text">
+                    Total Price: $0.60
                 </div>
+
+                <button class="btn-action" onclick="purchaseSocialCampaign()">Buy Promotion Campaign</button>
             </div>
         </div>
 
@@ -168,7 +169,7 @@
         <div id="view-wheel" class="tab-view" style="display: none;">
             <div class="card" style="text-align: center;">
                 <h3 style="color: var(--accent-gold); margin-bottom: 4px;">🎡 Lucky Wheel</h3>
-                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">Watch 4 ads to unlock 1 spin!</p>
+                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">Watch 4 ads to earn 1 lucky wheel spin!</p>
 
                 <div class="wheel-container">
                     <div class="wheel-pointer"></div>
@@ -190,36 +191,59 @@
                     </svg>
                 </div>
 
-                <button class="btn-action btn-gold" id="spin-btn" onclick="spinAction()">SPIN WHEEL NOW (0 Available)</button>
+                <button class="btn-action btn-gold" id="spin-btn" onclick="spinAction()">SPIN WHEEL NOW (0 Ready)</button>
             </div>
         </div>
 
-        <!-- TAB 4: RANKS / LEADERBOARD -->
-        <div id="view-ranks" class="tab-view" style="display: none;">
+        <!-- TAB 4: WALLET DEPOSIT & WITHDRAW -->
+        <div id="view-wallet" class="tab-view" style="display: none;">
+            <!-- DEPOSIT CARD -->
             <div class="card">
-                <h3 style="margin-bottom: 12px; text-align: center; color: var(--accent-gold);">🏆 Global Leaderboard</h3>
-                <div class="leaderboard-item" style="border: 1px solid var(--accent-gold); background: rgba(245, 158, 11, 0.1);">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 18px;">🥇</span>
-                        <div>
-                            <div style="font-weight: 800; font-size: 13px;">@sagor790 (You)</div>
-                            <div style="font-size: 10px; color: var(--text-sub);">300 Ads Completed</div>
-                        </div>
+                <div class="card-title" style="margin-bottom: 10px; color: var(--accent-cyan);">Deposit Funds (Min $1 - Max $100)</div>
+                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">Select deposit cryptocurrency:</p>
+
+                <div class="crypto-grid">
+                    <div class="crypto-item active" onclick="selectCrypto('ton', 'deposit')">
+                        <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON">
+                        <div style="font-size: 11px; font-weight: bold;">TON</div>
                     </div>
-                    <div style="font-weight: 900; color: var(--accent-green);">$100.000</div>
+                    <div class="crypto-item" onclick="selectCrypto('usdt', 'deposit')">
+                        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT">
+                        <div style="font-size: 11px; font-weight: bold;">USDT</div>
+                    </div>
+                    <div class="crypto-item" onclick="selectCrypto('bnb', 'deposit')">
+                        <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="BNB">
+                        <div style="font-size: 11px; font-weight: bold;">BNB</div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- TAB 5: PROFILE & WALLET -->
-        <div id="view-profile" class="tab-view" style="display: none;">
+                <input type="number" class="input-field" id="deposit-amt" placeholder="Amount ($1 - $100)">
+                <button class="btn-action" onclick="executeDeposit()">Get Deposit Address</button>
+            </div>
+
+            <!-- WITHDRAW CARD -->
             <div class="card">
-                <h3 style="color: var(--accent-green); margin-bottom: 12px;">Wallet Dashboard</h3>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
-                    <span style="color: var(--text-sub);">Current Balance:</span>
-                    <span style="font-weight: 900; color: var(--accent-green);" id="prof-balance-val">$100.000</span>
+                <div class="card-title" style="margin-bottom: 10px; color: var(--accent-green);">Withdraw Funds (Min $1.00)</div>
+                <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">Select payout gateway:</p>
+
+                <div class="crypto-grid">
+                    <div class="crypto-item active" onclick="selectCrypto('ton', 'withdraw')">
+                        <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON">
+                        <div style="font-size: 11px; font-weight: bold;">TON</div>
+                    </div>
+                    <div class="crypto-item" onclick="selectCrypto('usdt', 'withdraw')">
+                        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT">
+                        <div style="font-size: 11px; font-weight: bold;">USDT</div>
+                    </div>
+                    <div class="crypto-item" onclick="selectCrypto('bnb', 'withdraw')">
+                        <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="BNB">
+                        <div style="font-size: 11px; font-weight: bold;">BNB</div>
+                    </div>
                 </div>
-                <button class="btn-action btn-green" onclick="alert('Withdrawal Request Submitted!')">Withdraw Funds</button>
+
+                <input type="text" class="input-field" id="withdraw-addr" placeholder="Enter Wallet Address or Pay ID">
+                <input type="number" class="input-field" id="withdraw-amt" placeholder="Amount ($1.00 minimum)">
+                <button class="btn-action btn-green" onclick="executeWithdraw()">Submit Withdrawal Request</button>
             </div>
         </div>
 
@@ -237,10 +261,9 @@
         <!-- Bottom Navigation Bar -->
         <div class="navbar">
             <div class="nav-item active" onclick="switchTab('home', this)"><div>🏠</div>Home</div>
-            <div class="nav-item" onclick="switchTab('earn', this)"><div>⚡</div>Earn</div>
+            <div class="nav-item" onclick="switchTab('promo', this)"><div>⚡</div>Promo</div>
             <div class="nav-item" onclick="switchTab('wheel', this)"><div>🎡</div>Wheel</div>
-            <div class="nav-item" onclick="switchTab('ranks', this)"><div>🏆</div>Ranks</div>
-            <div class="nav-item" onclick="switchTab('profile', this)"><div>👤</div>Profile</div>
+            <div class="nav-item" onclick="switchTab('wallet', this)"><div>💼</div>Wallet</div>
         </div>
 
     </div>
@@ -271,12 +294,11 @@
         function updateUI() {
             const formatted = `$${balance.toFixed(3)}`;
             document.getElementById('balance-val').innerText = formatted;
-            document.getElementById('prof-balance-val').innerText = formatted;
             document.getElementById('ads-counter-display').innerText = `${totalAdsWatched}/200`;
             document.getElementById('wheel-ads-progress').innerText = `${wheelAdCounter}/4`;
             document.getElementById('spin-avail-display').innerText = availableSpins;
             
-            document.getElementById('spin-btn').innerText = availableSpins > 0 ? `SPIN WHEEL NOW (${availableSpins} Available)` : `WATCH ${4 - wheelAdCounter} MORE ADS TO SPIN`;
+            document.getElementById('spin-btn').innerText = availableSpins > 0 ? `SPIN WHEEL NOW (${availableSpins} Ready)` : `WATCH ${4 - wheelAdCounter} MORE ADS TO SPIN`;
         }
 
         function switchTab(viewName, el) {
@@ -304,8 +326,6 @@
                         availableSpins++;
                         wheelAdCounter = 0;
                         alert("Great! You watched 4 ads and earned 1 Lucky Wheel Spin!");
-                    } else {
-                        alert(`Ad watched! Watch ${4 - wheelAdCounter} more ad(s) for a Spin.`);
                     }
 
                     updateUI();
@@ -327,7 +347,7 @@
             updateUI();
 
             const disc = document.getElementById('wheel-disc');
-            const degree = 1440 + 45; // Smooth rotation target
+            const degree = 1440 + 45;
 
             disc.style.transform = `rotate(${degree}deg)`;
 
@@ -335,7 +355,6 @@
                 balance += 0.0001;
                 updateUI();
 
-                // Fire Party Confetti Fireworks
                 if (typeof confetti === 'function') {
                     confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
                 }
@@ -347,6 +366,49 @@
                 disc.style.transform = 'rotate(0deg)';
                 setTimeout(() => { disc.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)'; }, 50);
             }, 4000);
+        }
+
+        function updatePromoCost() {
+            const cost = document.getElementById('sub-package-select').value;
+            document.getElementById('promo-cost-text').innerText = `Total Price: $${cost}`;
+        }
+
+        function purchaseSocialCampaign() {
+            const cost = parseFloat(document.getElementById('sub-package-select').value);
+            if(balance < cost) {
+                alert("Insufficient wallet balance!");
+                return;
+            }
+            balance -= cost;
+            updateUI();
+            alert(`Promotion order placed successfully for $${cost.toFixed(2)}!`);
+        }
+
+        function selectCrypto(type, action) {
+            // UI Selection Handler
+            alert(`${type.toUpperCase()} selected for ${action}`);
+        }
+
+        function executeDeposit() {
+            const amt = parseFloat(document.getElementById('deposit-amt').value);
+            if(isNaN(amt) || amt < 1 || amt > 100) {
+                alert("Deposit limit is Minimum $1 and Maximum $100!");
+                return;
+            }
+            alert(`Deposit Invoice Created for $${amt}. Address copied to clipboard!`);
+        }
+
+        function executeWithdraw() {
+            const addr = document.getElementById('withdraw-addr').value.trim();
+            const amt = parseFloat(document.getElementById('withdraw-amt').value);
+
+            if(!addr) { alert("Please enter wallet address!"); return; }
+            if(isNaN(amt) || amt < 1.00) { alert("Minimum withdrawal amount is $1.00!"); return; }
+            if(amt > balance) { alert("Insufficient balance!"); return; }
+
+            balance -= amt;
+            updateUI();
+            alert(`Withdrawal request submitted for $${amt.toFixed(2)}!`);
         }
 
         function closeModal() {
