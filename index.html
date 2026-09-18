@@ -10,14 +10,565 @@
     <script src="https://sad.adsgram.ai/js/sad-index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <!-- Link CSS -->
-    <link rel="stylesheet" href="style.css">
+    <!-- CSS Styles Included Directly -->
+    <style>
+        :root {
+            --bg-dark: #050811;
+            --card-glass: rgba(15, 23, 42, 0.85);
+            --card-border: rgba(59, 130, 246, 0.25);
+            --accent-blue: #2563eb;
+            --accent-purple: #7c3aed;
+            --accent-gold: #f59e0b;
+            --accent-green: #10b981;
+            --accent-cyan: #06b6d4;
+            --accent-red: #ef4444;
+            --text-main: #ffffff;
+            --text-sub: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #050811 80%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 440px;
+            min-height: 100vh;
+            padding: 14px;
+            padding-bottom: 95px;
+            position: relative;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 12px 16px;
+            border-radius: 18px;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+        }
+
+        .bot-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .bot-title span {
+            color: var(--accent-cyan);
+            text-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        .level-badge {
+            background: linear-gradient(135deg, var(--accent-gold), #d97706);
+            color: #000;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 20px;
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #1e1b4b, #2563eb);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .hero-info h2 {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .hero-desc {
+            font-size: 11px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        .robot-avatar-glow {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 2px solid var(--accent-cyan);
+            box-shadow: 0 0 15px var(--accent-cyan);
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 14px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(12px);
+        }
+
+        .profile-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 56px;
+            height: 56px;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--accent-gold);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+            object-fit: cover;
+        }
+
+        .badge-max {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--accent-red);
+            color: #fff;
+            font-size: 8px;
+            font-weight: 900;
+            padding: 2px 5px;
+            border-radius: 8px;
+            border: 1px solid #fff;
+        }
+
+        .user-details h4 {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .tg-id {
+            font-size: 10px;
+            color: var(--text-sub);
+            display: block;
+        }
+
+        .status-indicator {
+            font-size: 10px;
+            color: var(--accent-green);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .dot-online {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--accent-green);
+        }
+
+        .user-rank {
+            font-size: 10px;
+            color: var(--accent-gold);
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .balance-card {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--accent-green);
+            border-radius: 16px;
+            padding: 10px 14px;
+            text-align: right;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .balance-label {
+            font-size: 8px;
+            color: var(--text-sub);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .balance-value {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--accent-green);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card {
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 10px 4px;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .stat-lbl {
+            font-size: 8px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        /* Card Sections */
+        .card {
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 14px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .card-desc {
+            font-size: 11px;
+            color: var(--text-sub);
+            margin-bottom: 12px;
+        }
+
+        .reward-tag {
+            color: var(--accent-green);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        /* Action Buttons */
+        .btn {
+            width: 100%;
+            padding: 13px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: #000;
+            font-weight: 900;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--accent-gold), #d97706);
+            color: #000;
+            font-weight: 900;
+        }
+
+        /* Sub Cards */
+        .sub-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .sub-card {
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .sub-icon {
+            font-size: 26px;
+            margin-bottom: 4px;
+        }
+
+        .sub-title {
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .sub-desc {
+            font-size: 9px;
+            color: var(--text-sub);
+        }
+
+        /* Invite Banner */
+        .invite-banner {
+            background: linear-gradient(135deg, #7c3aed, #ec4899);
+            border-radius: 18px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            cursor: pointer;
+        }
+
+        .invite-info h3 {
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .invite-info p {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .invite-icon {
+            font-size: 28px;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            color: var(--text-sub);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .input-control, .select-control {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(5, 8, 17, 0.8);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .cost-summary {
+            font-size: 12px;
+            color: var(--accent-green);
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        /* Wheel UI */
+        .wheel-wrapper {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 15px auto;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 24px solid var(--accent-gold);
+            z-index: 30;
+        }
+
+        .wheel-svg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid var(--accent-gold);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        /* Prize Board Grid */
+        .prize-board-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .prize-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 6px 2px;
+            text-align: center;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--accent-gold);
+        }
+
+        /* Crypto Deposit Elements */
+        .crypto-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .crypto-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .crypto-card.active {
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .crypto-card img {
+            width: 26px;
+            height: 26px;
+            margin-bottom: 4px;
+        }
+
+        /* Modal Popup */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-card {
+            background: var(--bg-dark);
+            border: 2px solid var(--accent-gold);
+            border-radius: 22px;
+            padding: 24px;
+            text-align: center;
+            width: 85%;
+            max-width: 320px;
+        }
+
+        /* Navigation Bar */
+        .bottom-navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(7, 11, 25, 0.95);
+            border-top: 1px solid var(--card-border);
+            backdrop-filter: blur(25px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .nav-btn.active {
+            color: var(--accent-cyan);
+        }
+
+        .nav-icon {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .tab-view {
+            display: none;
+        }
+
+        .tab-view.active {
+            display: block;
+        }
+
+        .highlight-gold { color: var(--accent-gold); }
+        .highlight-green { color: var(--accent-green); }
+        .highlight-cyan { color: var(--accent-cyan); }
+        .highlight-purple { color: var(--accent-purple); }
+    </style>
 </head>
 <body>
 
     <div class="app-container">
         
-        <!-- Top App Header -->
+        <!-- Header -->
         <header class="top-header">
             <div class="bot-title">
                 <span class="bot-icon">🤖</span>
@@ -26,13 +577,12 @@
             <div class="level-badge">LEVEL 4 - ULTRA MASTER</div>
         </header>
 
-        <!-- Dynamic Content Section -->
+        <!-- Main Content View -->
         <main class="content-area">
             
             <!-- TAB 1: HOME VIEW -->
             <section id="view-home" class="tab-view active">
                 
-                <!-- Robot Hero Promo Banner -->
                 <div class="hero-banner">
                     <div class="hero-info">
                         <h2>Watch Ads</h2>
@@ -42,7 +592,6 @@
                     <div class="robot-avatar-glow">🤖</div>
                 </div>
 
-                <!-- User Profile Banner Card -->
                 <div class="profile-card">
                     <div class="profile-left">
                         <div class="avatar-container">
@@ -67,7 +616,6 @@
                     </div>
                 </div>
 
-                <!-- Live Dashboard Stats Grid -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-val" id="ads-counter">300/300</div>
@@ -87,7 +635,6 @@
                     </div>
                 </div>
 
-                <!-- Main Watch Ad Action Card -->
                 <div class="card action-card">
                     <div class="card-header">
                         <span class="card-title">Watch Ad & Earn</span>
@@ -97,7 +644,6 @@
                     <button class="btn btn-primary btn-green" onclick="handleWatchAd()">Watch Ad Now</button>
                 </div>
 
-                <!-- Quick Navigation Sub Grid -->
                 <div class="sub-grid">
                     <div class="sub-card" onclick="switchTab('wheel')">
                         <div class="sub-icon">🎡</div>
@@ -111,7 +657,6 @@
                     </div>
                 </div>
 
-                <!-- Invite Friends Quick Banner -->
                 <div class="invite-banner" onclick="switchTab('referrals')">
                     <div class="invite-info">
                         <h3>Invite Friends</h3>
@@ -122,7 +667,7 @@
 
             </section>
 
-            <!-- TAB 2: ADS & PROMOTION VIEW -->
+            <!-- TAB 2: ADS PROMOTION -->
             <section id="view-ads" class="tab-view">
                 <div class="card">
                     <div class="card-header">
@@ -154,7 +699,7 @@
                 </div>
             </section>
 
-            <!-- TAB 3: LUCKY WHEEL VIEW -->
+            <!-- TAB 3: LUCKY WHEEL -->
             <section id="view-wheel" class="tab-view">
                 <div class="card wheel-card">
                     <h2 class="section-title">🎡 Lucky Wheel</h2>
@@ -183,7 +728,6 @@
                     <button class="btn btn-primary btn-gold" id="btn-spin" onclick="handleSpinWheel()">SPIN WHEEL NOW</button>
                 </div>
 
-                <!-- Prize Board Grid -->
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title highlight-gold">🎁 Prize Board (10 Big Rewards)</span>
@@ -203,7 +747,7 @@
                 </div>
             </section>
 
-            <!-- TAB 4: REFERRALS VIEW -->
+            <!-- TAB 4: REFERRALS -->
             <section id="view-referrals" class="tab-view">
                 <div class="card">
                     <h2 class="section-title highlight-purple">👥 Invite Friends</h2>
@@ -218,10 +762,8 @@
                 </div>
             </section>
 
-            <!-- TAB 5: PROFILE & WALLET VIEW -->
+            <!-- TAB 5: PROFILE & WALLET -->
             <section id="view-profile" class="tab-view">
-                
-                <!-- Crypto Deposit -->
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title highlight-cyan">Deposit Funds (Min $1 - Max $100)</span>
@@ -249,7 +791,6 @@
                     <button class="btn btn-primary" onclick="handleDeposit()">Deposit Funds</button>
                 </div>
 
-                <!-- Crypto Withdrawal -->
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title highlight-green">Withdraw Funds (Min $1.00)</span>
@@ -280,7 +821,7 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation Bar -->
+        <!-- Bottom Navigation -->
         <nav class="bottom-navbar">
             <button class="nav-btn active" onclick="switchTab('home', this)">
                 <span class="nav-icon">🏠</span>
@@ -306,743 +847,194 @@
 
     </div>
 
-    <!-- Link JS -->
-    <script src="app.js"></script>
+    <!-- JavaScript Included Directly -->
+    <script>
+        // Global State Variables
+        let appData = {
+            balance: 100.000,
+            totalAdsWatched: 300,
+            availableSpins: 4,
+            selectedCrypto: 'TON',
+            blockId: "48241"
+        };
+
+        let AdController = null;
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            initTelegramApp();
+            initAdsgram();
+            updateUI();
+        });
+
+        // Initialize Telegram WebApp Data
+        function initTelegramApp() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.expand();
+                
+                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                    const user = tg.initDataUnsafe.user;
+                    const username = `@${user.username || user.first_name}`;
+                    document.getElementById('user-username').innerText = username;
+                    document.getElementById('user-tg-id').innerText = `Telegram ID: ${user.id}`;
+                }
+            }
+        }
+
+        // Initialize Adsgram SDK
+        function initAdsgram() {
+            if (window.Adsgram) {
+                AdController = window.Adsgram.init({ blockId: appData.blockId });
+            }
+        }
+
+        // Update UI Text Elements
+        function updateUI() {
+            document.getElementById('main-balance').innerText = `$${appData.balance.toFixed(3)}`;
+            document.getElementById('ads-counter').innerText = `${appData.totalAdsWatched}/300`;
+            document.getElementById('spin-counter').innerText = `${appData.availableSpins}/4`;
+        }
+
+        // Switch Active View Tab
+        function switchTab(tabName, clickedBtn) {
+            document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            const targetTab = document.getElementById(`view-${tabName}`);
+            if (targetTab) targetTab.classList.add('active');
+
+            if (clickedBtn) {
+                clickedBtn.classList.add('active');
+            }
+        }
+
+        // Watch Ads Logic
+        function handleWatchAd() {
+            if (AdController) {
+                AdController.show().then(() => {
+                    appData.balance += 0.001;
+                    appData.totalAdsWatched++;
+                    updateUI();
+                    alert("Success: Ad completed! +$0.001 added.");
+                }).catch(() => {
+                    alert("Adsgram Notice: Ad skipped or block ID is not active yet.");
+                });
+            } else {
+                alert("Adsgram SDK Notice: Block ID is currently inactive or loading.");
+            }
+        }
+
+        // Spin Wheel Logic
+        function handleSpinWheel() {
+            if (appData.availableSpins <= 0) {
+                alert("No spins remaining! Watch ads to unlock spins.");
+                return;
+            }
+
+            appData.availableSpins--;
+            updateUI();
+
+            const disc = document.getElementById('wheel-disc');
+            const degree = 1440 + 45;
+
+            disc.style.transform = `rotate(${degree}deg)`;
+
+            setTimeout(() => {
+                appData.balance += 0.0001;
+                updateUI();
+
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+                }
+
+                document.getElementById('modal-prize-amount').innerText = "+$0.0001";
+                document.getElementById('reward-modal').style.display = 'flex';
+
+                disc.style.transition = 'none';
+                disc.style.transform = 'rotate(0deg)';
+                setTimeout(() => { 
+                    disc.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)'; 
+                }, 50);
+            }, 4000);
+        }
+
+        // Promotion Logic
+        function calculatePromoCost() {
+            const selectedCost = document.getElementById('promo-package').value;
+            document.getElementById('total-promo-cost').innerText = `$${selectedCost}`;
+        }
+
+        function handleBuyPromotion() {
+            const cost = parseFloat(document.getElementById('promo-package').value);
+            const link = document.getElementById('promo-link').value;
+
+            if (!link) {
+                alert("Please enter a valid link!");
+                return;
+            }
+
+            if (appData.balance < cost) {
+                alert("Insufficient balance!");
+                return;
+            }
+
+            appData.balance -= cost;
+            updateUI();
+            alert(`Success: Campaign created for $${cost.toFixed(2)}!`);
+        }
+
+        // Copy Referral Link
+        function handleCopyReferral() {
+            const refInput = document.getElementById('ref-link-input');
+            refInput.select();
+            document.execCommand('copy');
+            alert("Referral link copied to clipboard!");
+        }
+
+        // Crypto Deposit and Withdraw
+        function selectCrypto(element, cryptoType) {
+            document.querySelectorAll('.crypto-card').forEach(card => card.classList.remove('active'));
+            element.classList.add('active');
+            appData.selectedCrypto = cryptoType;
+        }
+
+        function handleDeposit() {
+            const amount = document.getElementById('deposit-amount').value;
+            if (!amount || amount < 1 || amount > 100) {
+                alert("Deposit amount must be between $1 and $100!");
+                return;
+            }
+            alert(`Deposit request of $${amount} via ${appData.selectedCrypto} generated!`);
+        }
+
+        function handleWithdraw() {
+            const address = document.getElementById('withdraw-address').value;
+            const amount = parseFloat(document.getElementById('withdraw-amount').value);
+
+            if (!address) {
+                alert("Please enter a wallet address!");
+                return;
+            }
+
+            if (!amount || amount < 1.00) {
+                alert("Minimum withdrawal is $1.00!");
+                return;
+            }
+
+            if (appData.balance < amount) {
+                alert("Insufficient balance!");
+                return;
+            }
+
+            appData.balance -= amount;
+            updateUI();
+            alert(`Withdrawal request for $${amount.toFixed(2)} submitted successfully!`);
+        }
+
+        function closeRewardModal() {
+            document.getElementById('reward-modal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
-r.  :root {
-    --bg-dark: #050811;
-    --card-glass: rgba(15, 23, 42, 0.85);
-    --card-border: rgba(59, 130, 246, 0.25);
-    --accent-blue: #2563eb;
-    --accent-purple: #7c3aed;
-    --accent-gold: #f59e0b;
-    --accent-green: #10b981;
-    --accent-cyan: #06b6d4;
-    --accent-red: #ef4444;
-    --text-main: #ffffff;
-    --text-sub: #94a3b8;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    user-select: none;
-}
-
-body {
-    background: var(--bg-dark);
-    color: var(--text-main);
-    display: flex;
-    justify-content: center;
-    background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #050811 80%);
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
-.app-container {
-    width: 100%;
-    max-width: 440px;
-    min-height: 100vh;
-    padding: 14px;
-    padding-bottom: 95px;
-    position: relative;
-}
-
-/* Header UI */
-.top-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-    background: rgba(15, 23, 42, 0.7);
-    padding: 12px 16px;
-    border-radius: 18px;
-    border: 1px solid var(--card-border);
-    backdrop-filter: blur(12px);
-}
-
-.bot-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 18px;
-    font-weight: 900;
-}
-
-.bot-title span {
-    color: var(--accent-cyan);
-    text-shadow: 0 0 10px var(--accent-cyan);
-}
-
-.level-badge {
-    background: linear-gradient(135deg, var(--accent-gold), #d97706);
-    color: #000;
-    font-size: 10px;
-    font-weight: 900;
-    padding: 4px 10px;
-    border-radius: 20px;
-    box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
-}
-
-/* Hero Banner */
-.hero-banner {
-    background: linear-gradient(135deg, #1e1b4b, #2563eb);
-    border-radius: 20px;
-    padding: 16px;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
-}
-
-.hero-info h2 {
-    font-size: 18px;
-    font-weight: 900;
-}
-
-.hero-desc {
-    font-size: 11px;
-    color: var(--text-sub);
-    margin-top: 2px;
-}
-
-.robot-avatar-glow {
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    border: 2px solid var(--accent-cyan);
-    box-shadow: 0 0 15px var(--accent-cyan);
-}
-
-/* Profile Card */
-.profile-card {
-    background: var(--card-glass);
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    padding: 14px;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    backdrop-filter: blur(12px);
-}
-
-.profile-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.avatar-container {
-    position: relative;
-    width: 56px;
-    height: 56px;
-}
-
-.avatar-img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 3px solid var(--accent-gold);
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
-    object-fit: cover;
-}
-
-.badge-max {
-    position: absolute;
-    top: -2px;
-    right: -2px;
-    background: var(--accent-red);
-    color: #fff;
-    font-size: 8px;
-    font-weight: 900;
-    padding: 2px 5px;
-    border-radius: 8px;
-    border: 1px solid #fff;
-}
-
-.user-details h4 {
-    font-size: 15px;
-    font-weight: 800;
-}
-
-.tg-id {
-    font-size: 10px;
-    color: var(--text-sub);
-    display: block;
-}
-
-.status-indicator {
-    font-size: 10px;
-    color: var(--accent-green);
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.dot-online {
-    width: 6px;
-    height: 6px;
-    background: var(--accent-green);
-    border-radius: 50%;
-    box-shadow: 0 0 6px var(--accent-green);
-}
-
-.user-rank {
-    font-size: 10px;
-    color: var(--accent-gold);
-    font-weight: 800;
-    margin-top: 2px;
-}
-
-.balance-card {
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid var(--accent-green);
-    border-radius: 16px;
-    padding: 10px 14px;
-    text-align: right;
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
-}
-
-.balance-label {
-    font-size: 8px;
-    color: var(--text-sub);
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.balance-value {
-    font-size: 18px;
-    font-weight: 900;
-    color: var(--accent-green);
-}
-
-/* Stats Grid */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 14px;
-}
-
-.stat-card {
-    background: var(--card-glass);
-    border: 1px solid var(--card-border);
-    border-radius: 14px;
-    padding: 10px 4px;
-    text-align: center;
-}
-
-.stat-val {
-    font-size: 12px;
-    font-weight: 800;
-}
-
-.stat-lbl {
-    font-size: 8px;
-    color: var(--text-sub);
-    margin-top: 2px;
-}
-
-/* Cards & Layout */
-.card {
-    background: var(--card-glass);
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    padding: 16px;
-    margin-bottom: 14px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.card-title {
-    font-size: 14px;
-    font-weight: 800;
-}
-
-.card-desc {
-    font-size: 11px;
-    color: var(--text-sub);
-    margin-bottom: 12px;
-}
-
-.reward-tag {
-    color: var(--accent-green);
-    font-size: 11px;
-    font-weight: 800;
-}
-
-/* Buttons */
-.btn {
-    width: 100%;
-    padding: 13px;
-    border-radius: 14px;
-    font-weight: 800;
-    font-size: 13px;
-    border: none;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.btn:active {
-    transform: scale(0.98);
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-    color: #fff;
-    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
-}
-
-.btn-green {
-    background: linear-gradient(135deg, var(--accent-green), #059669);
-    color: #000;
-    font-weight: 900;
-}
-
-.btn-gold {
-    background: linear-gradient(135deg, var(--accent-gold), #d97706);
-    color: #000;
-    font-weight: 900;
-}
-
-/* Sub Card Grid */
-.sub-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-bottom: 14px;
-}
-
-.sub-card {
-    background: var(--card-glass);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 12px;
-    text-align: center;
-    cursor: pointer;
-}
-
-.sub-icon {
-    font-size: 26px;
-    margin-bottom: 4px;
-}
-
-.sub-title {
-    font-size: 12px;
-    font-weight: 800;
-}
-
-.sub-desc {
-    font-size: 9px;
-    color: var(--text-sub);
-}
-
-/* Invite Banner */
-.invite-banner {
-    background: linear-gradient(135deg, #7c3aed, #ec4899);
-    border-radius: 18px;
-    padding: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
-    cursor: pointer;
-}
-
-.invite-info h3 {
-    font-size: 14px;
-    font-weight: 900;
-}
-
-.invite-info p {
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.invite-icon {
-    font-size: 28px;
-}
-
-/* Form Controls */
-.form-group {
-    margin-bottom: 12px;
-}
-
-.form-group label {
-    font-size: 11px;
-    color: var(--text-sub);
-    display: block;
-    margin-bottom: 4px;
-}
-
-.input-control, .select-control {
-    width: 100%;
-    padding: 12px 14px;
-    background: rgba(5, 8, 17, 0.8);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    color: #fff;
-    font-size: 13px;
-    outline: none;
-}
-
-.cost-summary {
-    font-size: 12px;
-    color: var(--accent-green);
-    font-weight: bold;
-    margin-bottom: 12px;
-}
-
-/* Wheel Styling */
-.wheel-wrapper {
-    position: relative;
-    width: 250px;
-    height: 250px;
-    margin: 15px auto;
-}
-
-.wheel-pointer {
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 14px solid transparent;
-    border-right: 14px solid transparent;
-    border-top: 24px solid var(--accent-gold);
-    z-index: 30;
-}
-
-.wheel-svg {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 5px solid var(--accent-gold);
-    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-}
-
-/* Prize Board */
-.prize-board-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
-    margin-top: 10px;
-}
-
-.prize-box {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--accent-gold);
-    border-radius: 8px;
-    padding: 6px 2px;
-    text-align: center;
-    font-size: 10px;
-    font-weight: 800;
-    color: var(--accent-gold);
-}
-
-/* Crypto Selector */
-.crypto-selector {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 12px;
-}
-
-.crypto-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-}
-
-.crypto-card.active {
-    border-color: var(--accent-cyan);
-    background: rgba(6, 182, 212, 0.1);
-}
-
-.crypto-card img {
-    width: 26px;
-    height: 26px;
-    margin-bottom: 4px;
-}
-
-/* Modal UI */
-.modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
-    z-index: 200;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-card {
-    background: var(--bg-dark);
-    border: 2px solid var(--accent-gold);
-    border-radius: 22px;
-    padding: 24px;
-    text-align: center;
-    width: 85%;
-    max-width: 320px;
-}
-
-/* Bottom Nav */
-.bottom-navbar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(7, 11, 25, 0.95);
-    border-top: 1px solid var(--card-border);
-    backdrop-filter: blur(25px);
-    display: flex;
-    justify-content: space-around;
-    padding: 12px 0;
-    z-index: 100;
-}
-
-.nav-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-sub);
-    font-size: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    flex: 1;
-}
-
-.nav-btn.active {
-    color: var(--accent-cyan);
-}
-
-.nav-icon {
-    font-size: 18px;
-    display: block;
-    margin-bottom: 2px;
-}
-
-.tab-view {
-    display: none;
-}
-
-.tab-view.active {
-    display: block;
-}
-
-.highlight-gold { color: var(--accent-gold); }
-.highlight-green { color: var(--accent-green); }
-.highlight-cyan { color: var(--accent-cyan); }
-.highlight-purple { color: var(--accent-purple); } 
-    // App State Variables
-let appData = {
-    balance: 100.000,
-    totalAdsWatched: 300,
-    availableSpins: 4,
-    selectedCrypto: 'TON',
-    blockId: "48241"
-};
-
-let AdController = null;
-
-// Initialize Application
-window.addEventListener('DOMContentLoaded', () => {
-    initTelegramApp();
-    initAdsgram();
-    updateUI();
-});
-
-// Telegram WebApp Setup
-function initTelegramApp() {
-    if (window.Telegram && window.Telegram.WebApp) {
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        
-        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            const user = tg.initDataUnsafe.user;
-            const username = `@${user.username || user.first_name}`;
-            document.getElementById('user-username').innerText = username;
-            document.getElementById('user-tg-id').innerText = `Telegram ID: ${user.id}`;
-        }
-    }
-}
-
-// Adsgram SDK Setup
-function initAdsgram() {
-    if (window.Adsgram) {
-        AdController = window.Adsgram.init({ blockId: appData.blockId });
-    }
-}
-
-// Update UI States
-function updateUI() {
-    document.getElementById('main-balance').innerText = `$${appData.balance.toFixed(3)}`;
-    document.getElementById('ads-counter').innerText = `${appData.totalAdsWatched}/300`;
-    document.getElementById('spin-counter').innerText = `${appData.availableSpins}/4`;
-}
-
-// Tab Switching
-function switchTab(tabName, clickedBtn) {
-    document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-
-    const targetTab = document.getElementById(`view-${tabName}`);
-    if (targetTab) targetTab.classList.add('active');
-
-    if (clickedBtn) {
-        clickedBtn.classList.add('active');
-    }
-}
-
-// Watch Ad Handler
-function handleWatchAd() {
-    if (AdController) {
-        AdController.show().then(() => {
-            appData.balance += 0.001;
-            appData.totalAdsWatched++;
-            updateUI();
-            alert("Success: Ad completed! +$0.001 added.");
-        }).catch(() => {
-            alert("Adsgram Notice: Ad skipped or block ID is not active yet.");
-        });
-    } else {
-        alert("Adsgram SDK Notice: Block ID is currently inactive or loading.");
-    }
-}
-
-// Spin Wheel Handler
-function handleSpinWheel() {
-    if (appData.availableSpins <= 0) {
-        alert("No spins remaining! Watch ads to unlock spins.");
-        return;
-    }
-
-    appData.availableSpins--;
-    updateUI();
-
-    const disc = document.getElementById('wheel-disc');
-    const degree = 1440 + 45;
-
-    disc.style.transform = `rotate(${degree}deg)`;
-
-    setTimeout(() => {
-        appData.balance += 0.0001;
-        updateUI();
-
-        if (typeof confetti === 'function') {
-            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-        }
-
-        document.getElementById('modal-prize-amount').innerText = "+$0.0001";
-        document.getElementById('reward-modal').style.display = 'flex';
-
-        disc.style.transition = 'none';
-        disc.style.transform = 'rotate(0deg)';
-        setTimeout(() => { 
-            disc.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)'; 
-        }, 50);
-    }, 4000);
-}
-
-// Social Promotion Calculation
-function calculatePromoCost() {
-    const selectedCost = document.getElementById('promo-package').value;
-    document.getElementById('total-promo-cost').innerText = `$${selectedCost}`;
-}
-
-function handleBuyPromotion() {
-    const cost = parseFloat(document.getElementById('promo-package').value);
-    const link = document.getElementById('promo-link').value;
-
-    if (!link) {
-        alert("Please enter a valid link!");
-        return;
-    }
-
-    if (appData.balance < cost) {
-        alert("Insufficient balance!");
-        return;
-    }
-
-    appData.balance -= cost;
-    updateUI();
-    alert(`Success: Campaign created for $${cost.toFixed(2)}!`);
-}
-
-// Referral Link Copy
-function handleCopyReferral() {
-    const refInput = document.getElementById('ref-link-input');
-    refInput.select();
-    document.execCommand('copy');
-    alert("Referral link copied to clipboard!");
-}
-
-// Crypto Selection & Transactions
-function selectCrypto(element, cryptoType) {
-    document.querySelectorAll('.crypto-card').forEach(card => card.classList.remove('active'));
-    element.classList.add('active');
-    appData.selectedCrypto = cryptoType;
-}
-
-function handleDeposit() {
-    const amount = document.getElementById('deposit-amount').value;
-    if (!amount || amount < 1 || amount > 100) {
-        alert("Deposit amount must be between $1 and $100!");
-        return;
-    }
-    alert(`Deposit request of $${amount} via ${appData.selectedCrypto} generated!`);
-}
-
-function handleWithdraw() {
-    const address = document.getElementById('withdraw-address').value;
-    const amount = parseFloat(document.getElementById('withdraw-amount').value);
-
-    if (!address) {
-        alert("Please enter a wallet address!");
-        return;
-    }
-
-    if (!amount || amount < 1.00) {
-        alert("Minimum withdrawal is $1.00!");
-        return;
-    }
-
-    if (appData.balance < amount) {
-        alert("Insufficient balance!");
-        return;
-    }
-
-    appData.balance -= amount;
-    updateUI();
-    alert(`Withdrawal request for $${amount.toFixed(2)} submitted successfully!`);
-}
-
-function closeRewardModal() {
-    document.getElementById('reward-modal').style.display = 'none';
-}
